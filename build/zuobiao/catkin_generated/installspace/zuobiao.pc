@@ -1,0 +1,8 @@
+prefix=/home/jetson/github/guoji_ws/install
+
+Name: zuobiao
+Description: Description of zuobiao
+Version: 0.0.0
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

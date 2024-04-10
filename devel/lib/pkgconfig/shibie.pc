@@ -1,0 +1,8 @@
+prefix=/home/jetson/github/guoji_ws/devel
+
+Name: shibie
+Description: Description of shibie
+Version: 0.0.0
+Cflags: -I/home/jetson/github/guoji_ws/devel/include
+Libs: -L${prefix}/lib 
+Requires: rospy std_msgs message_runtime

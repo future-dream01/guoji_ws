@@ -1,0 +1,12 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/opt/ros/noetic/lib/python3/dist-packages",
+        "/home/jetson/torch2trt",
+        "/home/jetson/shibie_ws/src/shibie/"
+    ],
+    "python.analysis.extraPaths": [
+        "/opt/ros/noetic/lib/python3/dist-packages",
+        "/home/jetson/torch2trt",
+        "/home/jetson/shibie_ws/src/shibie/"
+    ]
+}
