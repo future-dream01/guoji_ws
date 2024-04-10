@@ -1,0 +1,18 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/home/jetson/github/guoji_ws/devel/lib/python3/dist-packages",
+        "/opt/ros/noetic/lib/python3/dist-packages",
+        "/home/jetson/torch2trt",
+        "/home/jetson/shibie_ws/src/shibie/exps/example/custom/",
+        "/home/jetson/shibie_ws/src/shibie/YOLOX_outputs/yolox_s/",
+        "/home/jetson/shibie_ws/src/"
+    ],
+    "python.analysis.extraPaths": [
+        "/home/jetson/github/guoji_ws/devel/lib/python3/dist-packages",
+        "/opt/ros/noetic/lib/python3/dist-packages",
+        "/home/jetson/torch2trt",
+        "/home/jetson/shibie_ws/src/shibie/exps/example/custom/",
+        "/home/jetson/shibie_ws/src/shibie/YOLOX_outputs/yolox_s/",
+        "/home/jetson/shibie_ws/src/"
+    ]
+}

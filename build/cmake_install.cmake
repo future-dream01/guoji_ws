@@ -136,6 +136,7 @@ endif()
 if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   # Include the install script for each subdirectory.
   include("/home/jetson/github/guoji_ws/build/gtest/cmake_install.cmake")
+  include("/home/jetson/github/guoji_ws/build/servo/cmake_install.cmake")
   include("/home/jetson/github/guoji_ws/build/shibie/cmake_install.cmake")
   include("/home/jetson/github/guoji_ws/build/rplidar_ros/cmake_install.cmake")
   include("/home/jetson/github/guoji_ws/build/zuobiao/cmake_install.cmake")

@@ -172,76 +172,6 @@ depend:
 .PHONY : depend
 
 # Convenience name for target.
-shibie/CMakeFiles/std_msgs_generate_messages_cpp.dir/rule:
-	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 shibie/CMakeFiles/std_msgs_generate_messages_cpp.dir/rule
-.PHONY : shibie/CMakeFiles/std_msgs_generate_messages_cpp.dir/rule
-
-# Convenience name for target.
-std_msgs_generate_messages_cpp: shibie/CMakeFiles/std_msgs_generate_messages_cpp.dir/rule
-.PHONY : std_msgs_generate_messages_cpp
-
-# fast build rule for target.
-std_msgs_generate_messages_cpp/fast:
-	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f shibie/CMakeFiles/std_msgs_generate_messages_cpp.dir/build.make shibie/CMakeFiles/std_msgs_generate_messages_cpp.dir/build
-.PHONY : std_msgs_generate_messages_cpp/fast
-
-# Convenience name for target.
-shibie/CMakeFiles/std_msgs_generate_messages_eus.dir/rule:
-	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 shibie/CMakeFiles/std_msgs_generate_messages_eus.dir/rule
-.PHONY : shibie/CMakeFiles/std_msgs_generate_messages_eus.dir/rule
-
-# Convenience name for target.
-std_msgs_generate_messages_eus: shibie/CMakeFiles/std_msgs_generate_messages_eus.dir/rule
-.PHONY : std_msgs_generate_messages_eus
-
-# fast build rule for target.
-std_msgs_generate_messages_eus/fast:
-	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f shibie/CMakeFiles/std_msgs_generate_messages_eus.dir/build.make shibie/CMakeFiles/std_msgs_generate_messages_eus.dir/build
-.PHONY : std_msgs_generate_messages_eus/fast
-
-# Convenience name for target.
-shibie/CMakeFiles/std_msgs_generate_messages_lisp.dir/rule:
-	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 shibie/CMakeFiles/std_msgs_generate_messages_lisp.dir/rule
-.PHONY : shibie/CMakeFiles/std_msgs_generate_messages_lisp.dir/rule
-
-# Convenience name for target.
-std_msgs_generate_messages_lisp: shibie/CMakeFiles/std_msgs_generate_messages_lisp.dir/rule
-.PHONY : std_msgs_generate_messages_lisp
-
-# fast build rule for target.
-std_msgs_generate_messages_lisp/fast:
-	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f shibie/CMakeFiles/std_msgs_generate_messages_lisp.dir/build.make shibie/CMakeFiles/std_msgs_generate_messages_lisp.dir/build
-.PHONY : std_msgs_generate_messages_lisp/fast
-
-# Convenience name for target.
-shibie/CMakeFiles/std_msgs_generate_messages_nodejs.dir/rule:
-	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 shibie/CMakeFiles/std_msgs_generate_messages_nodejs.dir/rule
-.PHONY : shibie/CMakeFiles/std_msgs_generate_messages_nodejs.dir/rule
-
-# Convenience name for target.
-std_msgs_generate_messages_nodejs: shibie/CMakeFiles/std_msgs_generate_messages_nodejs.dir/rule
-.PHONY : std_msgs_generate_messages_nodejs
-
-# fast build rule for target.
-std_msgs_generate_messages_nodejs/fast:
-	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f shibie/CMakeFiles/std_msgs_generate_messages_nodejs.dir/build.make shibie/CMakeFiles/std_msgs_generate_messages_nodejs.dir/build
-.PHONY : std_msgs_generate_messages_nodejs/fast
-
-# Convenience name for target.
-shibie/CMakeFiles/std_msgs_generate_messages_py.dir/rule:
-	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 shibie/CMakeFiles/std_msgs_generate_messages_py.dir/rule
-.PHONY : shibie/CMakeFiles/std_msgs_generate_messages_py.dir/rule
-
-# Convenience name for target.
-std_msgs_generate_messages_py: shibie/CMakeFiles/std_msgs_generate_messages_py.dir/rule
-.PHONY : std_msgs_generate_messages_py
-
-# fast build rule for target.
-std_msgs_generate_messages_py/fast:
-	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f shibie/CMakeFiles/std_msgs_generate_messages_py.dir/build.make shibie/CMakeFiles/std_msgs_generate_messages_py.dir/build
-.PHONY : std_msgs_generate_messages_py/fast
-
-# Convenience name for target.
 shibie/CMakeFiles/shibie_generate_messages.dir/rule:
 	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 shibie/CMakeFiles/shibie_generate_messages.dir/rule
 .PHONY : shibie/CMakeFiles/shibie_generate_messages.dir/rule
@@ -434,11 +364,6 @@ help:
 	@echo "... shibie_genlisp"
 	@echo "... shibie_gennodejs"
 	@echo "... shibie_genpy"
-	@echo "... std_msgs_generate_messages_cpp"
-	@echo "... std_msgs_generate_messages_eus"
-	@echo "... std_msgs_generate_messages_lisp"
-	@echo "... std_msgs_generate_messages_nodejs"
-	@echo "... std_msgs_generate_messages_py"
 .PHONY : help
 
 

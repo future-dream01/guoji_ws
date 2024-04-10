@@ -543,6 +543,15 @@ rplidar_ros_SOURCE_DIR:STATIC=/home/jetson/github/guoji_ws/src/rplidar_ros
 sensor_msgs_DIR:PATH=/opt/ros/noetic/share/sensor_msgs/cmake
 
 //Value Computed by CMake
+servo_BINARY_DIR:STATIC=/home/jetson/github/guoji_ws/build/servo
+
+//Value Computed by CMake
+servo_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+servo_SOURCE_DIR:STATIC=/home/jetson/github/guoji_ws/src/servo
+
+//Value Computed by CMake
 shibie_BINARY_DIR:STATIC=/home/jetson/github/guoji_ws/build/shibie
 
 //Value Computed by CMake
@@ -729,7 +738,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=7
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=8
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP
