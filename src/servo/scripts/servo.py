@@ -1,11 +1,13 @@
 #!/usr/bin/env python3
+# 舵机订阅者节点
+
 import rospy 
 from std_msgs.msg import UInt8
 
+
 class Subscriber_servo_node:
-    def __init__(self,node_name):
-        rospy.init_node(node_name,anonymous=True)
-        self.node_name=node_name
+    def __init__(self):
+        rospy.init_node("node3",anonymous=True)
         self.sub=rospy.Subscriber("servo_move",UInt8,self.callback)
 
     def callback(self,msg):
@@ -16,5 +18,7 @@ class Subscriber_servo_node:
         rospy.spin()
 
 if __name__=='__main__':
-    servo_node=Subscriber_servo_node("node")
-    servo_node.start_listening()
+    servo_node=Subscriber_servo_node()
+    while True:
+        pass
+    #servo_node.start_listening()

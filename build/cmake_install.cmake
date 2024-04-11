@@ -139,7 +139,7 @@ if(NOT CMAKE_INSTALL_LOCAL_ONLY)
   include("/home/jetson/github/guoji_ws/build/servo/cmake_install.cmake")
   include("/home/jetson/github/guoji_ws/build/shibie/cmake_install.cmake")
   include("/home/jetson/github/guoji_ws/build/rplidar_ros/cmake_install.cmake")
-  include("/home/jetson/github/guoji_ws/build/zuobiao/cmake_install.cmake")
+  include("/home/jetson/github/guoji_ws/build/main/cmake_install.cmake")
 
 endif()
 

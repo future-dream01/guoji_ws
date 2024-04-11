@@ -1,2 +1,2 @@
-rplidar_ros:servo:shibie:zuobiao
+main:rplidar_ros:servo:shibie
 -DCATKIN_DEVEL_PREFIX=/home/jetson/github/guoji_ws/devel -DCMAKE_INSTALL_PREFIX=/home/jetson/github/guoji_ws/install -G Unix Makefiles

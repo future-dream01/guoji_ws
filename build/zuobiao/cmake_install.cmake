@@ -43,17 +43,17 @@ if(NOT DEFINED CMAKE_OBJDUMP)
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/jetson/github/guoji_ws/build/zuobiao/catkin_generated/installspace/zuobiao.pc")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/lib/pkgconfig" TYPE FILE FILES "/home/jetson/github/guoji_ws/build/zuobiao/catkin_generated/installspace/main.pc")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/zuobiao/cmake" TYPE FILE FILES
-    "/home/jetson/github/guoji_ws/build/zuobiao/catkin_generated/installspace/zuobiaoConfig.cmake"
-    "/home/jetson/github/guoji_ws/build/zuobiao/catkin_generated/installspace/zuobiaoConfig-version.cmake"
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/main/cmake" TYPE FILE FILES
+    "/home/jetson/github/guoji_ws/build/zuobiao/catkin_generated/installspace/mainConfig.cmake"
+    "/home/jetson/github/guoji_ws/build/zuobiao/catkin_generated/installspace/mainConfig-version.cmake"
     )
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/zuobiao" TYPE FILE FILES "/home/jetson/github/guoji_ws/src/zuobiao/package.xml")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/main" TYPE FILE FILES "/home/jetson/github/guoji_ws/src/zuobiao/package.xml")
 endif()
 

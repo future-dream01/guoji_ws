@@ -494,6 +494,15 @@ gtest_main_LIB_DEPENDS:STATIC=general;gtest;
 //Path to a library.
 lib:FILEPATH=/opt/ros/noetic/lib/libtf2.so
 
+//Value Computed by CMake
+main_BINARY_DIR:STATIC=/home/jetson/github/guoji_ws/build/main
+
+//Value Computed by CMake
+main_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+main_SOURCE_DIR:STATIC=/home/jetson/github/guoji_ws/src/main
+
 //The directory containing a CMake configuration file for message_filters.
 message_filters_DIR:PATH=/opt/ros/noetic/share/message_filters/cmake
 
