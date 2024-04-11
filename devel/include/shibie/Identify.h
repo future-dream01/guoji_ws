@@ -40,7 +40,7 @@ template<>
 struct MD5Sum< ::shibie::Identify > {
   static const char* value()
   {
-    return "86f4e91a6ab25c36871755e93aece959";
+    return "7debc7ecb9cc5cb9fe2af4ff555737b7";
   }
 
   static const char* value(const ::shibie::Identify&) { return value(); }

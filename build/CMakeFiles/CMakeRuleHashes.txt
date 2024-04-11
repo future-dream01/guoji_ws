@@ -1,13 +1,20 @@
 # Hashes of file build rules.
-359c0c035f2e37eae6e1409dc8f58e6c /home/jetson/github/guoji_ws/devel/include/shibie/Identify.h
-c162245a67b5201f2eda32b317f0d514 /home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/srv/_Identify.py
+47b74d90b15d3871d0af2993889280fd /home/jetson/github/guoji_ws/devel/include/shibie/Identify.h
+32fe9d7863ed43b15fedec38652998f2 /home/jetson/github/guoji_ws/devel/include/shibie/Result.h
+b4c16c392e27dd77e2ded25cb906bf02 /home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/msg/_Result.py
+c886cba3a1e13c052f5cfb6eaa2ab78e /home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/msg/__init__.py
+c0a6b002ad6f86900083153d66a05cc4 /home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/srv/_Identify.py
 325b768ac615155697e9368d77905489 /home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/srv/__init__.py
-246471070b73f38e590178aedaff6eea /home/jetson/github/guoji_ws/devel/share/common-lisp/ros/shibie/srv/Identify.lisp
-397871e980fdf252148f6cf50da2173a /home/jetson/github/guoji_ws/devel/share/gennodejs/ros/shibie/srv/Identify.js
+1498aee66f54afdda3c8b759af49024a /home/jetson/github/guoji_ws/devel/share/common-lisp/ros/shibie/msg/Result.lisp
+b1a114d05efc39cb3474d149d000efe0 /home/jetson/github/guoji_ws/devel/share/common-lisp/ros/shibie/srv/Identify.lisp
+597cf21b0869fd413cc55ecdbcb3217d /home/jetson/github/guoji_ws/devel/share/gennodejs/ros/shibie/msg/Result.js
+2d8fe0615d33e7003b7a832b0dffa2e3 /home/jetson/github/guoji_ws/devel/share/gennodejs/ros/shibie/srv/Identify.js
 b0b2b6f41364ae4a1dd4cd0e436e20ae /home/jetson/github/guoji_ws/devel/share/roseus/ros/shibie/manifest.l
-19b733ba1007d84bec03b9c3a23ea334 /home/jetson/github/guoji_ws/devel/share/roseus/ros/shibie/srv/Identify.l
+ffd71f05099b93fc97c876e0e80ede73 /home/jetson/github/guoji_ws/devel/share/roseus/ros/shibie/msg/Result.l
+d87d658e6ca4deb7aa4865fdacb40aca /home/jetson/github/guoji_ws/devel/share/roseus/ros/shibie/srv/Identify.l
 95a3f1afbdb5394a1eca5fa1273341ba CMakeFiles/clean_test_results
 03c0014eeff531a2961764e8270b864e shibie/CMakeFiles/_shibie_generate_messages_check_deps_Identify
+0c56038a8505ef3b9ed88a0e217982a5 shibie/CMakeFiles/_shibie_generate_messages_check_deps_Result
 1866a62ee5fd9e877bc6f4180d0e22cf shibie/CMakeFiles/shibie_generate_messages_cpp
 1866a62ee5fd9e877bc6f4180d0e22cf shibie/CMakeFiles/shibie_generate_messages_eus
 1866a62ee5fd9e877bc6f4180d0e22cf shibie/CMakeFiles/shibie_generate_messages_lisp

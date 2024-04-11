@@ -16,5 +16,5 @@ class Subscriber_servo_node:
         rospy.spin()
 
 if __name__=='__main__':
-    servo_node=Subscriber_servo_node("")
+    servo_node=Subscriber_servo_node("node")
     servo_node.start_listening()

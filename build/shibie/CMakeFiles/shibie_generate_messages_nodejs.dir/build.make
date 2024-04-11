@@ -66,14 +66,21 @@ include shibie/CMakeFiles/shibie_generate_messages_nodejs.dir/compiler_depend.ma
 # Include the progress variables for this target.
 include shibie/CMakeFiles/shibie_generate_messages_nodejs.dir/progress.make
 
+shibie/CMakeFiles/shibie_generate_messages_nodejs: /home/jetson/github/guoji_ws/devel/share/gennodejs/ros/shibie/msg/Result.js
 shibie/CMakeFiles/shibie_generate_messages_nodejs: /home/jetson/github/guoji_ws/devel/share/gennodejs/ros/shibie/srv/Identify.js
+
+/home/jetson/github/guoji_ws/devel/share/gennodejs/ros/shibie/msg/Result.js: /opt/ros/noetic/lib/gennodejs/gen_nodejs.py
+/home/jetson/github/guoji_ws/devel/share/gennodejs/ros/shibie/msg/Result.js: /home/jetson/github/guoji_ws/src/shibie/msg/Result.msg
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/jetson/github/guoji_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating Javascript code from shibie/Result.msg"
+	cd /home/jetson/github/guoji_ws/build/shibie && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gennodejs/cmake/../../../lib/gennodejs/gen_nodejs.py /home/jetson/github/guoji_ws/src/shibie/msg/Result.msg -Ishibie:/home/jetson/github/guoji_ws/src/shibie/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p shibie -o /home/jetson/github/guoji_ws/devel/share/gennodejs/ros/shibie/msg
 
 /home/jetson/github/guoji_ws/devel/share/gennodejs/ros/shibie/srv/Identify.js: /opt/ros/noetic/lib/gennodejs/gen_nodejs.py
 /home/jetson/github/guoji_ws/devel/share/gennodejs/ros/shibie/srv/Identify.js: /home/jetson/github/guoji_ws/src/shibie/srv/Identify.srv
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/jetson/github/guoji_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating Javascript code from shibie/Identify.srv"
-	cd /home/jetson/github/guoji_ws/build/shibie && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gennodejs/cmake/../../../lib/gennodejs/gen_nodejs.py /home/jetson/github/guoji_ws/src/shibie/srv/Identify.srv -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p shibie -o /home/jetson/github/guoji_ws/devel/share/gennodejs/ros/shibie/srv
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/jetson/github/guoji_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Generating Javascript code from shibie/Identify.srv"
+	cd /home/jetson/github/guoji_ws/build/shibie && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gennodejs/cmake/../../../lib/gennodejs/gen_nodejs.py /home/jetson/github/guoji_ws/src/shibie/srv/Identify.srv -Ishibie:/home/jetson/github/guoji_ws/src/shibie/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p shibie -o /home/jetson/github/guoji_ws/devel/share/gennodejs/ros/shibie/srv
 
 shibie_generate_messages_nodejs: shibie/CMakeFiles/shibie_generate_messages_nodejs
+shibie_generate_messages_nodejs: /home/jetson/github/guoji_ws/devel/share/gennodejs/ros/shibie/msg/Result.js
 shibie_generate_messages_nodejs: /home/jetson/github/guoji_ws/devel/share/gennodejs/ros/shibie/srv/Identify.js
 shibie_generate_messages_nodejs: shibie/CMakeFiles/shibie_generate_messages_nodejs.dir/build.make
 .PHONY : shibie_generate_messages_nodejs

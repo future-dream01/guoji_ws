@@ -57,99 +57,37 @@
 
 (defclass shibie::IdentifyResponse
   :super ros::object
-  :slots (_target _x _y ))
+  :slots (_back ))
 
 (defmethod shibie::IdentifyResponse
   (:init
    (&key
-    ((:target __target) 0)
-    ((:x __x) 0)
-    ((:y __y) 0)
+    ((:back __back) "")
     )
    (send-super :init)
-   (setq _target (round __target))
-   (setq _x (round __x))
-   (setq _y (round __y))
+   (setq _back (string __back))
    self)
-  (:target
-   (&optional __target)
-   (if __target (setq _target __target)) _target)
-  (:x
-   (&optional __x)
-   (if __x (setq _x __x)) _x)
-  (:y
-   (&optional __y)
-   (if __y (setq _y __y)) _y)
+  (:back
+   (&optional __back)
+   (if __back (setq _back __back)) _back)
   (:serialization-length
    ()
    (+
-    ;; uint8 _target
-    1
-    ;; int64 _x
-    8
-    ;; int64 _y
-    8
+    ;; string _back
+    4 (length _back)
     ))
   (:serialize
    (&optional strm)
    (let ((s (if strm strm
               (make-string-output-stream (send self :serialization-length)))))
-     ;; uint8 _target
-       (write-byte _target s)
-     ;; int64 _x
-#+(or :alpha :irix6 :x86_64)
-       (progn (sys::poke _x (send s :buffer) (send s :count) :long) (incf (stream-count s) 8))
-#-(or :alpha :irix6 :x86_64)
-       (cond ((and (class _x) (= (length (_x . bv)) 2)) ;; bignum
-              (write-long (ash (elt (_x . bv) 0) 0) s)
-              (write-long (ash (elt (_x . bv) 1) -1) s))
-             ((and (class _x) (= (length (_x . bv)) 1)) ;; big1
-              (write-long (elt (_x . bv) 0) s)
-              (write-long (if (>= _x 0) 0 #xffffffff) s))
-             (t                                         ;; integer
-              (write-long _x s)(write-long (if (>= _x 0) 0 #xffffffff) s)))
-     ;; int64 _y
-#+(or :alpha :irix6 :x86_64)
-       (progn (sys::poke _y (send s :buffer) (send s :count) :long) (incf (stream-count s) 8))
-#-(or :alpha :irix6 :x86_64)
-       (cond ((and (class _y) (= (length (_y . bv)) 2)) ;; bignum
-              (write-long (ash (elt (_y . bv) 0) 0) s)
-              (write-long (ash (elt (_y . bv) 1) -1) s))
-             ((and (class _y) (= (length (_y . bv)) 1)) ;; big1
-              (write-long (elt (_y . bv) 0) s)
-              (write-long (if (>= _y 0) 0 #xffffffff) s))
-             (t                                         ;; integer
-              (write-long _y s)(write-long (if (>= _y 0) 0 #xffffffff) s)))
+     ;; string _back
+       (write-long (length _back) s) (princ _back s)
      ;;
      (if (null strm) (get-output-stream-string s))))
   (:deserialize
    (buf &optional (ptr- 0))
-   ;; uint8 _target
-     (setq _target (sys::peek buf ptr- :char)) (incf ptr- 1)
-   ;; int64 _x
-#+(or :alpha :irix6 :x86_64)
-      (setf _x (prog1 (sys::peek buf ptr- :long) (incf ptr- 8)))
-#-(or :alpha :irix6 :x86_64)
-      (setf _x (let ((b0 (prog1 (sys::peek buf ptr- :integer) (incf ptr- 4)))
-                  (b1 (prog1 (sys::peek buf ptr- :integer) (incf ptr- 4))))
-              (cond ((= b1 -1) b0)
-                     ((and (= b1  0)
-                           (<= lisp::most-negative-fixnum b0 lisp::most-positive-fixnum))
-                      b0)
-                    ((= b1  0) (make-instance bignum :size 1 :bv (integer-vector b0)))
-                    (t (make-instance bignum :size 2 :bv (integer-vector b0 (ash b1 1)))))))
-   ;; int64 _y
-#+(or :alpha :irix6 :x86_64)
-      (setf _y (prog1 (sys::peek buf ptr- :long) (incf ptr- 8)))
-#-(or :alpha :irix6 :x86_64)
-      (setf _y (let ((b0 (prog1 (sys::peek buf ptr- :integer) (incf ptr- 4)))
-                  (b1 (prog1 (sys::peek buf ptr- :integer) (incf ptr- 4))))
-              (cond ((= b1 -1) b0)
-                     ((and (= b1  0)
-                           (<= lisp::most-negative-fixnum b0 lisp::most-positive-fixnum))
-                      b0)
-                    ((= b1  0) (make-instance bignum :size 1 :bv (integer-vector b0)))
-                    (t (make-instance bignum :size 2 :bv (integer-vector b0 (ash b1 1)))))))
+   ;; string _back
+     (let (n) (setq n (sys::peek buf ptr- :integer)) (incf ptr- 4) (setq _back (subseq buf ptr- (+ ptr- n))) (incf ptr- n))
    ;;
    self)
   )
@@ -158,7 +96,7 @@
   :super ros::object
   :slots ())
 
-(setf (get shibie::Identify :md5sum-) "86f4e91a6ab25c36871755e93aece959")
+(setf (get shibie::Identify :md5sum-) "7debc7ecb9cc5cb9fe2af4ff555737b7")
 (setf (get shibie::Identify :datatype-) "shibie/Identify")
 (setf (get shibie::Identify :request) shibie::IdentifyRequest)
 (setf (get shibie::Identify :response) shibie::IdentifyResponse)
@@ -166,28 +104,24 @@
 (defmethod shibie::IdentifyRequest
   (:response () (instance shibie::IdentifyResponse :init)))
 
-(setf (get shibie::IdentifyRequest :md5sum-) "86f4e91a6ab25c36871755e93aece959")
+(setf (get shibie::IdentifyRequest :md5sum-) "7debc7ecb9cc5cb9fe2af4ff555737b7")
 (setf (get shibie::IdentifyRequest :datatype-) "shibie/IdentifyRequest")
 (setf (get shibie::IdentifyRequest :definition-)
       "string call
 ---
-uint8 target
-int64 x
-int64 y
+string back
 ")
 
-(setf (get shibie::IdentifyResponse :md5sum-) "86f4e91a6ab25c36871755e93aece959")
+(setf (get shibie::IdentifyResponse :md5sum-) "7debc7ecb9cc5cb9fe2af4ff555737b7")
 (setf (get shibie::IdentifyResponse :datatype-) "shibie/IdentifyResponse")
 (setf (get shibie::IdentifyResponse :definition-)
       "string call
 ---
-uint8 target
-int64 x
-int64 y
+string back
 ")
 
 
 
-(provide :shibie/Identify "86f4e91a6ab25c36871755e93aece959")
+(provide :shibie/Identify "7debc7ecb9cc5cb9fe2af4ff555737b7")
 
 

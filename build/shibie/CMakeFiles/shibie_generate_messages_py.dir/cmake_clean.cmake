@@ -1,4 +1,6 @@
 file(REMOVE_RECURSE
+  "/home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/msg/_Result.py"
+  "/home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/msg/__init__.py"
   "/home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/srv/_Identify.py"
   "/home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/srv/__init__.py"
   "CMakeFiles/shibie_generate_messages_py"

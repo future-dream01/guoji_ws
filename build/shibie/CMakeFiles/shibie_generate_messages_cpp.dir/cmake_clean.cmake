@@ -1,5 +1,6 @@
 file(REMOVE_RECURSE
   "/home/jetson/github/guoji_ws/devel/include/shibie/Identify.h"
+  "/home/jetson/github/guoji_ws/devel/include/shibie/Result.h"
   "CMakeFiles/shibie_generate_messages_cpp"
 )
 

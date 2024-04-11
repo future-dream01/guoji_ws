@@ -24,27 +24,17 @@ struct IdentifyResponse_
   typedef IdentifyResponse_<ContainerAllocator> Type;
 
   IdentifyResponse_()
-    : target(0)
-    , x(0)
-    , y(0)  {
+    : back()  {
     }
   IdentifyResponse_(const ContainerAllocator& _alloc)
-    : target(0)
-    , x(0)
-    , y(0)  {
+    : back(_alloc)  {
   (void)_alloc;
     }
 
 
 
-   typedef uint8_t _target_type;
-  _target_type target;
-
-   typedef int64_t _x_type;
-  _x_type x;
-
-   typedef int64_t _y_type;
-  _y_type y;
+   typedef std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>> _back_type;
+  _back_type back;
 
 
 
@@ -75,9 +65,7 @@ return s;
 template<typename ContainerAllocator1, typename ContainerAllocator2>
 bool operator==(const ::shibie::IdentifyResponse_<ContainerAllocator1> & lhs, const ::shibie::IdentifyResponse_<ContainerAllocator2> & rhs)
 {
-  return lhs.target == rhs.target &&
-    lhs.x == rhs.x &&
-    lhs.y == rhs.y;
+  return lhs.back == rhs.back;
 }
 
 template<typename ContainerAllocator1, typename ContainerAllocator2>
@@ -110,12 +98,12 @@ struct IsMessage< ::shibie::IdentifyResponse_<ContainerAllocator> const>
 
 template <class ContainerAllocator>
 struct IsFixedSize< ::shibie::IdentifyResponse_<ContainerAllocator> >
-  : TrueType
+  : FalseType
   { };
 
 template <class ContainerAllocator>
 struct IsFixedSize< ::shibie::IdentifyResponse_<ContainerAllocator> const>
-  : TrueType
+  : FalseType
   { };
 
 template <class ContainerAllocator>
@@ -134,12 +122,12 @@ struct MD5Sum< ::shibie::IdentifyResponse_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "15449436763f6557c2e68c9c70afc48d";
+    return "c4a1d3ec3f5c241f65fed707d363d25e";
   }
 
   static const char* value(const ::shibie::IdentifyResponse_<ContainerAllocator>&) { return value(); }
-  static const uint64_t static_value1 = 0x15449436763f6557ULL;
-  static const uint64_t static_value2 = 0xc2e68c9c70afc48dULL;
+  static const uint64_t static_value1 = 0xc4a1d3ec3f5c241fULL;
+  static const uint64_t static_value2 = 0x65fed707d363d25eULL;
 };
 
 template<class ContainerAllocator>
@@ -158,9 +146,7 @@ struct Definition< ::shibie::IdentifyResponse_<ContainerAllocator> >
 {
   static const char* value()
   {
-    return "uint8 target\n"
-"int64 x\n"
-"int64 y\n"
+    return "string back\n"
 ;
   }
 
@@ -179,9 +165,7 @@ namespace serialization
   {
     template<typename Stream, typename T> inline static void allInOne(Stream& stream, T m)
     {
-      stream.next(m.target);
-      stream.next(m.x);
-      stream.next(m.y);
+      stream.next(m.back);
     }
 
     ROS_DECLARE_ALLINONE_SERIALIZER
@@ -200,12 +184,8 @@ struct Printer< ::shibie::IdentifyResponse_<ContainerAllocator> >
 {
   template<typename Stream> static void stream(Stream& s, const std::string& indent, const ::shibie::IdentifyResponse_<ContainerAllocator>& v)
   {
-    s << indent << "target: ";
-    Printer<uint8_t>::stream(s, indent + "  ", v.target);
-    s << indent << "x: ";
-    Printer<int64_t>::stream(s, indent + "  ", v.x);
-    s << indent << "y: ";
-    Printer<int64_t>::stream(s, indent + "  ", v.y);
+    s << indent << "back: ";
+    Printer<std::basic_string<char, std::char_traits<char>, typename std::allocator_traits<ContainerAllocator>::template rebind_alloc<char>>>::stream(s, indent + "  ", v.back);
   }
 };
 

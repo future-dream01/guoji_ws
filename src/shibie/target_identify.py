@@ -25,12 +25,6 @@ def target_identify():
 
 if __name__ == "__main__":
     # 服务器调用并显示结果
-    while True:
-        t1 = time.perf_counter()
-        response = target_identify()
-        # response = "0,1236,2541".split(",")
-        target, x_postion, y_postion = response.target, response.x, response.y
-        t2 = time.perf_counter()
-        print(f"Process time:{t2-t1}s")
-        print(f"Target: {target} \nx:{x_postion} \ny:{y_postion}")
-        time.sleep(0.1)
+    # t1 = time.perf_counter()
+    response = target_identify()
+    # t2 = time.perf_counter()

@@ -94,40 +94,22 @@ class IdentifyResponse {
   constructor(initObj={}) {
     if (initObj === null) {
       // initObj === null is a special case for deserialization where we don't initialize fields
-      this.target = null;
-      this.x = null;
-      this.y = null;
+      this.back = null;
     }
     else {
-      if (initObj.hasOwnProperty('target')) {
-        this.target = initObj.target
+      if (initObj.hasOwnProperty('back')) {
+        this.back = initObj.back
       }
       else {
-        this.target = 0;
-      }
-      if (initObj.hasOwnProperty('x')) {
-        this.x = initObj.x
-      }
-      else {
-        this.x = 0;
-      }
-      if (initObj.hasOwnProperty('y')) {
-        this.y = initObj.y
-      }
-      else {
-        this.y = 0;
+        this.back = '';
       }
     }
   }
 
   static serialize(obj, buffer, bufferOffset) {
     // Serializes a message object of type IdentifyResponse
-    // Serialize message field [target]
-    bufferOffset = _serializer.uint8(obj.target, buffer, bufferOffset);
-    // Serialize message field [x]
-    bufferOffset = _serializer.int64(obj.x, buffer, bufferOffset);
-    // Serialize message field [y]
-    bufferOffset = _serializer.int64(obj.y, buffer, bufferOffset);
+    // Serialize message field [back]
+    bufferOffset = _serializer.string(obj.back, buffer, bufferOffset);
     return bufferOffset;
   }
 
@@ -135,17 +117,15 @@ class IdentifyResponse {
     //deserializes a message object of type IdentifyResponse
     let len;
     let data = new IdentifyResponse(null);
-    // Deserialize message field [target]
-    data.target = _deserializer.uint8(buffer, bufferOffset);
-    // Deserialize message field [x]
-    data.x = _deserializer.int64(buffer, bufferOffset);
-    // Deserialize message field [y]
-    data.y = _deserializer.int64(buffer, bufferOffset);
+    // Deserialize message field [back]
+    data.back = _deserializer.string(buffer, bufferOffset);
     return data;
   }
 
   static getMessageSize(object) {
-    return 17;
+    let length = 0;
+    length += _getByteLength(object.back);
+    return length + 4;
   }
 
   static datatype() {
@@ -155,15 +135,13 @@ class IdentifyResponse {
 
   static md5sum() {
     //Returns md5sum for a message object
-    return '15449436763f6557c2e68c9c70afc48d';
+    return 'c4a1d3ec3f5c241f65fed707d363d25e';
   }
 
   static messageDefinition() {
     // Returns full string definition for message
     return `
-    uint8 target
-    int64 x
-    int64 y
+    string back
     
     `;
   }
@@ -174,25 +152,11 @@ class IdentifyResponse {
       msg = {};
     }
     const resolved = new IdentifyResponse(null);
-    if (msg.target !== undefined) {
-      resolved.target = msg.target;
+    if (msg.back !== undefined) {
+      resolved.back = msg.back;
     }
     else {
-      resolved.target = 0
-    }
-
-    if (msg.x !== undefined) {
-      resolved.x = msg.x;
-    }
-    else {
-      resolved.x = 0
-    }
-
-    if (msg.y !== undefined) {
-      resolved.y = msg.y;
-    }
-    else {
-      resolved.y = 0
+      resolved.back = ''
     }
 
     return resolved;
@@ -202,6 +166,6 @@ class IdentifyResponse {
 module.exports = {
   Request: IdentifyRequest,
   Response: IdentifyResponse,
-  md5sum() { return '86f4e91a6ab25c36871755e93aece959'; },
+  md5sum() { return '7debc7ecb9cc5cb9fe2af4ff555737b7'; },
   datatype() { return 'shibie/Identify'; }
 };

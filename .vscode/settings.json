@@ -13,6 +13,7 @@
         "/home/jetson/torch2trt",
         "/home/jetson/shibie_ws/src/shibie/exps/example/custom/",
         "/home/jetson/shibie_ws/src/shibie/YOLOX_outputs/yolox_s/",
-        "/home/jetson/shibie_ws/src/"
+        "/home/jetson/shibie_ws/src/",
+        "./src/shibie"
     ]
 }

@@ -30,8 +30,8 @@ class Publisher_servo_node:
 
 if __name__=="__main__":
     try:
-        rplidar_node=Rplidar_sub_node(2)
-        servo_node=Publisher_servo_node(3)
+        rplidar_node=Rplidar_sub_node("node2")
+        servo_node=Publisher_servo_node("node3")
         rplidar_node.start_listening()
         servo_node.start_publish()
     except rospy.ROSInterruptException:

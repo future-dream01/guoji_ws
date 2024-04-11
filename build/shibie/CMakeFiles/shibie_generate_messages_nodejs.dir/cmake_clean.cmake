@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "/home/jetson/github/guoji_ws/devel/share/gennodejs/ros/shibie/msg/Result.js"
   "/home/jetson/github/guoji_ws/devel/share/gennodejs/ros/shibie/srv/Identify.js"
   "CMakeFiles/shibie_generate_messages_nodejs"
 )

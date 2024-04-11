@@ -5,46 +5,27 @@
 import time
 from demo import *
 from shibie.srv import Identify, IdentifyResponse
+from shibie.msg import Result
 from std_msgs.msg import String
 import rospy 
 
-
-pubCommand = False
-# ide_pub = rospy.Publisher('')
-
-
-def command_thread():
-    """单词循环线程"""
-    while True:
-        if pubCommand:
-            vel_msg = String()
-    
-        time.sleep(0.05)
-        
 
 def identifyCallback(call):
     """回调函数"""
     # 显示请求数据
     rospy.loginfo("Publish command!")
-    
-    """
-    if call != "1":
-        return Identify(7, -1, -1)
-    """
 
     # 调用demo.py识别图片
     obj_response,x_p,y_p = main(predictor, vis_folder, args)
 
-    #x_pos_res = 0
-    #y_pos_res = 0
-    """
-    x_pos = str(round(x_pos_res, 2) * 100)
-    y_pos = str(round(y_pos_res, 2) * 100)
-    target_info = ','.join([obj_response, x_pos, y_pos])
-    """
-    #print(f"target:{obj_response}\n x_pos:{x_pos_res}\n y_pos:{y_pos_res}")
+    # print(f"target:{obj_response}\n x_pos:{x_p}\n y_pos:{y_p}")
+    
+    # 创建发布者并发布数据
+    result_pub = rospy.Publisher('identify_result', Result, queue_size=10)
+    
+    
     # 反馈数据
-    return IdentifyResponse(int(obj_response), x_p, y_p)
+    return IdentifyResponse("1")
     # return IdentifyResponse(2, 0, 0)
 
 def identify_server(predictor, vis_folder, args):

@@ -66,20 +66,36 @@ include shibie/CMakeFiles/shibie_generate_messages_py.dir/compiler_depend.make
 # Include the progress variables for this target.
 include shibie/CMakeFiles/shibie_generate_messages_py.dir/progress.make
 
+shibie/CMakeFiles/shibie_generate_messages_py: /home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/msg/_Result.py
 shibie/CMakeFiles/shibie_generate_messages_py: /home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/srv/_Identify.py
+shibie/CMakeFiles/shibie_generate_messages_py: /home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/msg/__init__.py
 shibie/CMakeFiles/shibie_generate_messages_py: /home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/srv/__init__.py
+
+/home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/msg/_Result.py: /opt/ros/noetic/lib/genpy/genmsg_py.py
+/home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/msg/_Result.py: /home/jetson/github/guoji_ws/src/shibie/msg/Result.msg
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/jetson/github/guoji_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating Python from MSG shibie/Result"
+	cd /home/jetson/github/guoji_ws/build/shibie && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genpy/cmake/../../../lib/genpy/genmsg_py.py /home/jetson/github/guoji_ws/src/shibie/msg/Result.msg -Ishibie:/home/jetson/github/guoji_ws/src/shibie/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p shibie -o /home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/msg
+
+/home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/msg/__init__.py: /opt/ros/noetic/lib/genpy/genmsg_py.py
+/home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/msg/__init__.py: /home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/msg/_Result.py
+/home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/msg/__init__.py: /home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/srv/_Identify.py
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/jetson/github/guoji_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Generating Python msg __init__.py for shibie"
+	cd /home/jetson/github/guoji_ws/build/shibie && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genpy/cmake/../../../lib/genpy/genmsg_py.py -o /home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/msg --initpy
 
 /home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/srv/_Identify.py: /opt/ros/noetic/lib/genpy/gensrv_py.py
 /home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/srv/_Identify.py: /home/jetson/github/guoji_ws/src/shibie/srv/Identify.srv
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/jetson/github/guoji_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating Python code from SRV shibie/Identify"
-	cd /home/jetson/github/guoji_ws/build/shibie && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genpy/cmake/../../../lib/genpy/gensrv_py.py /home/jetson/github/guoji_ws/src/shibie/srv/Identify.srv -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p shibie -o /home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/srv
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/jetson/github/guoji_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Generating Python code from SRV shibie/Identify"
+	cd /home/jetson/github/guoji_ws/build/shibie && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genpy/cmake/../../../lib/genpy/gensrv_py.py /home/jetson/github/guoji_ws/src/shibie/srv/Identify.srv -Ishibie:/home/jetson/github/guoji_ws/src/shibie/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p shibie -o /home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/srv
 
 /home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/srv/__init__.py: /opt/ros/noetic/lib/genpy/genmsg_py.py
+/home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/srv/__init__.py: /home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/msg/_Result.py
 /home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/srv/__init__.py: /home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/srv/_Identify.py
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/jetson/github/guoji_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Generating Python srv __init__.py for shibie"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/jetson/github/guoji_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Generating Python srv __init__.py for shibie"
 	cd /home/jetson/github/guoji_ws/build/shibie && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genpy/cmake/../../../lib/genpy/genmsg_py.py -o /home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/srv --initpy
 
 shibie_generate_messages_py: shibie/CMakeFiles/shibie_generate_messages_py
+shibie_generate_messages_py: /home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/msg/_Result.py
+shibie_generate_messages_py: /home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/msg/__init__.py
 shibie_generate_messages_py: /home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/srv/_Identify.py
 shibie_generate_messages_py: /home/jetson/github/guoji_ws/devel/lib/python3/dist-packages/shibie/srv/__init__.py
 shibie_generate_messages_py: shibie/CMakeFiles/shibie_generate_messages_py.dir/build.make

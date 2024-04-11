@@ -47,6 +47,10 @@ if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/shibie/msg" TYPE FILE FILES "/home/jetson/github/guoji_ws/src/shibie/msg/Result.msg")
+endif()
+
+if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
   file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/shibie/cmake" TYPE FILE FILES "/home/jetson/github/guoji_ws/build/shibie/catkin_generated/installspace/shibie-msg-paths.cmake")
 endif()
 

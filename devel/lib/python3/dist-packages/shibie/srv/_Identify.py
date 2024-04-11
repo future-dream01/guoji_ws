@@ -135,15 +135,13 @@ import struct
 
 
 class IdentifyResponse(genpy.Message):
-  _md5sum = "15449436763f6557c2e68c9c70afc48d"
+  _md5sum = "c4a1d3ec3f5c241f65fed707d363d25e"
   _type = "shibie/IdentifyResponse"
   _has_header = False  # flag to mark the presence of a Header object
-  _full_text = """uint8 target
-int64 x
-int64 y
+  _full_text = """string back
 """
-  __slots__ = ['target','x','y']
-  _slot_types = ['uint8','int64','int64']
+  __slots__ = ['back']
+  _slot_types = ['string']
 
   def __init__(self, *args, **kwds):
     """
@@ -153,7 +151,7 @@ int64 y
     changes.  You cannot mix in-order arguments and keyword arguments.
 
     The available fields are:
-       target,x,y
+       back
 
     :param args: complete set of field values, in .msg order
     :param kwds: use keyword arguments corresponding to message field names
@@ -162,16 +160,10 @@ int64 y
     if args or kwds:
       super(IdentifyResponse, self).__init__(*args, **kwds)
       # message fields cannot be None, assign default values for those that are
-      if self.target is None:
-        self.target = 0
-      if self.x is None:
-        self.x = 0
-      if self.y is None:
-        self.y = 0
+      if self.back is None:
+        self.back = ''
     else:
-      self.target = 0
-      self.x = 0
-      self.y = 0
+      self.back = ''
 
   def _get_types(self):
     """
@@ -185,8 +177,12 @@ int64 y
     :param buff: buffer, ``StringIO``
     """
     try:
-      _x = self
-      buff.write(_get_struct_B2q().pack(_x.target, _x.x, _x.y))
+      _x = self.back
+      length = len(_x)
+      if python3 or type(_x) == unicode:
+        _x = _x.encode('utf-8')
+        length = len(_x)
+      buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -199,10 +195,15 @@ int64 y
       codecs.lookup_error("rosmsg").msg_type = self._type
     try:
       end = 0
-      _x = self
       start = end
-      end += 17
-      (_x.target, _x.x, _x.y,) = _get_struct_B2q().unpack(str[start:end])
+      end += 4
+      (length,) = _struct_I.unpack(str[start:end])
+      start = end
+      end += length
+      if python3:
+        self.back = str[start:end].decode('utf-8', 'rosmsg')
+      else:
+        self.back = str[start:end]
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill
@@ -215,8 +216,12 @@ int64 y
     :param numpy: numpy python module
     """
     try:
-      _x = self
-      buff.write(_get_struct_B2q().pack(_x.target, _x.x, _x.y))
+      _x = self.back
+      length = len(_x)
+      if python3 or type(_x) == unicode:
+        _x = _x.encode('utf-8')
+        length = len(_x)
+      buff.write(struct.Struct('<I%ss'%length).pack(length, _x))
     except struct.error as se: self._check_types(struct.error("%s: '%s' when writing '%s'" % (type(se), str(se), str(locals().get('_x', self)))))
     except TypeError as te: self._check_types(ValueError("%s: '%s' when writing '%s'" % (type(te), str(te), str(locals().get('_x', self)))))
 
@@ -230,10 +235,15 @@ int64 y
       codecs.lookup_error("rosmsg").msg_type = self._type
     try:
       end = 0
-      _x = self
       start = end
-      end += 17
-      (_x.target, _x.x, _x.y,) = _get_struct_B2q().unpack(str[start:end])
+      end += 4
+      (length,) = _struct_I.unpack(str[start:end])
+      start = end
+      end += length
+      if python3:
+        self.back = str[start:end].decode('utf-8', 'rosmsg')
+      else:
+        self.back = str[start:end]
       return self
     except struct.error as e:
       raise genpy.DeserializationError(e)  # most likely buffer underfill
@@ -242,14 +252,8 @@ _struct_I = genpy.struct_I
 def _get_struct_I():
     global _struct_I
     return _struct_I
-_struct_B2q = None
-def _get_struct_B2q():
-    global _struct_B2q
-    if _struct_B2q is None:
-        _struct_B2q = struct.Struct("<B2q")
-    return _struct_B2q
 class Identify(object):
   _type          = 'shibie/Identify'
-  _md5sum = '86f4e91a6ab25c36871755e93aece959'
+  _md5sum = '7debc7ecb9cc5cb9fe2af4ff555737b7'
   _request_class  = IdentifyRequest
   _response_class = IdentifyResponse
