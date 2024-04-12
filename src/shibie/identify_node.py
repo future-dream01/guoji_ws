@@ -47,3 +47,4 @@ if __name__ == "__main__":
     exp = get_exp(args.exp_file, args.name)
     predictor, vis_folder = pre_main(exp, args)
     identify_server(predictor, vis_folder, args)
+    print("AAA")
