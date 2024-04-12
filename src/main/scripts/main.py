@@ -21,6 +21,7 @@ class MainNode():
 
     def Rp_callback(self,msg):
         #rospy.loginfo("Robot's Position: %s" % str(msg.pose))
+         
         global x,y
         x = msg.pose.position.x
         y = msg.pose.position.y
