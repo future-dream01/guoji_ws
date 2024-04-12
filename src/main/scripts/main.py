@@ -39,6 +39,7 @@ class MainNode():
         y = msg.pose.position.y         # 无人机当前的y位置
         pass
 
+
     def yolox_callback(self,msg):       # 识别数据订阅函数
         global obj,x_p,y_p
         obj=msg.data.                   # 识别出的物体类别
