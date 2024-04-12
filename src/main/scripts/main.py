@@ -34,14 +34,11 @@ class MainNode():
             self.yolox_pub(2)
 
     def rplidar_callback(self,msg):     # 激光雷达位姿数据订阅函数
-
-    def Rp_callback(self,msg):
-        #rospy.loginfo("Robot's Position: %s" % str(msg.pose))
-         
         global x,y
         x = msg.pose.position.x         # 无人机当前的x位置
         y = msg.pose.position.y         # 无人机当前的y位置
         pass
+
 
     def yolox_callback(self,msg):       # 识别数据订阅函数
         global obj,x_p,y_p
