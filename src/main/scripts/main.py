@@ -2,11 +2,19 @@
 # 无人机飞行主程序节点
 
 import rospy
+import Jetson.GPIO as GPIO
+import time
 from std_msgs.msg import UInt8
 from geometry_msgs.msg import PoseStamped
 
 x,y=0,0                   # 初始化位置x，y
 obj,x_p,y_p=0,0,0         # 初始化目标位置偏移x_p、y_p
+
+# 初始化GPIO引脚
+GPIO.setmode(GPIO.BOARD)
+GPIO.setup(18,GPIO.OUT,initial=GPIO.LOW)
+GPIO.setup(19,GPIO.OUT,initial=GPIO.LOW)
+GPIO.setup(20,GPIO.OUT,initial=GPIO.LOW)
 
 class MainNode():
     def __init__(self):
@@ -46,6 +54,15 @@ class MainNode():
         x_p=msg.data.                   # 物体的x偏移量
         y_p=msg.data.                   # 物体的y偏移量
 
+def ryg_lights(light):
+    if light==1:                        # 黄灯亮，代表雷达有数据出来，位姿数据正常
+        GPIO.output(18,GPIO.HIGH)
+    if light==2:                        # 绿灯亮，代表所有节点启动完毕，可以起飞
+        GPIO.output(19,GPIO.HIGH)
+    if light==3:                        # 红灯亮，代表识别有数据传出
+        GPIO.output(20,GPIO.HIGH)
+
+
 # 主函数
 def main():
     mainnode=MainNode()
@@ -58,9 +75,3 @@ def main():
 if __name__=='__main__':
     main()
 
-111
-111
-111
-111
-111
-111
