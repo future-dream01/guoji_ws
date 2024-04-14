@@ -9,7 +9,7 @@ from std_msgs.msg import String
 def target_identify():
     """向服务器发出信号并接收识别结果"""
     # ROS节点初始化
-    rospy.init_node("target_identify")
+    rospy.init_node("identify_control")
 
     #发现identify_server服务，创建客户端，连接服务
     rospy.wait_for_service('identify_server')
@@ -28,6 +28,3 @@ if __name__ == "__main__":
     # t1 = time.perf_counter()
     response = target_identify()
     # t2 = time.perf_counter()
-
-
-
