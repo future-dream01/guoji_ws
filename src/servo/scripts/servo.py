@@ -41,3 +41,5 @@ if __name__=='__main__':
             delivery()
             y==0
         servo_node.rate.sleep() # 休眠，防止过多占用CPU资源
+        ###########
+        #####
