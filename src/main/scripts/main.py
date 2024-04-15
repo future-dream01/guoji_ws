@@ -4,9 +4,12 @@
 import rospy
 import time
 import Jetson.GPIO as GPIO
+from main.msg import Result
 from std_msgs.msg import UInt8
 from mavros_msgs.srv import SetMode
-from geometry_msgs.msg import PoseStamped,Twist,State
+from mavros_msgs.msg import State
+from geometry_msgs.msg import PoseStamped,Twist
+
 
 # 主节点类
 class MainNode():
@@ -33,12 +36,14 @@ class MainNode():
         if msg.armed:
             rospy.loginfo("无人机已正常起飞")
             self.state=True
+        else:
+            rospy.loginfo("无人机未起飞")
 
     def set_mode(self,mode):                                                                                # 设置无人机飞行模式
         try:
             response=self.set_mode_client(custom_mode=mode)
             if response.mode_sent:
-                rospy.loginfo("Mode change to GUIDED successful")
+                rospy.loginfo("Mode change to OFFBOARD successful")
             else:
                 rospy.loginfo("Mode change failed")
         except rospy.ServiceException as e:
@@ -48,14 +53,11 @@ class MainNode():
         rospy.loginfo("now we catch the target!")
         self.servo_pub.publish(a)
 
-    def shibie_pub(self,a):                     # 识别状态发布函数
-        if a==0:
-            for i in range(0,10):
-                self.yolox_pub(0)
-        if a==1:
+    def shibie_pub(self,a):                      # 识别状态发布函数
+        if a==1:                                 # 1代表开始识别
             for i in range(0,10):
                 self.yolox_pub(1)
-        if a==2:
+        if a==2:                                 # 2代表结束识别
             for i in range(0,10):
                 self.yolox_pub(2)
 
@@ -64,47 +66,44 @@ class MainNode():
         self.y = msg.pose.position.y             # 无人机当前的y位置
         self.own_position_pub.publish(msg)       # 向飞控发布坐标信息
 
-    def send_aim_posion(self,x,y,z):    # 发送目标点位置信息
+    def send_aim_posion(self,x,y,z):             # 发送目标点位置信息
         position=PoseStamped()
-        position.header.stamp.rospy.Time.now()
+        position.header.stamp=rospy.Time.now()
         position.header.frame_id="map"
-        position.pose.position.x=x
-        position.pose.position.y=y
-        position.pose.position.z=z
-        self.aim_position_pub.publisb(position)
+        position.pose.position.x=x               # 目标点的x坐标
+        position.pose.position.y=y               # 目标点的y坐标
+        position.pose.position.z=z               # 目标点的z坐标
+        self.aim_position_pub.publish(position)
 
-    def yolox_callback(self,msg):      # 识别数据订阅函数
-        obj=msg.data.                   # 识别出的物体类别
-        x_p=msg.data.                   # 物体的x偏移量
-        y_p=msg.data.                   # 物体的y偏移量
+    def yolox_callback(self,msg):                # 识别数据订阅函数
+        obj=msg.data.target                      # 识别出的物体类别
+        x_p=msg.data.x_p                         # 物体的x偏移量
+        y_p=msg.data.y_p                         # 物体的y偏移量
 
 # 信号灯类
 class Light():
     def __init__(self):
         GPIO.setmode(GPIO.BOARD)
-        GPIO.setup(18,GPIO.OUT,initial=GPIO.LOW)
-        GPIO.setup(19,GPIO.OUT,initial=GPIO.LOW)
-        GPIO.setup(20,GPIO.OUT,initial=GPIO.LOW)
+        GPIO.setup(24,GPIO.OUT,initial=GPIO.LOW)
+        GPIO.setup(26,GPIO.OUT,initial=GPIO.LOW)
+        GPIO.setup(28,GPIO.OUT,initial=GPIO.LOW)
 
     def ryg_lights(self,light):             # 信号灯指示函数
         if light==1:                        # 黄灯亮，代表雷达有数据出来，位姿数据正常
-            GPIO.output(18,GPIO.HIGH)
+            GPIO.output(24,GPIO.HIGH)
         if light==2:                        # 绿灯亮，代表所有节点启动完毕，可以起飞
-            GPIO.output(19,GPIO.HIGH)
+            GPIO.output(26,GPIO.HIGH)
         if light==3:                        # 红灯亮，代表识别有数据传出
-            GPIO.output(20,GPIO.HIGH)
-
+            GPIO.output(28,GPIO.HIGH)
 
 # 主函数
 def main():
     mainnode=MainNode()
-    light=Light()
+    #light=Light()
+    mainnode.set_mode("OFFBOARD")
     while not rospy.is_shutdown(): 
+        #mainnode.send_aim_posion(100,100,10)
         pass
-
-
 
 if __name__=='__main__':
     main()
-    1111111
-
