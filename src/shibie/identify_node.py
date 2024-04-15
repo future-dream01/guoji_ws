@@ -4,35 +4,15 @@
 # import threading
 import time
 from demo import *
-from shibie.msg import Result
+from shibie.msg import Yolox_action, Yolox_data
 # from std_msgs.msg import String
 import rospy
 import cv2
 from loguru import logger
 
-"""
-def identifyCallback(call):
-    # 回调函数
-    # 显示请求数据
-    rospy.loginfo("Publish command!")
 
-    # 调用demo.py识别图片
-    obj_response, x_p, y_p = main(predictor, vis_folder, args)
-    # print(f"target:{obj_response}\n x_pos:{x_p}\n y_pos:{y_p}")
-    
-    # 创建发布者并发布数据
-    result_pub = rospy.Publisher('identify_result', Result, queue_size=10)
-"""
-
-
-def identify_server(predictor, vis_folder, args):
-    """接收客户端信号，提供识别服务"""
-    # 初始化ROS节点
-    rospy.init_node('identify_server')
-
-    # 创建针对识别结果数据信息的发布者节点
-    identify_info_pub = rospy.Publisher('identify_info', Result, queue_size=10)
-
+def pre_ide_func():
+    # 准备识别
     current_time = time.localtime()
     cap = cv2.VideoCapture(args.path if args.demo == "video" else args.camid)
     width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)  # float
@@ -51,13 +31,23 @@ def identify_server(predictor, vis_folder, args):
         vid_writer = cv2.VideoWriter(
             save_path, cv2.VideoWriter_fourcc(*"mp4v"), fps, (int(width), int(height))
         )
+    return cap, vid_writer
 
-    judge = True
-    while judge:
+
+
+def identifyCallback(call):
+    # 回调函数
+    identify_data_pub = rospy.Publisher('yolox_back', Yolox_data, queue_size = 10)
+    data_back = Yolox_data()
+
+    cap, vid_writer = pre_ide_func()
+
+    while call.action:
         ret_val, frame = cap.read()
         if ret_val:
             outputs, img_info = predictor.inference(frame)
             result_frame = predictor.visual(outputs[0], img_info, predictor.confthre)
+            print(outputs)
             if args.save_result:
                 vid_writer.write(result_frame)
             else:
@@ -68,15 +58,25 @@ def identify_server(predictor, vis_folder, args):
                 break
         else:
             break
-        identify_result = Result()
-        identify_result.target = obj
-        identify_result.x_p = x_p
-        identify_result.y_p = y_p
+        data_back.target = obj
+        data_back.x_p = x_p
+        data_back.y_p = y_p
+        identify_data_pub.publish(data_back)
+
+
+def identify_processor(predictor, vis_folder, args):
+    """接收客户端信号，提供识别服务"""
+    # 初始化ROS节点
+    rospy.init_node('identify_server')
+
+    # 创建针对控制节点的订阅者
+    rospy.Subscriber('yolox_call', Yolox_action, identifyCallback)
+    rospy.spin()
 
 
 if __name__ == "__main__":
     args = make_parser().parse_args()
     exp = get_exp(args.exp_file, args.name)
     predictor, vis_folder = pre_main(exp, args)
-    identify_server(predictor, vis_folder, args)
+    identify_processor(predictor, vis_folder, args)
     # print("AAA")
