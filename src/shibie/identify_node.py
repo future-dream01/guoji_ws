@@ -4,7 +4,7 @@
 # import threading
 import time
 from demo import *
-from shibie.msg import Result
+from shibie.msg import Yolox_action, Yolox_data
 # from std_msgs.msg import String
 import rospy
 import cv2
@@ -25,7 +25,7 @@ def identifyCallback(call):
 """
 
 
-def identify_server(predictor, vis_folder, args):
+def identify_processor(predictor, vis_folder, args):
     """接收客户端信号，提供识别服务"""
     # 初始化ROS节点
     rospy.init_node('identify_server')

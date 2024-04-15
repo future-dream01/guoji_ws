@@ -2,7 +2,7 @@
 
 import rospy
 import time
-from shibie.srv import Identify, IdentifyRequest
+from shibie.srv import Yolox_action, Yolox_data
 from std_msgs.msg import String
 
 
