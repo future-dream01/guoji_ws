@@ -3,6 +3,7 @@
 
 import rospy
 import time
+import serial                                           # UART串口通讯模块
 import Jetson.GPIO as GPIO
 from main.msg import Result
 from std_msgs.msg import UInt8
@@ -10,7 +11,10 @@ from mavros_msgs.srv import SetMode
 from mavros_msgs.msg import State
 from geometry_msgs.msg import PoseStamped,Twist
 
-
+port='/dev/ttyTHS1'
+baudrate=9600
+position=[[3,2],[2,4],[4,1],[2,3],[4,4]]               # 靶标所在点
+i=0                                                    # 已遍历点数
 # 主节点类
 class MainNode():
     def __init__(self):
@@ -27,7 +31,8 @@ class MainNode():
         self.yolox_sub=rospy.Subscriber("yolox_data",PoseStamped,self.yolox_callback)                       # 识别结果订阅者
         self.own_position_pub=rospy.Publisher('/mavros/vision_pose/pose',PoseStamped,queue_size=10)         # 当前位置发布者
         self.aim_position_pub=rospy.Publisher('/mavros/setpoint_position/local',PoseStamped,queue_size=10)  # 飞行目标点发布者
-        self.state_sub=rospy.Subscriber('/mavros/state',State,self.state_callback)                               # 无人机状态订阅者
+        self.shibie_move_pub=rospy.Publisher('/mavros/setpoint_position/local',PoseStamped,queue_size=10)   # 识别到目标之后调整位置
+        self.state_sub=rospy.Subscriber('/mavros/state',State,self.state_callback)                          # 无人机状态订阅者
         # 服务
         rospy.wait_for_service('/mavros/set_mode')                                                          # 确保服务可用
         self.set_mode_client = rospy.ServiceProxy('/mavros/set_mode', SetMode)                              # 飞行模式切换服务代理
@@ -49,10 +54,6 @@ class MainNode():
         except rospy.ServiceException as e:
             rospy.logerr("Service call failed: %s" % e)
             
-    def servo_start_pub(self,a):
-        rospy.loginfo("now we catch the target!")
-        self.servo_pub.publish(a)
-
     def shibie_pub(self,a):                      # 识别状态发布函数
         if a==1:                                 # 1代表开始识别
             for i in range(0,10):
@@ -66,14 +67,26 @@ class MainNode():
         self.y = msg.pose.position.y             # 无人机当前的y位置
         self.own_position_pub.publish(msg)       # 向飞控发布坐标信息
 
+    def shibie_move_fix(self,z):                 # 发现目标之后开始调整定位，需给定高度
+        position=PoseStamped()
+        while (-70<=(self.x_p)<=70) and(70<=(self.y_p)<=70) :
+            position.header.stamp=rospy.Time.now()
+            position.header.frame_id="map"
+            position.pose.position.x=self.x+self.x_p               # 目标点的x坐标
+            position.pose.position.y=self.y+self.y_p             # 目标点的y坐标
+            position.pose.position.z=z               # 目标点的z坐标
+            self.aim_position_pub.publish(position)
+
+        
     def send_aim_posion(self,x,y,z):             # 发送目标点位置信息
         position=PoseStamped()
-        position.header.stamp=rospy.Time.now()
-        position.header.frame_id="map"
-        position.pose.position.x=x               # 目标点的x坐标
-        position.pose.position.y=y               # 目标点的y坐标
-        position.pose.position.z=z               # 目标点的z坐标
-        self.aim_position_pub.publish(position)
+        while (-0.1<=(self.x-x)<=0.1) and(-0.1<=(self.y-y)<=0.1) :
+            position.header.stamp=rospy.Time.now()
+            position.header.frame_id="map"
+            position.pose.position.x=x               # 目标点的x坐标
+            position.pose.position.y=y               # 目标点的y坐标
+            position.pose.position.z=z               # 目标点的z坐标
+            self.aim_position_pub.publish(position)
 
     def yolox_callback(self,msg):                # 识别数据订阅函数
         obj=msg.data.target                      # 识别出的物体类别
@@ -96,13 +109,48 @@ class Light():
         if light==3:                        # 红灯亮，代表识别有数据传出
             GPIO.output(28,GPIO.HIGH)
 
+# 串口通信类
+class UART(serial.Serial):                         # 串口通讯类
+    def __init__(self):
+        super(UART, self).__init__()        # 父类初始化
+
+    def servo_start(self,a):                # 舵机开始运动,a=1:投第一个货物；a=2:投第二个货物;a=3:投第三个货物
+        for i in range(0,10):               
+            self.write(a)
+
+
+
+main_node=MainNode()
+servo=UART(port, baudrate, timeout=1)
+light=Light()
+
+def shibie_toudi():
+    global i
+    if main_node.obj==1 or main_node.obj==2 or main_node.obj==5 :
+        main_node.shibie_move_fix(1)
+        servo.servo_start(1)
+        time.sleep(2)
+        i+=1
+    if main_node.obj==0:
+        pass
+    else:
+        i+=1
+        
 # 主函数
 def main():
-    mainnode=MainNode()
-    #light=Light()
-    mainnode.set_mode("OFFBOARD")
     while not rospy.is_shutdown(): 
-        #mainnode.send_aim_posion(100,100,10)
+        if main_node.state:
+            main_node.set_mode("OFFBOARD")
+            time.sleep(1)
+            main_node.send_aim_posion(2,3,1)                                    # 第一个点
+            main_node.shibie_pub(1)                                             # 开始识别
+            time.sleep(3)
+            shibie_toudi()
+            main_node.send_aim_posion(3,4,1)
+
+
+
+
         pass
 
 if __name__=='__main__':
