@@ -66,28 +66,28 @@ include shibie/CMakeFiles/shibie_generate_messages_eus.dir/compiler_depend.make
 # Include the progress variables for this target.
 include shibie/CMakeFiles/shibie_generate_messages_eus.dir/progress.make
 
-shibie/CMakeFiles/shibie_generate_messages_eus: /home/jetson/github/guoji_ws/devel/share/roseus/ros/shibie/msg/Result.l
-shibie/CMakeFiles/shibie_generate_messages_eus: /home/jetson/github/guoji_ws/devel/share/roseus/ros/shibie/srv/Identify.l
+shibie/CMakeFiles/shibie_generate_messages_eus: /home/jetson/github/guoji_ws/devel/share/roseus/ros/shibie/msg/Yolox_action.l
+shibie/CMakeFiles/shibie_generate_messages_eus: /home/jetson/github/guoji_ws/devel/share/roseus/ros/shibie/msg/Yolox_data.l
 shibie/CMakeFiles/shibie_generate_messages_eus: /home/jetson/github/guoji_ws/devel/share/roseus/ros/shibie/manifest.l
 
 /home/jetson/github/guoji_ws/devel/share/roseus/ros/shibie/manifest.l: /opt/ros/noetic/lib/geneus/gen_eus.py
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/jetson/github/guoji_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating EusLisp manifest code for shibie"
 	cd /home/jetson/github/guoji_ws/build/shibie && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/geneus/cmake/../../../lib/geneus/gen_eus.py -m -o /home/jetson/github/guoji_ws/devel/share/roseus/ros/shibie shibie std_msgs
 
-/home/jetson/github/guoji_ws/devel/share/roseus/ros/shibie/msg/Result.l: /opt/ros/noetic/lib/geneus/gen_eus.py
-/home/jetson/github/guoji_ws/devel/share/roseus/ros/shibie/msg/Result.l: /home/jetson/github/guoji_ws/src/shibie/msg/Result.msg
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/jetson/github/guoji_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Generating EusLisp code from shibie/Result.msg"
-	cd /home/jetson/github/guoji_ws/build/shibie && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/geneus/cmake/../../../lib/geneus/gen_eus.py /home/jetson/github/guoji_ws/src/shibie/msg/Result.msg -Ishibie:/home/jetson/github/guoji_ws/src/shibie/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p shibie -o /home/jetson/github/guoji_ws/devel/share/roseus/ros/shibie/msg
+/home/jetson/github/guoji_ws/devel/share/roseus/ros/shibie/msg/Yolox_action.l: /opt/ros/noetic/lib/geneus/gen_eus.py
+/home/jetson/github/guoji_ws/devel/share/roseus/ros/shibie/msg/Yolox_action.l: /home/jetson/github/guoji_ws/src/shibie/msg/Yolox_action.msg
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/jetson/github/guoji_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Generating EusLisp code from shibie/Yolox_action.msg"
+	cd /home/jetson/github/guoji_ws/build/shibie && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/geneus/cmake/../../../lib/geneus/gen_eus.py /home/jetson/github/guoji_ws/src/shibie/msg/Yolox_action.msg -Ishibie:/home/jetson/github/guoji_ws/src/shibie/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p shibie -o /home/jetson/github/guoji_ws/devel/share/roseus/ros/shibie/msg
 
-/home/jetson/github/guoji_ws/devel/share/roseus/ros/shibie/srv/Identify.l: /opt/ros/noetic/lib/geneus/gen_eus.py
-/home/jetson/github/guoji_ws/devel/share/roseus/ros/shibie/srv/Identify.l: /home/jetson/github/guoji_ws/src/shibie/srv/Identify.srv
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/jetson/github/guoji_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Generating EusLisp code from shibie/Identify.srv"
-	cd /home/jetson/github/guoji_ws/build/shibie && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/geneus/cmake/../../../lib/geneus/gen_eus.py /home/jetson/github/guoji_ws/src/shibie/srv/Identify.srv -Ishibie:/home/jetson/github/guoji_ws/src/shibie/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p shibie -o /home/jetson/github/guoji_ws/devel/share/roseus/ros/shibie/srv
+/home/jetson/github/guoji_ws/devel/share/roseus/ros/shibie/msg/Yolox_data.l: /opt/ros/noetic/lib/geneus/gen_eus.py
+/home/jetson/github/guoji_ws/devel/share/roseus/ros/shibie/msg/Yolox_data.l: /home/jetson/github/guoji_ws/src/shibie/msg/Yolox_data.msg
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/jetson/github/guoji_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_3) "Generating EusLisp code from shibie/Yolox_data.msg"
+	cd /home/jetson/github/guoji_ws/build/shibie && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/geneus/cmake/../../../lib/geneus/gen_eus.py /home/jetson/github/guoji_ws/src/shibie/msg/Yolox_data.msg -Ishibie:/home/jetson/github/guoji_ws/src/shibie/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p shibie -o /home/jetson/github/guoji_ws/devel/share/roseus/ros/shibie/msg
 
 shibie_generate_messages_eus: shibie/CMakeFiles/shibie_generate_messages_eus
 shibie_generate_messages_eus: /home/jetson/github/guoji_ws/devel/share/roseus/ros/shibie/manifest.l
-shibie_generate_messages_eus: /home/jetson/github/guoji_ws/devel/share/roseus/ros/shibie/msg/Result.l
-shibie_generate_messages_eus: /home/jetson/github/guoji_ws/devel/share/roseus/ros/shibie/srv/Identify.l
+shibie_generate_messages_eus: /home/jetson/github/guoji_ws/devel/share/roseus/ros/shibie/msg/Yolox_action.l
+shibie_generate_messages_eus: /home/jetson/github/guoji_ws/devel/share/roseus/ros/shibie/msg/Yolox_data.l
 shibie_generate_messages_eus: shibie/CMakeFiles/shibie_generate_messages_eus.dir/build.make
 .PHONY : shibie_generate_messages_eus
 

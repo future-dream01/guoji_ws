@@ -37,6 +37,7 @@ def pre_ide_func():
 
 def identifyCallback(call):
     # 回调函数
+    print("Get!")
     identify_data_pub = rospy.Publisher('yolox_back', Yolox_data, queue_size = 10)
     data_back = Yolox_data()
 
@@ -67,7 +68,7 @@ def identifyCallback(call):
 def identify_processor(predictor, vis_folder, args):
     """接收客户端信号，提供识别服务"""
     # 初始化ROS节点
-    rospy.init_node('identify_server')
+    rospy.init_node('identify_node')
 
     # 创建针对控制节点的订阅者
     rospy.Subscriber('yolox_call', Yolox_action, identifyCallback)

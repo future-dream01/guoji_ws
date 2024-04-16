@@ -1,7 +1,9 @@
 (cl:defpackage shibie-msg
   (:use )
   (:export
-   "<RESULT>"
-   "RESULT"
+   "<YOLOX_ACTION>"
+   "YOLOX_ACTION"
+   "<YOLOX_DATA>"
+   "YOLOX_DATA"
   ))
 

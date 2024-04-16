@@ -1,6 +1,6 @@
 # generated from genmsg/cmake/pkg-genmsg.cmake.em
 
-message(STATUS "shibie: 1 messages, 1 services")
+message(STATUS "shibie: 2 messages, 0 services")
 
 set(MSG_I_FLAGS "-Ishibie:/home/jetson/github/guoji_ws/src/shibie/msg;-Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg")
 
@@ -17,14 +17,14 @@ add_custom_target(shibie_generate_messages ALL)
 
 
 
-get_filename_component(_filename "/home/jetson/github/guoji_ws/src/shibie/msg/Result.msg" NAME_WE)
+get_filename_component(_filename "/home/jetson/github/guoji_ws/src/shibie/msg/Yolox_action.msg" NAME_WE)
 add_custom_target(_shibie_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "shibie" "/home/jetson/github/guoji_ws/src/shibie/msg/Result.msg" ""
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "shibie" "/home/jetson/github/guoji_ws/src/shibie/msg/Yolox_action.msg" ""
 )
 
-get_filename_component(_filename "/home/jetson/github/guoji_ws/src/shibie/srv/Identify.srv" NAME_WE)
+get_filename_component(_filename "/home/jetson/github/guoji_ws/src/shibie/msg/Yolox_data.msg" NAME_WE)
 add_custom_target(_shibie_generate_messages_check_deps_${_filename}
-  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "shibie" "/home/jetson/github/guoji_ws/src/shibie/srv/Identify.srv" ""
+  COMMAND ${CATKIN_ENV} ${PYTHON_EXECUTABLE} ${GENMSG_CHECK_DEPS_SCRIPT} "shibie" "/home/jetson/github/guoji_ws/src/shibie/msg/Yolox_data.msg" ""
 )
 
 #
@@ -34,19 +34,19 @@ add_custom_target(_shibie_generate_messages_check_deps_${_filename}
 ### Section generating for lang: gencpp
 ### Generating Messages
 _generate_msg_cpp(shibie
-  "/home/jetson/github/guoji_ws/src/shibie/msg/Result.msg"
+  "/home/jetson/github/guoji_ws/src/shibie/msg/Yolox_action.msg"
+  "${MSG_I_FLAGS}"
+  ""
+  ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/shibie
+)
+_generate_msg_cpp(shibie
+  "/home/jetson/github/guoji_ws/src/shibie/msg/Yolox_data.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/shibie
 )
 
 ### Generating Services
-_generate_srv_cpp(shibie
-  "/home/jetson/github/guoji_ws/src/shibie/srv/Identify.srv"
-  "${MSG_I_FLAGS}"
-  ""
-  ${CATKIN_DEVEL_PREFIX}/${gencpp_INSTALL_DIR}/shibie
-)
 
 ### Generating Module File
 _generate_module_cpp(shibie
@@ -60,9 +60,9 @@ add_custom_target(shibie_generate_messages_cpp
 add_dependencies(shibie_generate_messages shibie_generate_messages_cpp)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/jetson/github/guoji_ws/src/shibie/msg/Result.msg" NAME_WE)
+get_filename_component(_filename "/home/jetson/github/guoji_ws/src/shibie/msg/Yolox_action.msg" NAME_WE)
 add_dependencies(shibie_generate_messages_cpp _shibie_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/jetson/github/guoji_ws/src/shibie/srv/Identify.srv" NAME_WE)
+get_filename_component(_filename "/home/jetson/github/guoji_ws/src/shibie/msg/Yolox_data.msg" NAME_WE)
 add_dependencies(shibie_generate_messages_cpp _shibie_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -75,19 +75,19 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS shibie_generate_messages_cpp)
 ### Section generating for lang: geneus
 ### Generating Messages
 _generate_msg_eus(shibie
-  "/home/jetson/github/guoji_ws/src/shibie/msg/Result.msg"
+  "/home/jetson/github/guoji_ws/src/shibie/msg/Yolox_action.msg"
+  "${MSG_I_FLAGS}"
+  ""
+  ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/shibie
+)
+_generate_msg_eus(shibie
+  "/home/jetson/github/guoji_ws/src/shibie/msg/Yolox_data.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/shibie
 )
 
 ### Generating Services
-_generate_srv_eus(shibie
-  "/home/jetson/github/guoji_ws/src/shibie/srv/Identify.srv"
-  "${MSG_I_FLAGS}"
-  ""
-  ${CATKIN_DEVEL_PREFIX}/${geneus_INSTALL_DIR}/shibie
-)
 
 ### Generating Module File
 _generate_module_eus(shibie
@@ -101,9 +101,9 @@ add_custom_target(shibie_generate_messages_eus
 add_dependencies(shibie_generate_messages shibie_generate_messages_eus)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/jetson/github/guoji_ws/src/shibie/msg/Result.msg" NAME_WE)
+get_filename_component(_filename "/home/jetson/github/guoji_ws/src/shibie/msg/Yolox_action.msg" NAME_WE)
 add_dependencies(shibie_generate_messages_eus _shibie_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/jetson/github/guoji_ws/src/shibie/srv/Identify.srv" NAME_WE)
+get_filename_component(_filename "/home/jetson/github/guoji_ws/src/shibie/msg/Yolox_data.msg" NAME_WE)
 add_dependencies(shibie_generate_messages_eus _shibie_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -116,19 +116,19 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS shibie_generate_messages_eus)
 ### Section generating for lang: genlisp
 ### Generating Messages
 _generate_msg_lisp(shibie
-  "/home/jetson/github/guoji_ws/src/shibie/msg/Result.msg"
+  "/home/jetson/github/guoji_ws/src/shibie/msg/Yolox_action.msg"
+  "${MSG_I_FLAGS}"
+  ""
+  ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/shibie
+)
+_generate_msg_lisp(shibie
+  "/home/jetson/github/guoji_ws/src/shibie/msg/Yolox_data.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/shibie
 )
 
 ### Generating Services
-_generate_srv_lisp(shibie
-  "/home/jetson/github/guoji_ws/src/shibie/srv/Identify.srv"
-  "${MSG_I_FLAGS}"
-  ""
-  ${CATKIN_DEVEL_PREFIX}/${genlisp_INSTALL_DIR}/shibie
-)
 
 ### Generating Module File
 _generate_module_lisp(shibie
@@ -142,9 +142,9 @@ add_custom_target(shibie_generate_messages_lisp
 add_dependencies(shibie_generate_messages shibie_generate_messages_lisp)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/jetson/github/guoji_ws/src/shibie/msg/Result.msg" NAME_WE)
+get_filename_component(_filename "/home/jetson/github/guoji_ws/src/shibie/msg/Yolox_action.msg" NAME_WE)
 add_dependencies(shibie_generate_messages_lisp _shibie_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/jetson/github/guoji_ws/src/shibie/srv/Identify.srv" NAME_WE)
+get_filename_component(_filename "/home/jetson/github/guoji_ws/src/shibie/msg/Yolox_data.msg" NAME_WE)
 add_dependencies(shibie_generate_messages_lisp _shibie_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -157,19 +157,19 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS shibie_generate_messages_lisp)
 ### Section generating for lang: gennodejs
 ### Generating Messages
 _generate_msg_nodejs(shibie
-  "/home/jetson/github/guoji_ws/src/shibie/msg/Result.msg"
+  "/home/jetson/github/guoji_ws/src/shibie/msg/Yolox_action.msg"
+  "${MSG_I_FLAGS}"
+  ""
+  ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/shibie
+)
+_generate_msg_nodejs(shibie
+  "/home/jetson/github/guoji_ws/src/shibie/msg/Yolox_data.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/shibie
 )
 
 ### Generating Services
-_generate_srv_nodejs(shibie
-  "/home/jetson/github/guoji_ws/src/shibie/srv/Identify.srv"
-  "${MSG_I_FLAGS}"
-  ""
-  ${CATKIN_DEVEL_PREFIX}/${gennodejs_INSTALL_DIR}/shibie
-)
 
 ### Generating Module File
 _generate_module_nodejs(shibie
@@ -183,9 +183,9 @@ add_custom_target(shibie_generate_messages_nodejs
 add_dependencies(shibie_generate_messages shibie_generate_messages_nodejs)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/jetson/github/guoji_ws/src/shibie/msg/Result.msg" NAME_WE)
+get_filename_component(_filename "/home/jetson/github/guoji_ws/src/shibie/msg/Yolox_action.msg" NAME_WE)
 add_dependencies(shibie_generate_messages_nodejs _shibie_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/jetson/github/guoji_ws/src/shibie/srv/Identify.srv" NAME_WE)
+get_filename_component(_filename "/home/jetson/github/guoji_ws/src/shibie/msg/Yolox_data.msg" NAME_WE)
 add_dependencies(shibie_generate_messages_nodejs _shibie_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility
@@ -198,19 +198,19 @@ list(APPEND ${PROJECT_NAME}_EXPORTED_TARGETS shibie_generate_messages_nodejs)
 ### Section generating for lang: genpy
 ### Generating Messages
 _generate_msg_py(shibie
-  "/home/jetson/github/guoji_ws/src/shibie/msg/Result.msg"
+  "/home/jetson/github/guoji_ws/src/shibie/msg/Yolox_action.msg"
+  "${MSG_I_FLAGS}"
+  ""
+  ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/shibie
+)
+_generate_msg_py(shibie
+  "/home/jetson/github/guoji_ws/src/shibie/msg/Yolox_data.msg"
   "${MSG_I_FLAGS}"
   ""
   ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/shibie
 )
 
 ### Generating Services
-_generate_srv_py(shibie
-  "/home/jetson/github/guoji_ws/src/shibie/srv/Identify.srv"
-  "${MSG_I_FLAGS}"
-  ""
-  ${CATKIN_DEVEL_PREFIX}/${genpy_INSTALL_DIR}/shibie
-)
 
 ### Generating Module File
 _generate_module_py(shibie
@@ -224,9 +224,9 @@ add_custom_target(shibie_generate_messages_py
 add_dependencies(shibie_generate_messages shibie_generate_messages_py)
 
 # add dependencies to all check dependencies targets
-get_filename_component(_filename "/home/jetson/github/guoji_ws/src/shibie/msg/Result.msg" NAME_WE)
+get_filename_component(_filename "/home/jetson/github/guoji_ws/src/shibie/msg/Yolox_action.msg" NAME_WE)
 add_dependencies(shibie_generate_messages_py _shibie_generate_messages_check_deps_${_filename})
-get_filename_component(_filename "/home/jetson/github/guoji_ws/src/shibie/srv/Identify.srv" NAME_WE)
+get_filename_component(_filename "/home/jetson/github/guoji_ws/src/shibie/msg/Yolox_data.msg" NAME_WE)
 add_dependencies(shibie_generate_messages_py _shibie_generate_messages_check_deps_${_filename})
 
 # target for backward compatibility

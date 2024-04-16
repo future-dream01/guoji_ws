@@ -186,32 +186,32 @@ shibie_generate_messages/fast:
 .PHONY : shibie_generate_messages/fast
 
 # Convenience name for target.
-shibie/CMakeFiles/_shibie_generate_messages_check_deps_Result.dir/rule:
-	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 shibie/CMakeFiles/_shibie_generate_messages_check_deps_Result.dir/rule
-.PHONY : shibie/CMakeFiles/_shibie_generate_messages_check_deps_Result.dir/rule
+shibie/CMakeFiles/_shibie_generate_messages_check_deps_Yolox_action.dir/rule:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 shibie/CMakeFiles/_shibie_generate_messages_check_deps_Yolox_action.dir/rule
+.PHONY : shibie/CMakeFiles/_shibie_generate_messages_check_deps_Yolox_action.dir/rule
 
 # Convenience name for target.
-_shibie_generate_messages_check_deps_Result: shibie/CMakeFiles/_shibie_generate_messages_check_deps_Result.dir/rule
-.PHONY : _shibie_generate_messages_check_deps_Result
+_shibie_generate_messages_check_deps_Yolox_action: shibie/CMakeFiles/_shibie_generate_messages_check_deps_Yolox_action.dir/rule
+.PHONY : _shibie_generate_messages_check_deps_Yolox_action
 
 # fast build rule for target.
-_shibie_generate_messages_check_deps_Result/fast:
-	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f shibie/CMakeFiles/_shibie_generate_messages_check_deps_Result.dir/build.make shibie/CMakeFiles/_shibie_generate_messages_check_deps_Result.dir/build
-.PHONY : _shibie_generate_messages_check_deps_Result/fast
+_shibie_generate_messages_check_deps_Yolox_action/fast:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f shibie/CMakeFiles/_shibie_generate_messages_check_deps_Yolox_action.dir/build.make shibie/CMakeFiles/_shibie_generate_messages_check_deps_Yolox_action.dir/build
+.PHONY : _shibie_generate_messages_check_deps_Yolox_action/fast
 
 # Convenience name for target.
-shibie/CMakeFiles/_shibie_generate_messages_check_deps_Identify.dir/rule:
-	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 shibie/CMakeFiles/_shibie_generate_messages_check_deps_Identify.dir/rule
-.PHONY : shibie/CMakeFiles/_shibie_generate_messages_check_deps_Identify.dir/rule
+shibie/CMakeFiles/_shibie_generate_messages_check_deps_Yolox_data.dir/rule:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 shibie/CMakeFiles/_shibie_generate_messages_check_deps_Yolox_data.dir/rule
+.PHONY : shibie/CMakeFiles/_shibie_generate_messages_check_deps_Yolox_data.dir/rule
 
 # Convenience name for target.
-_shibie_generate_messages_check_deps_Identify: shibie/CMakeFiles/_shibie_generate_messages_check_deps_Identify.dir/rule
-.PHONY : _shibie_generate_messages_check_deps_Identify
+_shibie_generate_messages_check_deps_Yolox_data: shibie/CMakeFiles/_shibie_generate_messages_check_deps_Yolox_data.dir/rule
+.PHONY : _shibie_generate_messages_check_deps_Yolox_data
 
 # fast build rule for target.
-_shibie_generate_messages_check_deps_Identify/fast:
-	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f shibie/CMakeFiles/_shibie_generate_messages_check_deps_Identify.dir/build.make shibie/CMakeFiles/_shibie_generate_messages_check_deps_Identify.dir/build
-.PHONY : _shibie_generate_messages_check_deps_Identify/fast
+_shibie_generate_messages_check_deps_Yolox_data/fast:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f shibie/CMakeFiles/_shibie_generate_messages_check_deps_Yolox_data.dir/build.make shibie/CMakeFiles/_shibie_generate_messages_check_deps_Yolox_data.dir/build
+.PHONY : _shibie_generate_messages_check_deps_Yolox_data/fast
 
 # Convenience name for target.
 shibie/CMakeFiles/shibie_generate_messages_cpp.dir/rule:
@@ -366,8 +366,8 @@ help:
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... test"
-	@echo "... _shibie_generate_messages_check_deps_Identify"
-	@echo "... _shibie_generate_messages_check_deps_Result"
+	@echo "... _shibie_generate_messages_check_deps_Yolox_action"
+	@echo "... _shibie_generate_messages_check_deps_Yolox_data"
 	@echo "... shibie_gencpp"
 	@echo "... shibie_generate_messages"
 	@echo "... shibie_generate_messages_cpp"

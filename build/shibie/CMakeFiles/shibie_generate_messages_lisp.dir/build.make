@@ -66,22 +66,22 @@ include shibie/CMakeFiles/shibie_generate_messages_lisp.dir/compiler_depend.make
 # Include the progress variables for this target.
 include shibie/CMakeFiles/shibie_generate_messages_lisp.dir/progress.make
 
-shibie/CMakeFiles/shibie_generate_messages_lisp: /home/jetson/github/guoji_ws/devel/share/common-lisp/ros/shibie/msg/Result.lisp
-shibie/CMakeFiles/shibie_generate_messages_lisp: /home/jetson/github/guoji_ws/devel/share/common-lisp/ros/shibie/srv/Identify.lisp
+shibie/CMakeFiles/shibie_generate_messages_lisp: /home/jetson/github/guoji_ws/devel/share/common-lisp/ros/shibie/msg/Yolox_action.lisp
+shibie/CMakeFiles/shibie_generate_messages_lisp: /home/jetson/github/guoji_ws/devel/share/common-lisp/ros/shibie/msg/Yolox_data.lisp
 
-/home/jetson/github/guoji_ws/devel/share/common-lisp/ros/shibie/msg/Result.lisp: /opt/ros/noetic/lib/genlisp/gen_lisp.py
-/home/jetson/github/guoji_ws/devel/share/common-lisp/ros/shibie/msg/Result.lisp: /home/jetson/github/guoji_ws/src/shibie/msg/Result.msg
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/jetson/github/guoji_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating Lisp code from shibie/Result.msg"
-	cd /home/jetson/github/guoji_ws/build/shibie && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/jetson/github/guoji_ws/src/shibie/msg/Result.msg -Ishibie:/home/jetson/github/guoji_ws/src/shibie/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p shibie -o /home/jetson/github/guoji_ws/devel/share/common-lisp/ros/shibie/msg
+/home/jetson/github/guoji_ws/devel/share/common-lisp/ros/shibie/msg/Yolox_action.lisp: /opt/ros/noetic/lib/genlisp/gen_lisp.py
+/home/jetson/github/guoji_ws/devel/share/common-lisp/ros/shibie/msg/Yolox_action.lisp: /home/jetson/github/guoji_ws/src/shibie/msg/Yolox_action.msg
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/jetson/github/guoji_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating Lisp code from shibie/Yolox_action.msg"
+	cd /home/jetson/github/guoji_ws/build/shibie && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/jetson/github/guoji_ws/src/shibie/msg/Yolox_action.msg -Ishibie:/home/jetson/github/guoji_ws/src/shibie/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p shibie -o /home/jetson/github/guoji_ws/devel/share/common-lisp/ros/shibie/msg
 
-/home/jetson/github/guoji_ws/devel/share/common-lisp/ros/shibie/srv/Identify.lisp: /opt/ros/noetic/lib/genlisp/gen_lisp.py
-/home/jetson/github/guoji_ws/devel/share/common-lisp/ros/shibie/srv/Identify.lisp: /home/jetson/github/guoji_ws/src/shibie/srv/Identify.srv
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/jetson/github/guoji_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Generating Lisp code from shibie/Identify.srv"
-	cd /home/jetson/github/guoji_ws/build/shibie && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/jetson/github/guoji_ws/src/shibie/srv/Identify.srv -Ishibie:/home/jetson/github/guoji_ws/src/shibie/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p shibie -o /home/jetson/github/guoji_ws/devel/share/common-lisp/ros/shibie/srv
+/home/jetson/github/guoji_ws/devel/share/common-lisp/ros/shibie/msg/Yolox_data.lisp: /opt/ros/noetic/lib/genlisp/gen_lisp.py
+/home/jetson/github/guoji_ws/devel/share/common-lisp/ros/shibie/msg/Yolox_data.lisp: /home/jetson/github/guoji_ws/src/shibie/msg/Yolox_data.msg
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/jetson/github/guoji_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Generating Lisp code from shibie/Yolox_data.msg"
+	cd /home/jetson/github/guoji_ws/build/shibie && ../catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/genlisp/cmake/../../../lib/genlisp/gen_lisp.py /home/jetson/github/guoji_ws/src/shibie/msg/Yolox_data.msg -Ishibie:/home/jetson/github/guoji_ws/src/shibie/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p shibie -o /home/jetson/github/guoji_ws/devel/share/common-lisp/ros/shibie/msg
 
 shibie_generate_messages_lisp: shibie/CMakeFiles/shibie_generate_messages_lisp
-shibie_generate_messages_lisp: /home/jetson/github/guoji_ws/devel/share/common-lisp/ros/shibie/msg/Result.lisp
-shibie_generate_messages_lisp: /home/jetson/github/guoji_ws/devel/share/common-lisp/ros/shibie/srv/Identify.lisp
+shibie_generate_messages_lisp: /home/jetson/github/guoji_ws/devel/share/common-lisp/ros/shibie/msg/Yolox_action.lisp
+shibie_generate_messages_lisp: /home/jetson/github/guoji_ws/devel/share/common-lisp/ros/shibie/msg/Yolox_data.lisp
 shibie_generate_messages_lisp: shibie/CMakeFiles/shibie_generate_messages_lisp.dir/build.make
 .PHONY : shibie_generate_messages_lisp
 

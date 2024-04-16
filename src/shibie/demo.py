@@ -5,7 +5,7 @@ import argparse
 import os
 import time
 from loguru import logger
-from shibie.srv import Identify, IdentifyResponse
+# from shibie.srv import Identify, IdentifyResponse
 import cv2
 
 import torch

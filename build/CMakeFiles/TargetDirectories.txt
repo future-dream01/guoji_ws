@@ -48,8 +48,8 @@
 /home/jetson/github/guoji_ws/build/servo/CMakeFiles/install/local.dir
 /home/jetson/github/guoji_ws/build/servo/CMakeFiles/install/strip.dir
 /home/jetson/github/guoji_ws/build/shibie/CMakeFiles/shibie_generate_messages.dir
-/home/jetson/github/guoji_ws/build/shibie/CMakeFiles/_shibie_generate_messages_check_deps_Result.dir
-/home/jetson/github/guoji_ws/build/shibie/CMakeFiles/_shibie_generate_messages_check_deps_Identify.dir
+/home/jetson/github/guoji_ws/build/shibie/CMakeFiles/_shibie_generate_messages_check_deps_Yolox_action.dir
+/home/jetson/github/guoji_ws/build/shibie/CMakeFiles/_shibie_generate_messages_check_deps_Yolox_data.dir
 /home/jetson/github/guoji_ws/build/shibie/CMakeFiles/shibie_generate_messages_cpp.dir
 /home/jetson/github/guoji_ws/build/shibie/CMakeFiles/shibie_gencpp.dir
 /home/jetson/github/guoji_ws/build/shibie/CMakeFiles/shibie_generate_messages_eus.dir

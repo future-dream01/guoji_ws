@@ -43,11 +43,11 @@ if(NOT DEFINED CMAKE_OBJDUMP)
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/shibie/srv" TYPE FILE FILES "/home/jetson/github/guoji_ws/src/shibie/srv/Identify.srv")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/shibie/msg" TYPE FILE FILES "/home/jetson/github/guoji_ws/src/shibie/msg/Yolox_action.msg")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/shibie/msg" TYPE FILE FILES "/home/jetson/github/guoji_ws/src/shibie/msg/Result.msg")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/shibie/msg" TYPE FILE FILES "/home/jetson/github/guoji_ws/src/shibie/msg/Yolox_data.msg")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT STREQUAL "Unspecified" OR NOT CMAKE_INSTALL_COMPONENT)

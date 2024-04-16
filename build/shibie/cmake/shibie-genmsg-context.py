@@ -1,7 +1,7 @@
 # generated from genmsg/cmake/pkg-genmsg.context.in
 
-messages_str = "/home/jetson/github/guoji_ws/src/shibie/msg/Result.msg"
-services_str = "/home/jetson/github/guoji_ws/src/shibie/srv/Identify.srv"
+messages_str = "/home/jetson/github/guoji_ws/src/shibie/msg/Yolox_action.msg;/home/jetson/github/guoji_ws/src/shibie/msg/Yolox_data.msg"
+services_str = ""
 pkg_name = "shibie"
 dependencies_str = "std_msgs"
 langs = "gencpp;geneus;genlisp;gennodejs;genpy"

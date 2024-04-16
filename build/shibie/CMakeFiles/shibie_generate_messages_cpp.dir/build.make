@@ -66,25 +66,24 @@ include shibie/CMakeFiles/shibie_generate_messages_cpp.dir/compiler_depend.make
 # Include the progress variables for this target.
 include shibie/CMakeFiles/shibie_generate_messages_cpp.dir/progress.make
 
-shibie/CMakeFiles/shibie_generate_messages_cpp: /home/jetson/github/guoji_ws/devel/include/shibie/Result.h
-shibie/CMakeFiles/shibie_generate_messages_cpp: /home/jetson/github/guoji_ws/devel/include/shibie/Identify.h
+shibie/CMakeFiles/shibie_generate_messages_cpp: /home/jetson/github/guoji_ws/devel/include/shibie/Yolox_action.h
+shibie/CMakeFiles/shibie_generate_messages_cpp: /home/jetson/github/guoji_ws/devel/include/shibie/Yolox_data.h
 
-/home/jetson/github/guoji_ws/devel/include/shibie/Identify.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
-/home/jetson/github/guoji_ws/devel/include/shibie/Identify.h: /home/jetson/github/guoji_ws/src/shibie/srv/Identify.srv
-/home/jetson/github/guoji_ws/devel/include/shibie/Identify.h: /opt/ros/noetic/share/gencpp/msg.h.template
-/home/jetson/github/guoji_ws/devel/include/shibie/Identify.h: /opt/ros/noetic/share/gencpp/srv.h.template
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/jetson/github/guoji_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating C++ code from shibie/Identify.srv"
-	cd /home/jetson/github/guoji_ws/src/shibie && /home/jetson/github/guoji_ws/build/catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/jetson/github/guoji_ws/src/shibie/srv/Identify.srv -Ishibie:/home/jetson/github/guoji_ws/src/shibie/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p shibie -o /home/jetson/github/guoji_ws/devel/include/shibie -e /opt/ros/noetic/share/gencpp/cmake/..
+/home/jetson/github/guoji_ws/devel/include/shibie/Yolox_action.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
+/home/jetson/github/guoji_ws/devel/include/shibie/Yolox_action.h: /home/jetson/github/guoji_ws/src/shibie/msg/Yolox_action.msg
+/home/jetson/github/guoji_ws/devel/include/shibie/Yolox_action.h: /opt/ros/noetic/share/gencpp/msg.h.template
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/jetson/github/guoji_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_1) "Generating C++ code from shibie/Yolox_action.msg"
+	cd /home/jetson/github/guoji_ws/src/shibie && /home/jetson/github/guoji_ws/build/catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/jetson/github/guoji_ws/src/shibie/msg/Yolox_action.msg -Ishibie:/home/jetson/github/guoji_ws/src/shibie/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p shibie -o /home/jetson/github/guoji_ws/devel/include/shibie -e /opt/ros/noetic/share/gencpp/cmake/..
 
-/home/jetson/github/guoji_ws/devel/include/shibie/Result.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
-/home/jetson/github/guoji_ws/devel/include/shibie/Result.h: /home/jetson/github/guoji_ws/src/shibie/msg/Result.msg
-/home/jetson/github/guoji_ws/devel/include/shibie/Result.h: /opt/ros/noetic/share/gencpp/msg.h.template
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/jetson/github/guoji_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Generating C++ code from shibie/Result.msg"
-	cd /home/jetson/github/guoji_ws/src/shibie && /home/jetson/github/guoji_ws/build/catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/jetson/github/guoji_ws/src/shibie/msg/Result.msg -Ishibie:/home/jetson/github/guoji_ws/src/shibie/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p shibie -o /home/jetson/github/guoji_ws/devel/include/shibie -e /opt/ros/noetic/share/gencpp/cmake/..
+/home/jetson/github/guoji_ws/devel/include/shibie/Yolox_data.h: /opt/ros/noetic/lib/gencpp/gen_cpp.py
+/home/jetson/github/guoji_ws/devel/include/shibie/Yolox_data.h: /home/jetson/github/guoji_ws/src/shibie/msg/Yolox_data.msg
+/home/jetson/github/guoji_ws/devel/include/shibie/Yolox_data.h: /opt/ros/noetic/share/gencpp/msg.h.template
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --blue --bold --progress-dir=/home/jetson/github/guoji_ws/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_2) "Generating C++ code from shibie/Yolox_data.msg"
+	cd /home/jetson/github/guoji_ws/src/shibie && /home/jetson/github/guoji_ws/build/catkin_generated/env_cached.sh /usr/bin/python3 /opt/ros/noetic/share/gencpp/cmake/../../../lib/gencpp/gen_cpp.py /home/jetson/github/guoji_ws/src/shibie/msg/Yolox_data.msg -Ishibie:/home/jetson/github/guoji_ws/src/shibie/msg -Istd_msgs:/opt/ros/noetic/share/std_msgs/cmake/../msg -p shibie -o /home/jetson/github/guoji_ws/devel/include/shibie -e /opt/ros/noetic/share/gencpp/cmake/..
 
 shibie_generate_messages_cpp: shibie/CMakeFiles/shibie_generate_messages_cpp
-shibie_generate_messages_cpp: /home/jetson/github/guoji_ws/devel/include/shibie/Identify.h
-shibie_generate_messages_cpp: /home/jetson/github/guoji_ws/devel/include/shibie/Result.h
+shibie_generate_messages_cpp: /home/jetson/github/guoji_ws/devel/include/shibie/Yolox_action.h
+shibie_generate_messages_cpp: /home/jetson/github/guoji_ws/devel/include/shibie/Yolox_data.h
 shibie_generate_messages_cpp: shibie/CMakeFiles/shibie_generate_messages_cpp.dir/build.make
 .PHONY : shibie_generate_messages_cpp
 

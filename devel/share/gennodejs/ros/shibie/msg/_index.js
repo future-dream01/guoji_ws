@@ -1,8 +1,10 @@
 
 "use strict";
 
-let Result = require('./Result.js');
+let Yolox_data = require('./Yolox_data.js');
+let Yolox_action = require('./Yolox_action.js');
 
 module.exports = {
-  Result: Result,
+  Yolox_data: Yolox_data,
+  Yolox_action: Yolox_action,
 };

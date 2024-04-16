@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "/home/jetson/github/guoji_ws/devel/share/gennodejs/ros/shibie/msg/Result.js"
-  "/home/jetson/github/guoji_ws/devel/share/gennodejs/ros/shibie/srv/Identify.js"
+  "/home/jetson/github/guoji_ws/devel/share/gennodejs/ros/shibie/msg/Yolox_action.js"
+  "/home/jetson/github/guoji_ws/devel/share/gennodejs/ros/shibie/msg/Yolox_data.js"
   "CMakeFiles/shibie_generate_messages_nodejs"
 )
 

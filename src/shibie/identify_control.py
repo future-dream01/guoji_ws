@@ -2,12 +2,15 @@
 
 import rospy
 import time
-from shibie.srv import Yolox_action, Yolox_data
+from shibie.msg import Yolox_action, Yolox_data
 action_judge = True
+back_judge = False
 
 def identify_data_callback(msg):
     # 接受并输出识别结果
+    global back_judge
     rospy.loginfo(f"Taregt:{msg.target} \n X_postion:{msg.x_p} \n Y_postion:{msg.y_p}")
+    back_judge = True
 
 
 def identify_call():
@@ -17,7 +20,7 @@ def identify_call():
     此处定义全局变量action_bool，用于控制接收循环是否停止，
     当主程序判定循环应当停止时，更改action_bool为False，则该节点停止订阅yolox_back的内容，并向identify_node发出停止的信号。
     """
-    global action_judge
+    global action_judge, back_judge
 
     # ROS节点初始化
     rospy.init_node("identify_control")
@@ -25,11 +28,13 @@ def identify_call():
     identify_control = rospy.Publisher('yolox_call', Yolox_action, queue_size = 5)
     control_cmd = Yolox_action()
     control_cmd.action = 1
-    identify_control.publish(control_cmd)
+    while not back_judge:
+        identify_control.publish(control_cmd)
 
     t1 = time.perf_counter()
     while action_judge:
         rospy.Subscriber('yolox_back', Yolox_data, identify_data_callback)
+
         t2 = time.perf_counter()
         if (t1 - t2) == 60:
             action_judge = False

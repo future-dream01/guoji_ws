@@ -73,8 +73,8 @@ find_package(catkin REQUIRED COMPONENTS
 #   std_msgs
 # )
 
-add_service_files(FILES Identify.srv)
-add_message_files(FILES Result.msg)
+add_message_files(FILES Yolox_action.msg)
+add_message_files(FILES Yolox_data.msg)
 generate_messages(DEPENDENCIES std_msgs)
 # generate_messages(DEPENDENCIES std_msgs)
 
