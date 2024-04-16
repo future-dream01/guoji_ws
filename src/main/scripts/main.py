@@ -11,10 +11,11 @@ from mavros_msgs.srv import SetMode
 from mavros_msgs.msg import State
 from geometry_msgs.msg import PoseStamped,Twist
 
-port='/dev/ttyTHS1'
-baudrate=9600
+port='/dev/ttyTHS1'                                    # 串口端口
+baudrate=9600                                          # 波特率
 position=[[3,2],[2,4],[4,1],[2,3],[4,4]]               # 靶标所在点
 i=0                                                    # 已遍历点数
+
 # 主节点类
 class MainNode():
     def __init__(self):
@@ -110,7 +111,7 @@ class Light():
             GPIO.output(28,GPIO.HIGH)
 
 # 串口通信类
-class UART(serial.Serial):                         # 串口通讯类
+class UART(serial.Serial):                       
     def __init__(self):
         super(UART, self).__init__()        # 父类初始化
 
@@ -118,13 +119,8 @@ class UART(serial.Serial):                         # 串口通讯类
         for i in range(0,10):               
             self.write(a)
 
-
-
-main_node=MainNode()
-servo=UART(port, baudrate, timeout=1)
-light=Light()
-
-def shibie_toudi():
+# 识别投递功能函数
+def shibie_toudi(main_node,servo):                                                          
     global i
     if main_node.obj==1 or main_node.obj==2 or main_node.obj==5 :
         main_node.shibie_move_fix(1)
@@ -138,20 +134,17 @@ def shibie_toudi():
         
 # 主函数
 def main():
+    main_node=MainNode()
+    servo=UART(port, baudrate, timeout=1)
+    light=Light()
     while not rospy.is_shutdown(): 
-        if main_node.state:
-            main_node.set_mode("OFFBOARD")
+        if main_node.state:                                                     # 确定无人机是起飞状态
+            main_node.set_mode("OFFBOARD")                                      # 将无人机飞行模式切换到OFFBOARD，由ros程序控制
             time.sleep(1)
-            main_node.send_aim_posion(2,3,1)                                    # 第一个点
+            main_node.send_aim_posion(position[i][0],position[i][1],1)          # 前往指定点
             main_node.shibie_pub(1)                                             # 开始识别
-            time.sleep(3)
-            shibie_toudi()
-            main_node.send_aim_posion(3,4,1)
-
-
-
-
-        pass
+            time.sleep(4)                                                       # 等待识别开始出结果
+            shibie_toudi(main_node,servo)                                       # 投递函数
 
 if __name__=='__main__':
     main()
