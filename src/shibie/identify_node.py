@@ -13,6 +13,7 @@ from loguru import logger
 
 def pre_ide_func():
     # 准备识别
+    global cap, vid_writer
     current_time = time.localtime()
     cap = cv2.VideoCapture(args.path if args.demo == "video" else args.camid)
     width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)  # float
@@ -31,24 +32,22 @@ def pre_ide_func():
         vid_writer = cv2.VideoWriter(
             save_path, cv2.VideoWriter_fourcc(*"mp4v"), fps, (int(width), int(height))
         )
-    return cap, vid_writer
-
 
 
 def identifyCallback(call):
     # 回调函数
+    global cap, vid_writer
     print("Get!")
     identify_data_pub = rospy.Publisher('yolox_back', Yolox_data, queue_size = 10)
     data_back = Yolox_data()
 
-    cap, vid_writer = pre_ide_func()
+    pre_ide_func()
 
     while call.action:
         ret_val, frame = cap.read()
         if ret_val:
             outputs, img_info = predictor.inference(frame)
             result_frame = predictor.visual(outputs[0], img_info, predictor.confthre)
-            print(outputs)
             if args.save_result:
                 vid_writer.write(result_frame)
             else:
@@ -59,10 +58,11 @@ def identifyCallback(call):
                 break
         else:
             break
-        data_back.target = obj
+        data_back.target = int(obj)
         data_back.x_p = x_p
         data_back.y_p = y_p
         identify_data_pub.publish(data_back)
+        print(f"Published!{obj}")
 
 
 def identify_processor(predictor, vis_folder, args):

@@ -268,7 +268,6 @@ def imageflow_demo(predictor, vis_folder, current_time, args):
         if ret_val:
             outputs, img_info = predictor.inference(frame)
             result_frame = predictor.visual(outputs[0], img_info, predictor.confthre)
-            print(outputs)
             if args.save_result:
                 vid_writer.write(result_frame)
             else:
