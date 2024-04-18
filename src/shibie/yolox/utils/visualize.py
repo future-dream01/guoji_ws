@@ -59,7 +59,8 @@ def vis(img, boxes, scores, cls_ids, conf=0.5, class_names=None):
         y_p=c-b
         cv2.circle(img,(a,b),30,(0,0,255),-1)
         cv2.circle(img,(d,c),30,(0,255,0),-1)
-    return img,obj,x_p,y_p
+   # return img,obj,x_p,y_p
+    return img
 
 
 _COLORS = np.array(

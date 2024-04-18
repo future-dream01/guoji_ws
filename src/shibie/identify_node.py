@@ -9,6 +9,7 @@ from shibie.msg import Yolox_action, Yolox_data
 import rospy
 import cv2
 from loguru import logger
+action_judge = False
 
 
 def pre_ide_func():
@@ -36,43 +37,57 @@ def pre_ide_func():
 
 def identifyCallback(call):
     # 回调函数
-    global cap, vid_writer
-    print("Get!")
-    identify_data_pub = rospy.Publisher('yolox_back', Yolox_data, queue_size = 10)
-    data_back = Yolox_data()
+    global action_judge
+    if call.action == 1:
+        action_judge = True
+    else:
+        action_judge = False
 
-    pre_ide_func()
-
-    while call.action:
-        ret_val, frame = cap.read()
-        if ret_val:
-            outputs, img_info = predictor.inference(frame)
-            result_frame = predictor.visual(outputs[0], img_info, predictor.confthre)
-            if args.save_result:
-                vid_writer.write(result_frame)
-            else:
-                cv2.namedWindow("yolox", cv2.WINDOW_NORMAL)
-                cv2.imshow("yolox", result_frame[0])
-            ch = cv2.waitKey(1)
-            if ch == 27 or ch == ord("q") or ch == ord("Q"):
-                break
-        else:
-            break
-        data_back.target = int(obj)
-        data_back.x_p = x_p
-        data_back.y_p = y_p
-        identify_data_pub.publish(data_back)
-        print(f"Published!{obj}")
 
 
 def identify_processor(predictor, vis_folder, args):
     """接收客户端信号，提供识别服务"""
+    global cap, vid_writer
     # 初始化ROS节点
     rospy.init_node('identify_node')
+    pre_ide_func()
+
+    identify_data_pub = rospy.Publisher('yolox_back', Yolox_data, queue_size = 10)
+    data_back = Yolox_data()
 
     # 创建针对控制节点的订阅者
     rospy.Subscriber('yolox_call', Yolox_action, identifyCallback)
-    rospy.spin()
+    state_check = 0
+    while state_check == 0 or state_check == 1:
+        while action_judge:
+            state_check = 1
+            x_pos,y_pos,obj=0,0,6
+            ret_val, frame = cap.read()
+            if ret_val:
+                outputs, img_info = predictor.inference(frame)
+                result_frame,x_ps,y_ps,obj = predictor.visual(outputs[0], img_info, predictor.confthre)
+                if args.save_result:
+                    vid_writer.write(result_frame)
+                else:
+                    cv2.namedWindow("yolox", cv2.WINDOW_NORMAL)
+                    cv2.imshow("yolox", result_frame[0])
+                ch = cv2.waitKey(1)
+                if  not action_judge:
+                    state_check = 2
+                    break
+            else:
+                break
+
+            if obj != 6:
+                x_pos = x_ps
+                y_pos = y_ps
+            data_back.target = int(obj)
+            data_back.x_p = x_pos
+            data_back.y_p = y_pos
+            identify_data_pub.publish(data_back)
+        time.sleep(0.1)
+        if state_check == 2:
+            break
 
 
 if __name__ == "__main__":

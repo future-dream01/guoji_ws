@@ -205,18 +205,17 @@ class Predictor(object):
         ratio = img_info["ratio"]
         img = img_info["raw_img"]
         if output is None:
-            return img,6
+            return img,x_p,y_p,obj
         output = output.cpu()
 
         bboxes = output[:, 0:self.num_apexes*2]
         # preprocessing: resize
         bboxes /= ratio
-
         cls = output[:, self.num_apexes*2 + 2]
         scores = output[:, self.num_apexes*2] * output[:, self.num_apexes*2 + 1]
        # print(cls)
         vis_res , obj,x_p,y_p = vis(img, bboxes, scores, cls, cls_conf, self.cls_names)
-        return vis_res
+        return vis_res,x_p,y_p,obj
 
 
 def image_demo(predictor, vis_folder, path, current_time, save_result):

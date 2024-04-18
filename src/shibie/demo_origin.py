@@ -11,7 +11,7 @@ import cv2
 import torch
 import torch
 import sys
-sys.path.append("/home/jetson/shibie_ws/src/shibie")
+sys.path.append("/home/jetson/github/guoji_ws/src/shibie")
 from yolox.data.data_augment import ValTransform
 from yolox.data.datasets import COCO_CLASSES
 from yolox.exp import get_exp
@@ -26,13 +26,13 @@ clas="无"
 def make_parser():
     parser = argparse.ArgumentParser("YOLOX Demo!")
     parser.add_argument(
-        "--demo", default="image", help="demo type, eg. image, video and webcam"
+        "--demo", default="webcam", help="demo type, eg. image, video and webcam"
     )
     parser.add_argument("-expn", "--experiment-name", type=str, default=None)
     parser.add_argument("-n", "--name", type=str, default=None, help="model name")
 
     parser.add_argument(
-        "--path", default="/home/jetson/shibie_ws/src/shibie/datasets/coco/images", help="path to images or video"
+        "--path", default="/home/jetson/github/guoji_ws/src/shibie/datasets/coco/images", help="path to images or video"
     )
     parser.add_argument("--camid", type=int, default=0, help="webcam demo camera id")
     parser.add_argument(
@@ -45,11 +45,11 @@ def make_parser():
     parser.add_argument(
         "-f",
         "--exp_file",
-        default="/home/jetson/shibie_ws/src/shibie/exps/example/custom/yolox_s.py",
+        default="/home/jetson/github/guoji_ws/src/shibie/exps/example/custom/yolox_s.py",
         type=str,
         help="pls input your experiment description file",
     )
-    parser.add_argument("-c", "--ckpt", default="/home/jetson/shibie_ws/src/shibie/YOLOX_outputs/yolox_s/latest_ckpt.pth", type=str, help="ckpt for eval")
+    parser.add_argument("-c", "--ckpt", default="/home/jetson/weights/latest_ckpt.pth", type=str, help="ckpt for eval")
     parser.add_argument(
         "--device",
         default="gpu",
@@ -212,8 +212,8 @@ class Predictor(object):
         cls = output[:, self.num_apexes*2 + 2]
         scores = output[:, self.num_apexes*2] * output[:, self.num_apexes*2 + 1]
        # print(cls)
-        vis_res , obj = vis(img, bboxes, scores, cls, cls_conf, self.cls_names)
-        return vis_res,obj
+        vis_res = vis(img, bboxes, scores, cls, cls_conf, self.cls_names)
+        return vis_res
 
 
 def image_demo(predictor, vis_folder, path, current_time, save_result):
@@ -268,7 +268,7 @@ def imageflow_demo(predictor, vis_folder, current_time, args):
                 vid_writer.write(result_frame)
             else:
                 cv2.namedWindow("yolox", cv2.WINDOW_NORMAL)
-                cv2.imshow("yolox", result_frame)
+                cv2.imshow("yolox", result_frame[0])
             ch = cv2.waitKey(1)
             if ch == 27 or ch == ord("q") or ch == ord("Q"):
                 break

@@ -34,27 +34,23 @@ def identify_call():
     rospy.init_node("identify_control")
     #创建名为identify_control的Publisher，发布名为yolox_call的topic, 消息类型为Yolox_action，队列长度为5
     identify_control = rospy.Publisher('yolox_call', Yolox_action, queue_size = 5)
-    print("checkpoint1")
     control_cmd = Yolox_action()
     control_cmd.action = 1
-    print("checkpoint2")
     while not back_judge:
         identify_control.publish(control_cmd)
         rospy.Subscriber('yolox_back', Yolox_data, back_judge_control)
         
 
     t1 = time.perf_counter()
+    rospy.Subscriber('yolox_back', Yolox_data, identify_data_callback)
     while action_judge:
-        rospy.Subscriber('yolox_back', Yolox_data, identify_data_callback)
 
         t2 = time.perf_counter()
-        if (t2 - t1) >= 60:
+        if (t2 - t1) >= 30:
             action_judge = False
-        rospy.spin()
-
-    # 跳出循环后，发布停止消息
-    control_cmd.action = 0
-    identify_control.publish(control_cmd)
+            control_cmd.action = 0
+            identify_control.publish(control_cmd)
+    
 
 
 if __name__ == "__main__":
