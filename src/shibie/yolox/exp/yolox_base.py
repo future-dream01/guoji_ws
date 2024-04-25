@@ -20,7 +20,7 @@ class Exp(BaseExp):                 # 实验配置类
         self.teacher_pth = "/home/rangeronmars/AI/TUP-NN-Train/teacher/teacher.pth" # 教师模型
         # ---------------- model config ---------------- #
         self.num_classes = 3        # 类别数，改动（8）
-        #self.num_colors = 4         # 颜色数
+        #self.num_colors = 4        # 颜色数
         self.num_apexes = 4         # 特征点数，改动（4）
         self.depth = 1.00           # 网络深度因子
         self.width = 1.00           # 网络宽度因子

@@ -55,44 +55,44 @@ class MainNode():
         except rospy.ServiceException as e:
             rospy.logerr("Service call failed: %s" % e)
             
-    def shibie_pub(self,a):                      # 识别状态发布函数
-        if a==1:                                 # 1代表开始识别
+    def shibie_pub(self,a):                                        # 识别状态发布函数
+        if a==1:                                                   # 1代表开始识别
             for i in range(0,10):
                 self.yolox_pub(1)
-        if a==2:                                 # 2代表结束识别
+        if a==2:                                                   # 2代表结束识别
             for i in range(0,10):
                 self.yolox_pub(2)
 
-    def rplidar_callback(self,msg):              # 激光雷达位姿数据订阅函数
-        self.x = msg.pose.position.x             # 无人机当前的x位置
-        self.y = msg.pose.position.y             # 无人机当前的y位置
-        self.own_position_pub.publish(msg)       # 向飞控发布坐标信息
+    def rplidar_callback(self,msg):                                # 激光雷达位姿数据订阅函数
+        self.x = msg.pose.position.x                               # 无人机当前的x位置
+        self.y = msg.pose.position.y                               # 无人机当前的y位置
+        self.own_position_pub.publish(msg)                         # 向飞控发布坐标信息
 
-    def shibie_move_fix(self,z):                 # 发现目标之后开始调整定位，需给定高度
+    def shibie_move_fix(self,z):                                   # 发现目标之后开始调整定位，需给定高度
         position=PoseStamped()
-        while (-70<=(self.x_p)<=70) and(70<=(self.y_p)<=70) :
+        while not ((-70<=(self.x_p)<=70) and(70<=(self.y_p)<=70) ):
             position.header.stamp=rospy.Time.now()
             position.header.frame_id="map"
             position.pose.position.x=self.x+self.x_p               # 目标点的x坐标
-            position.pose.position.y=self.y+self.y_p             # 目标点的y坐标
-            position.pose.position.z=z               # 目标点的z坐标
+            position.pose.position.y=self.y+self.y_p               # 目标点的y坐标
+            position.pose.position.z=z                             # 目标点的z坐标
             self.aim_position_pub.publish(position)
 
         
-    def send_aim_posion(self,x,y,z):             # 发送目标点位置信息
+    def send_aim_posion(self,x,y,z):                               # 发送目标点位置信息
         position=PoseStamped()
-        while (-0.1<=(self.x-x)<=0.1) and(-0.1<=(self.y-y)<=0.1) :
+        while not ((-0.1<=(self.x-x)<=0.1) and(-0.1<=(self.y-y)<=0.1)) :
             position.header.stamp=rospy.Time.now()
             position.header.frame_id="map"
-            position.pose.position.x=x               # 目标点的x坐标
-            position.pose.position.y=y               # 目标点的y坐标
-            position.pose.position.z=z               # 目标点的z坐标
+            position.pose.position.x=x                             # 目标点的x坐标
+            position.pose.position.y=y                             # 目标点的y坐标
+            position.pose.position.z=z                             # 目标点的z坐标
             self.aim_position_pub.publish(position)
 
-    def yolox_callback(self,msg):                # 识别数据订阅函数
-        obj=msg.data.target                      # 识别出的物体类别
-        x_p=msg.data.x_p                         # 物体的x偏移量
-        y_p=msg.data.y_p                         # 物体的y偏移量
+    def yolox_callback(self,msg):                                  # 识别数据订阅函数
+        obj=msg.data.target                                        # 识别出的物体类别
+        x_p=msg.data.x_p                                           # 物体的x偏移量
+        y_p=msg.data.y_p                                           # 物体的y偏移量
 
 # 信号灯类
 class Light():
@@ -102,12 +102,12 @@ class Light():
         GPIO.setup(26,GPIO.OUT,initial=GPIO.LOW)
         GPIO.setup(28,GPIO.OUT,initial=GPIO.LOW)
 
-    def ryg_lights(self,light):             # 信号灯指示函数
-        if light==1:                        # 黄灯亮，代表雷达有数据出来，位姿数据正常
+    def ryg_lights(self,light):                                    # 信号灯指示函数
+        if light==1:                                               # 黄灯亮，代表雷达有数据出来，位姿数据正常
             GPIO.output(24,GPIO.HIGH)
-        if light==2:                        # 绿灯亮，代表所有节点启动完毕，可以起飞
+        if light==2:                                               # 绿灯亮，代表所有节点启动完毕，可以起飞
             GPIO.output(26,GPIO.HIGH)
-        if light==3:                        # 红灯亮，代表识别有数据传出
+        if light==3:                                               # 红灯亮，代表识别有数据传出
             GPIO.output(28,GPIO.HIGH)
 
 # 串口通信类
@@ -138,6 +138,7 @@ def main():
     servo=UART(port, baudrate, timeout=1)
     light=Light()
     while not rospy.is_shutdown(): 
+        pass
         if main_node.state:                                                     # 确定无人机是起飞状态
             main_node.set_mode("OFFBOARD")                                      # 将无人机飞行模式切换到OFFBOARD，由ros程序控制
             time.sleep(1)
