@@ -3,7 +3,7 @@
 
 import rospy
 import time
-import serial                                           # UART串口通讯模块
+#import serial                                           # UART串口通讯模块
 import Jetson.GPIO as GPIO
 from main.msg import Result
 from std_msgs.msg import UInt8
@@ -55,69 +55,69 @@ class MainNode():
         except rospy.ServiceException as e:
             rospy.logerr("Service call failed: %s" % e)
             
-    def shibie_pub(self,a):                      # 识别状态发布函数
-        if a==1:                                 # 1代表开始识别
+    def shibie_pub(self,a):                                        # 识别状态发布函数
+        if a==1:                                                   # 1代表开始识别
             for i in range(0,10):
                 self.yolox_pub(1)
-        if a==2:                                 # 2代表结束识别
+        if a==2:                                                   # 2代表结束识别
             for i in range(0,10):
                 self.yolox_pub(2)
 
-    def rplidar_callback(self,msg):              # 激光雷达位姿数据订阅函数
-        self.x = msg.pose.position.x             # 无人机当前的x位置
-        self.y = msg.pose.position.y             # 无人机当前的y位置
-        self.own_position_pub.publish(msg)       # 向飞控发布坐标信息
+    def rplidar_callback(self,msg):                                # 激光雷达位姿数据订阅函数
+        self.x = msg.pose.position.x                               # 无人机当前的x位置
+        self.y = msg.pose.position.y                               # 无人机当前的y位置
+        self.own_position_pub.publish(msg)                         # 向飞控发布坐标信息
 
-    def shibie_move_fix(self,z):                 # 发现目标之后开始调整定位，需给定高度
+    def shibie_move_fix(self,z):                                   # 发现目标之后开始调整定位，需给定高度
         position=PoseStamped()
         while (-70<=(self.x_p)<=70) and(70<=(self.y_p)<=70) :
             position.header.stamp=rospy.Time.now()
             position.header.frame_id="map"
             position.pose.position.x=self.x+self.x_p               # 目标点的x坐标
-            position.pose.position.y=self.y+self.y_p             # 目标点的y坐标
-            position.pose.position.z=z               # 目标点的z坐标
+            position.pose.position.y=self.y+self.y_p               # 目标点的y坐标
+            position.pose.position.z=z                             # 目标点的z坐标
             self.aim_position_pub.publish(position)
 
         
-    def send_aim_posion(self,x,y,z):             # 发送目标点位置信息
+    def send_aim_posion(self,x,y,z):                               # 发送目标点位置信息
         position=PoseStamped()
         while (-0.1<=(self.x-x)<=0.1) and(-0.1<=(self.y-y)<=0.1) :
             position.header.stamp=rospy.Time.now()
             position.header.frame_id="map"
-            position.pose.position.x=x               # 目标点的x坐标
-            position.pose.position.y=y               # 目标点的y坐标
-            position.pose.position.z=z               # 目标点的z坐标
+            position.pose.position.x=x                             # 目标点的x坐标
+            position.pose.position.y=y                             # 目标点的y坐标
+            position.pose.position.z=z                             # 目标点的z坐标
             self.aim_position_pub.publish(position)
 
-    def yolox_callback(self,msg):                # 识别数据订阅函数
-        obj=msg.data.target                      # 识别出的物体类别
-        x_p=msg.data.x_p                         # 物体的x偏移量
-        y_p=msg.data.y_p                         # 物体的y偏移量
+    def yolox_callback(self,msg):                                  # 识别数据订阅函数
+        obj=msg.data.target                                        # 识别出的物体类别
+        x_p=msg.data.x_p                                           # 物体的x偏移量
+        y_p=msg.data.y_p                                           # 物体的y偏移量
 
 # 信号灯类
-class Light():
-    def __init__(self):
-        GPIO.setmode(GPIO.BOARD)
-        GPIO.setup(24,GPIO.OUT,initial=GPIO.LOW)
-        GPIO.setup(26,GPIO.OUT,initial=GPIO.LOW)
-        GPIO.setup(28,GPIO.OUT,initial=GPIO.LOW)
+#class Light():
+    #def __init__(self):
+        #GPIO.setmode(GPIO.BOARD)
+        #GPIO.setup(24,GPIO.OUT,initial=GPIO.LOW)
+        #GPIO.setup(26,GPIO.OUT,initial=GPIO.LOW)
+        #GPIO.setup(28,GPIO.OUT,initial=GPIO.LOW)
 
-    def ryg_lights(self,light):             # 信号灯指示函数
-        if light==1:                        # 黄灯亮，代表雷达有数据出来，位姿数据正常
-            GPIO.output(24,GPIO.HIGH)
-        if light==2:                        # 绿灯亮，代表所有节点启动完毕，可以起飞
-            GPIO.output(26,GPIO.HIGH)
-        if light==3:                        # 红灯亮，代表识别有数据传出
-            GPIO.output(28,GPIO.HIGH)
+    #def ryg_lights(self,light):                                    # 信号灯指示函数
+        #if light==1:                                               # 黄灯亮，代表雷达有数据出来，位姿数据正常
+            #GPIO.output(24,GPIO.HIGH)
+        #if light==2:                                               # 绿灯亮，代表所有节点启动完毕，可以起飞
+            #GPIO.output(26,GPIO.HIGH)
+        #if light==3:                                               # 红灯亮，代表识别有数据传出
+            #GPIO.output(28,GPIO.HIGH)
 
 # 串口通信类
-class UART(serial.Serial):                       
-    def __init__(self):
-        super(UART, self).__init__()        # 父类初始化
+#class UART(serial.Serial):                       
+    #def __init__(self):
+        #super(UART, self).__init__()        # 父类初始化
 
-    def servo_start(self,a):                # 舵机开始运动,a=1:投第一个货物；a=2:投第二个货物;a=3:投第三个货物
-        for i in range(0,10):               
-            self.write(a)
+    #def servo_start(self,a):                # 舵机开始运动,a=1:投第一个货物；a=2:投第二个货物;a=3:投第三个货物
+        #for i in range(0,10):               
+            #self.write(a)
 
 # 识别投递功能函数
 def shibie_toudi(main_node,servo):                                                          
@@ -135,16 +135,17 @@ def shibie_toudi(main_node,servo):
 # 主函数
 def main():
     main_node=MainNode()
-    servo=UART(port, baudrate, timeout=1)
-    light=Light()
+    #servo=UART(port, baudrate, timeout=1)
+    #light=Light()
     while not rospy.is_shutdown(): 
-        if main_node.state:                                                     # 确定无人机是起飞状态
-            main_node.set_mode("OFFBOARD")                                      # 将无人机飞行模式切换到OFFBOARD，由ros程序控制
-            time.sleep(1)
-            main_node.send_aim_posion(position[i][0],position[i][1],1)          # 前往指定点
-            main_node.shibie_pub(1)                                             # 开始识别
-            time.sleep(4)                                                       # 等待识别开始出结果
-            shibie_toudi(main_node,servo)                                       # 投递函数
+        pass
+        #if main_node.state:                                                     # 确定无人机是起飞状态
+            #main_node.set_mode("OFFBOARD")                                      # 将无人机飞行模式切换到OFFBOARD，由ros程序控制
+            #time.sleep(1)
+            #main_node.send_aim_posion(position[i][0],position[i][1],1)          # 前往指定点
+            #main_node.shibie_pub(1)                                             # 开始识别
+            #time.sleep(4)                                                       # 等待识别开始出结果
+            #shibie_toudi(main_node,servo)                                       # 投递函数
 
 if __name__=='__main__':
     main()
