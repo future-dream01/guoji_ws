@@ -202,6 +202,7 @@ class Predictor(object):
 
     def visual(self, output, img_info, cls_conf=0.35):
         global x_p,y_p,obj
+        obj = 6
         ratio = img_info["ratio"]
         img = img_info["raw_img"]
         if output is None:

@@ -58,10 +58,11 @@ def identify_processor(predictor, vis_folder, args):
     # 创建针对控制节点的订阅者
     rospy.Subscriber('yolox_call', Yolox_action, identifyCallback)
     state_check = 0
+    x_pos, y_pos, obj = 0, 0, 6
     while state_check == 0 or state_check == 1:
         while action_judge:
             state_check = 1
-            x_pos,y_pos,obj=0,0,6
+            # x_pos,y_pos,obj=0,0,6
             ret_val, frame = cap.read()
             if ret_val:
                 outputs, img_info = predictor.inference(frame)
