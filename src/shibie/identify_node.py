@@ -1,11 +1,8 @@
 #!/usr/bin/env python
 
-# import sys
-# import threading
 import time
 from demo import *
 from shibie.msg import Yolox_action, Yolox_data
-# from std_msgs.msg import String
 import rospy
 import cv2
 from loguru import logger
@@ -60,7 +57,7 @@ def identify_processor(predictor, vis_folder, args):
     state_check = 0
     x_pos, y_pos, obj = 0, 0, 6
     while state_check == 0 or state_check == 1:
-        while action_judge:
+        while action_judge:         # 判断是否进识别程序段
             state_check = 1
             # x_pos,y_pos,obj=0,0,6
             ret_val, frame = cap.read()
@@ -86,7 +83,7 @@ def identify_processor(predictor, vis_folder, args):
             data_back.x_p = x_pos
             data_back.y_p = y_pos
             identify_data_pub.publish(data_back)
-        time.sleep(0.1)
+        #time.sleep(0.1)
         if state_check == 2:
             break
 

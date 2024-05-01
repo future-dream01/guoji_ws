@@ -3,7 +3,7 @@
 
 import rospy
 import time
-#import serial                                           # UART串口通讯模块
+import serial                                           # UART串口通讯模块
 #import Jetson.GPIO as GPIO
 from main.msg import Yolox_data,Yolox_action
 from std_msgs.msg import UInt8
@@ -11,8 +11,9 @@ from mavros_msgs.srv import SetMode
 from mavros_msgs.msg import State
 from geometry_msgs.msg import PoseStamped,Twist
 
-port='/dev/ttyTHS1'                                    # 串口端口
+port='/dev/ttyTHS0'                                    # 串口端口,pin8(TXD)->P5(RXD) ； pin10(RXD)->P4(TXD)
 baudrate=9600                                          # 波特率
+timeout=1
 position=[[3,2],[2,4],[4,1],[2,3],[4,4]]               # 靶标所在点
 i=0                                                    # 已遍历点数
 tim=0
@@ -61,14 +62,14 @@ class MainNode():
         tim=time.time()                                           # 记录当前时间
         if a==1:                                                  # 1代表开始识别
             act.action=1 
-            for i in range(0,1000):
+            for i in range(0,10):
                 self.yolox_pub.publish(act)
                 #rospy.loginfo(act)
                 self.rate.sleep()
                 
         if a==2:                                                   # 2代表结束识别
             act.action=2 
-            for i in range(0,1000):
+            for i in range(0,10):
                 self.yolox_pub.publish(act)
                 self.rate.sleep()
 
@@ -124,14 +125,16 @@ class MainNode():
        # if light==3:                                               # 红灯亮，代表识别有数据传出
            # GPIO.output(28,GPIO.HIGH)
 
-# 串口通信类
-#class UART(serial.Serial):                       
-    #def __init__(self):
-        #super(UART, self).__init__()        # 父类初始化
+#串口通信类
+class UART(serial.Serial):                       
+    def __init__(self, port, baudrate,timeout):
+        super(UART, self).__init__(port=port, baudrate=baudrate, timeout=timeout)
 
-    #def servo_start(self,a):                # 舵机开始运动,a=1:投第一个货物；a=2:投第二个货物;a=3:投第三个货物
-        #for i in range(0,10):               
-            #self.write(a)
+    def servo_start(self,a):                # 舵机开始运动,a=1:投第一个货物；a=2:投第二个货物;a=3:投第三个货物
+        for i in range(0,10): 
+            command = a.to_bytes(1, 'little')             
+            self.write(command)
+            rospy.sleep(0.1)
 
 # 识别投递功能函数
 def shibie_toudi(main_node,servo):                                                          
@@ -139,7 +142,7 @@ def shibie_toudi(main_node,servo):
     if main_node.obj==1 or main_node.obj==2 or main_node.obj==5 :
         main_node.shibie_move_fix(1)
         servo.servo_start(1)
-        time.sleep(2)
+        rospy.sleep(2)
         i+=1
     if main_node.obj==0:
         pass
@@ -149,20 +152,23 @@ def shibie_toudi(main_node,servo):
 # 主函数
 
 def main():
+    b=0
     main_node=MainNode()
-    #servo=UART(port, baudrate, timeout=1)
+    servo=UART(port, baudrate,timeout)
     #light=Light()
-    main_node.shibie_pub(1)
+    #main_node.shibie_pub(1)
+    #rospy.sleep(15)
+    servo.servo_start(1)
     while not rospy.is_shutdown(): 
         pass
-        #print(1)
-        #if main_node.state:                                                     # 确定无人机是起飞状态
-            #main_node.set_mode("OFFBOARD")                                      # 将无人机飞行模式切换到OFFBOARD，由ros程序控制
-            #time.sleep(1)
-            #main_node.send_aim_posion(position[i][0],position[i][1],1)          # 前往指定点
-            #main_node.shibie_pub(1)                                             # 开始识别
-            #time.sleep(4)                                                       # 等待识别开始出结果
-            #shibie_toudi(main_node,servo)                                       # 投递函数
+        # if main_node.state:                                                     # 确定无人机是起飞状态
+        #     main_node.set_mode("OFFBOARD")                                      # 将无人机飞行模式切换到OFFBOARD，由ros程序控制
+        #     time.sleep(1)
+        #     main_node.send_aim_posion(position[i][0],position[i][1],1)          # 前往指定点
+        #     main_node.shibie_pub(1)                                             # 开始识别
+        #     time.sleep(4)                                                       # 等待识别开始出结果
+        #     shibie_toudi(main_node,servo)                                       # 投递函数
+   # main_node.shibie_pub(2)
 
 if __name__=='__main__':
     main()
