@@ -52,11 +52,11 @@ def identify_processor(predictor, vis_folder, args):
     rospy.init_node('identify_node')
     pre_ide_func()
 
-    identify_data_pub = rospy.Publisher('yolox_back', Yolox_data, queue_size = 10)
+    identify_data_pub = rospy.Publisher('yolox_data', Yolox_data, queue_size = 10)
     data_back = Yolox_data()
 
     # 创建针对控制节点的订阅者
-    rospy.Subscriber('yolox_call', Yolox_action, identifyCallback)
+    rospy.Subscriber('yolox_action', Yolox_action, identifyCallback)
     state_check = 0
     x_pos, y_pos, obj = 0, 0, 6
     while state_check == 0 or state_check == 1:

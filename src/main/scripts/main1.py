@@ -3,9 +3,9 @@
 
 import rospy
 import time
-import serial                                           # UART串口通讯模块
-import Jetson.GPIO as GPIO
-from main.msg import Result
+#import serial                                           # UART串口通讯模块
+#import Jetson.GPIO as GPIO
+from main.msg import Yolox_data,Yolox_action
 from std_msgs.msg import UInt8
 from mavros_msgs.srv import SetMode
 from mavros_msgs.msg import State
@@ -15,7 +15,7 @@ port='/dev/ttyTHS1'                                    # 串口端口
 baudrate=9600                                          # 波特率
 position=[[3,2],[2,4],[4,1],[2,3],[4,4]]               # 靶标所在点
 i=0                                                    # 已遍历点数
-
+tim=0
 # 主节点类
 class MainNode():
     def __init__(self):
@@ -28,14 +28,14 @@ class MainNode():
         # 话题
         self.servo_pub=rospy.Publisher("servo_action",UInt8,queue_size=10)                                  # 舵机发布者节点
         self.rplidar_sub=rospy.Subscriber("/slam_out_pose",PoseStamped,self.rplidar_callback)               # 雷达订阅者节点 
-        self.yolox_pub=rospy.Publisher("yolox_action",UInt8,queue_size=10)                                  # 识别指令发布者
-        self.yolox_sub=rospy.Subscriber("yolox_data",PoseStamped,self.yolox_callback)                       # 识别结果订阅者
+        self.yolox_pub=rospy.Publisher("yolox_action",Yolox_action,queue_size=10)                                  # 识别指令发布者
+        self.yolox_sub=rospy.Subscriber("yolox_data",Yolox_data,self.yolox_callback)                       # 识别结果订阅者
         self.own_position_pub=rospy.Publisher('/mavros/vision_pose/pose',PoseStamped,queue_size=10)         # 当前位置发布者
         self.aim_position_pub=rospy.Publisher('/mavros/setpoint_position/local',PoseStamped,queue_size=10)  # 飞行目标点发布者
         self.shibie_move_pub=rospy.Publisher('/mavros/setpoint_position/local',PoseStamped,queue_size=10)   # 识别到目标之后调整位置
         self.state_sub=rospy.Subscriber('/mavros/state',State,self.state_callback)                          # 无人机状态订阅者
         # 服务
-        rospy.wait_for_service('/mavros/set_mode')                                                          # 确保服务可用
+        #rospy.wait_for_service('/mavros/set_mode')                                                          # 确保服务可用
         self.set_mode_client = rospy.ServiceProxy('/mavros/set_mode', SetMode)                              # 飞行模式切换服务代理
 
     def state_callback(self,msg):                                                                           # 监听无人机是否已起飞
@@ -56,12 +56,21 @@ class MainNode():
             rospy.logerr("Service call failed: %s" % e)
             
     def shibie_pub(self,a):                                        # 识别状态发布函数
-        if a==1:                                                   # 1代表开始识别
-            for i in range(0,10):
-                self.yolox_pub(1)
+        global tim
+        act=Yolox_action()
+        tim=time.time()                                           # 记录当前时间
+        if a==1:                                                  # 1代表开始识别
+            act.action=1 
+            for i in range(0,1000):
+                self.yolox_pub.publish(act)
+                #rospy.loginfo(act)
+                self.rate.sleep()
+                
         if a==2:                                                   # 2代表结束识别
-            for i in range(0,10):
-                self.yolox_pub(2)
+            act.action=2 
+            for i in range(0,1000):
+                self.yolox_pub.publish(act)
+                self.rate.sleep()
 
     def rplidar_callback(self,msg):                                # 激光雷达位姿数据订阅函数
         self.x = msg.pose.position.x                               # 无人机当前的x位置
@@ -90,34 +99,39 @@ class MainNode():
             self.aim_position_pub.publish(position)
 
     def yolox_callback(self,msg):                                  # 识别数据订阅函数
-        obj=msg.data.target                                        # 识别出的物体类别
-        x_p=msg.data.x_p                                           # 物体的x偏移量
-        y_p=msg.data.y_p                                           # 物体的y偏移量
+        global tim
+        tim2=time.time()
+        fps=1/(tim2-tim)                                         # 计算fps
+        obj=msg.target                                        # 识别出的物体类别
+        x_p=msg.x_p                                           # 物体的x偏移量
+        y_p=msg.y_p                                           # 物体的y偏移量
+        tim =tim2
+        rospy.loginfo(f"obj: {obj} \n x_p:{x_p} \n y_p:{y_p} \n fps: {fps}")   # 日志
 
 # 信号灯类
-class Light():
-    def __init__(self):
-        GPIO.setmode(GPIO.BOARD)
-        GPIO.setup(24,GPIO.OUT,initial=GPIO.LOW)
-        GPIO.setup(26,GPIO.OUT,initial=GPIO.LOW)
-        GPIO.setup(28,GPIO.OUT,initial=GPIO.LOW)
+#class Light():
+    #def __init__(self):
+        #GPIO.setmode(GPIO.BOARD)
+        #GPIO.setup(24,GPIO.OUT,initial=GPIO.LOW)
+        #GPIO.setup(26,GPIO.OUT,initial=GPIO.LOW)
+        #GPIO.setup(28,GPIO.OUT,initial=GPIO.LOW)
 
-    def ryg_lights(self,light):                                    # 信号灯指示函数
-        if light==1:                                               # 黄灯亮，代表雷达有数据出来，位姿数据正常
-            GPIO.output(24,GPIO.HIGH)
-        if light==2:                                               # 绿灯亮，代表所有节点启动完毕，可以起飞
-            GPIO.output(26,GPIO.HIGH)
-        if light==3:                                               # 红灯亮，代表识别有数据传出
-            GPIO.output(28,GPIO.HIGH)
+    #def ryg_lights(self,light):                                    # 信号灯指示函数
+        #if light==1:                                               # 黄灯亮，代表雷达有数据出来，位姿数据正常
+            #GPIO.output(24,GPIO.HIGH)
+        #if light==2:                                               # 绿灯亮，代表所有节点启动完毕，可以起飞
+            #GPIO.output(26,GPIO.HIGH)
+       # if light==3:                                               # 红灯亮，代表识别有数据传出
+           # GPIO.output(28,GPIO.HIGH)
 
 # 串口通信类
-class UART(serial.Serial):                       
-    def __init__(self):
-        super(UART, self).__init__()        # 父类初始化
+#class UART(serial.Serial):                       
+    #def __init__(self):
+        #super(UART, self).__init__()        # 父类初始化
 
-    def servo_start(self,a):                # 舵机开始运动,a=1:投第一个货物；a=2:投第二个货物;a=3:投第三个货物
-        for i in range(0,10):               
-            self.write(a)
+    #def servo_start(self,a):                # 舵机开始运动,a=1:投第一个货物；a=2:投第二个货物;a=3:投第三个货物
+        #for i in range(0,10):               
+            #self.write(a)
 
 # 识别投递功能函数
 def shibie_toudi(main_node,servo):                                                          
@@ -133,19 +147,22 @@ def shibie_toudi(main_node,servo):
         i+=1
         
 # 主函数
+
 def main():
     main_node=MainNode()
-    servo=UART(port, baudrate, timeout=1)
-    light=Light()
+    #servo=UART(port, baudrate, timeout=1)
+    #light=Light()
+    main_node.shibie_pub(1)
     while not rospy.is_shutdown(): 
         pass
-        if main_node.state:                                                     # 确定无人机是起飞状态
-            main_node.set_mode("OFFBOARD")                                      # 将无人机飞行模式切换到OFFBOARD，由ros程序控制
-            time.sleep(1)
-            main_node.send_aim_posion(position[i][0],position[i][1],1)          # 前往指定点
-            main_node.shibie_pub(1)                                             # 开始识别
-            time.sleep(4)                                                       # 等待识别开始出结果
-            shibie_toudi(main_node,servo)                                       # 投递函数
+        #print(1)
+        #if main_node.state:                                                     # 确定无人机是起飞状态
+            #main_node.set_mode("OFFBOARD")                                      # 将无人机飞行模式切换到OFFBOARD，由ros程序控制
+            #time.sleep(1)
+            #main_node.send_aim_posion(position[i][0],position[i][1],1)          # 前往指定点
+            #main_node.shibie_pub(1)                                             # 开始识别
+            #time.sleep(4)                                                       # 等待识别开始出结果
+            #shibie_toudi(main_node,servo)                                       # 投递函数
 
 if __name__=='__main__':
     main()

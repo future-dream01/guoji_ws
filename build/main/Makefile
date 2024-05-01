@@ -521,6 +521,188 @@ tf2_msgs_generate_messages_py/fast:
 	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f main/CMakeFiles/tf2_msgs_generate_messages_py.dir/build.make main/CMakeFiles/tf2_msgs_generate_messages_py.dir/build
 .PHONY : tf2_msgs_generate_messages_py/fast
 
+# Convenience name for target.
+main/CMakeFiles/main_generate_messages.dir/rule:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 main/CMakeFiles/main_generate_messages.dir/rule
+.PHONY : main/CMakeFiles/main_generate_messages.dir/rule
+
+# Convenience name for target.
+main_generate_messages: main/CMakeFiles/main_generate_messages.dir/rule
+.PHONY : main_generate_messages
+
+# fast build rule for target.
+main_generate_messages/fast:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f main/CMakeFiles/main_generate_messages.dir/build.make main/CMakeFiles/main_generate_messages.dir/build
+.PHONY : main_generate_messages/fast
+
+# Convenience name for target.
+main/CMakeFiles/_main_generate_messages_check_deps_Yolox_data.dir/rule:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 main/CMakeFiles/_main_generate_messages_check_deps_Yolox_data.dir/rule
+.PHONY : main/CMakeFiles/_main_generate_messages_check_deps_Yolox_data.dir/rule
+
+# Convenience name for target.
+_main_generate_messages_check_deps_Yolox_data: main/CMakeFiles/_main_generate_messages_check_deps_Yolox_data.dir/rule
+.PHONY : _main_generate_messages_check_deps_Yolox_data
+
+# fast build rule for target.
+_main_generate_messages_check_deps_Yolox_data/fast:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f main/CMakeFiles/_main_generate_messages_check_deps_Yolox_data.dir/build.make main/CMakeFiles/_main_generate_messages_check_deps_Yolox_data.dir/build
+.PHONY : _main_generate_messages_check_deps_Yolox_data/fast
+
+# Convenience name for target.
+main/CMakeFiles/_main_generate_messages_check_deps_Yolox_action.dir/rule:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 main/CMakeFiles/_main_generate_messages_check_deps_Yolox_action.dir/rule
+.PHONY : main/CMakeFiles/_main_generate_messages_check_deps_Yolox_action.dir/rule
+
+# Convenience name for target.
+_main_generate_messages_check_deps_Yolox_action: main/CMakeFiles/_main_generate_messages_check_deps_Yolox_action.dir/rule
+.PHONY : _main_generate_messages_check_deps_Yolox_action
+
+# fast build rule for target.
+_main_generate_messages_check_deps_Yolox_action/fast:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f main/CMakeFiles/_main_generate_messages_check_deps_Yolox_action.dir/build.make main/CMakeFiles/_main_generate_messages_check_deps_Yolox_action.dir/build
+.PHONY : _main_generate_messages_check_deps_Yolox_action/fast
+
+# Convenience name for target.
+main/CMakeFiles/main_generate_messages_cpp.dir/rule:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 main/CMakeFiles/main_generate_messages_cpp.dir/rule
+.PHONY : main/CMakeFiles/main_generate_messages_cpp.dir/rule
+
+# Convenience name for target.
+main_generate_messages_cpp: main/CMakeFiles/main_generate_messages_cpp.dir/rule
+.PHONY : main_generate_messages_cpp
+
+# fast build rule for target.
+main_generate_messages_cpp/fast:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f main/CMakeFiles/main_generate_messages_cpp.dir/build.make main/CMakeFiles/main_generate_messages_cpp.dir/build
+.PHONY : main_generate_messages_cpp/fast
+
+# Convenience name for target.
+main/CMakeFiles/main_gencpp.dir/rule:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 main/CMakeFiles/main_gencpp.dir/rule
+.PHONY : main/CMakeFiles/main_gencpp.dir/rule
+
+# Convenience name for target.
+main_gencpp: main/CMakeFiles/main_gencpp.dir/rule
+.PHONY : main_gencpp
+
+# fast build rule for target.
+main_gencpp/fast:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f main/CMakeFiles/main_gencpp.dir/build.make main/CMakeFiles/main_gencpp.dir/build
+.PHONY : main_gencpp/fast
+
+# Convenience name for target.
+main/CMakeFiles/main_generate_messages_eus.dir/rule:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 main/CMakeFiles/main_generate_messages_eus.dir/rule
+.PHONY : main/CMakeFiles/main_generate_messages_eus.dir/rule
+
+# Convenience name for target.
+main_generate_messages_eus: main/CMakeFiles/main_generate_messages_eus.dir/rule
+.PHONY : main_generate_messages_eus
+
+# fast build rule for target.
+main_generate_messages_eus/fast:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f main/CMakeFiles/main_generate_messages_eus.dir/build.make main/CMakeFiles/main_generate_messages_eus.dir/build
+.PHONY : main_generate_messages_eus/fast
+
+# Convenience name for target.
+main/CMakeFiles/main_geneus.dir/rule:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 main/CMakeFiles/main_geneus.dir/rule
+.PHONY : main/CMakeFiles/main_geneus.dir/rule
+
+# Convenience name for target.
+main_geneus: main/CMakeFiles/main_geneus.dir/rule
+.PHONY : main_geneus
+
+# fast build rule for target.
+main_geneus/fast:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f main/CMakeFiles/main_geneus.dir/build.make main/CMakeFiles/main_geneus.dir/build
+.PHONY : main_geneus/fast
+
+# Convenience name for target.
+main/CMakeFiles/main_generate_messages_lisp.dir/rule:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 main/CMakeFiles/main_generate_messages_lisp.dir/rule
+.PHONY : main/CMakeFiles/main_generate_messages_lisp.dir/rule
+
+# Convenience name for target.
+main_generate_messages_lisp: main/CMakeFiles/main_generate_messages_lisp.dir/rule
+.PHONY : main_generate_messages_lisp
+
+# fast build rule for target.
+main_generate_messages_lisp/fast:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f main/CMakeFiles/main_generate_messages_lisp.dir/build.make main/CMakeFiles/main_generate_messages_lisp.dir/build
+.PHONY : main_generate_messages_lisp/fast
+
+# Convenience name for target.
+main/CMakeFiles/main_genlisp.dir/rule:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 main/CMakeFiles/main_genlisp.dir/rule
+.PHONY : main/CMakeFiles/main_genlisp.dir/rule
+
+# Convenience name for target.
+main_genlisp: main/CMakeFiles/main_genlisp.dir/rule
+.PHONY : main_genlisp
+
+# fast build rule for target.
+main_genlisp/fast:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f main/CMakeFiles/main_genlisp.dir/build.make main/CMakeFiles/main_genlisp.dir/build
+.PHONY : main_genlisp/fast
+
+# Convenience name for target.
+main/CMakeFiles/main_generate_messages_nodejs.dir/rule:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 main/CMakeFiles/main_generate_messages_nodejs.dir/rule
+.PHONY : main/CMakeFiles/main_generate_messages_nodejs.dir/rule
+
+# Convenience name for target.
+main_generate_messages_nodejs: main/CMakeFiles/main_generate_messages_nodejs.dir/rule
+.PHONY : main_generate_messages_nodejs
+
+# fast build rule for target.
+main_generate_messages_nodejs/fast:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f main/CMakeFiles/main_generate_messages_nodejs.dir/build.make main/CMakeFiles/main_generate_messages_nodejs.dir/build
+.PHONY : main_generate_messages_nodejs/fast
+
+# Convenience name for target.
+main/CMakeFiles/main_gennodejs.dir/rule:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 main/CMakeFiles/main_gennodejs.dir/rule
+.PHONY : main/CMakeFiles/main_gennodejs.dir/rule
+
+# Convenience name for target.
+main_gennodejs: main/CMakeFiles/main_gennodejs.dir/rule
+.PHONY : main_gennodejs
+
+# fast build rule for target.
+main_gennodejs/fast:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f main/CMakeFiles/main_gennodejs.dir/build.make main/CMakeFiles/main_gennodejs.dir/build
+.PHONY : main_gennodejs/fast
+
+# Convenience name for target.
+main/CMakeFiles/main_generate_messages_py.dir/rule:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 main/CMakeFiles/main_generate_messages_py.dir/rule
+.PHONY : main/CMakeFiles/main_generate_messages_py.dir/rule
+
+# Convenience name for target.
+main_generate_messages_py: main/CMakeFiles/main_generate_messages_py.dir/rule
+.PHONY : main_generate_messages_py
+
+# fast build rule for target.
+main_generate_messages_py/fast:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f main/CMakeFiles/main_generate_messages_py.dir/build.make main/CMakeFiles/main_generate_messages_py.dir/build
+.PHONY : main_generate_messages_py/fast
+
+# Convenience name for target.
+main/CMakeFiles/main_genpy.dir/rule:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f CMakeFiles/Makefile2 main/CMakeFiles/main_genpy.dir/rule
+.PHONY : main/CMakeFiles/main_genpy.dir/rule
+
+# Convenience name for target.
+main_genpy: main/CMakeFiles/main_genpy.dir/rule
+.PHONY : main_genpy
+
+# fast build rule for target.
+main_genpy/fast:
+	cd /home/jetson/github/guoji_ws/build && $(MAKE) $(MAKESILENT) -f main/CMakeFiles/main_genpy.dir/build.make main/CMakeFiles/main_genpy.dir/build
+.PHONY : main_genpy/fast
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -534,6 +716,8 @@ help:
 	@echo "... list_install_components"
 	@echo "... rebuild_cache"
 	@echo "... test"
+	@echo "... _main_generate_messages_check_deps_Yolox_action"
+	@echo "... _main_generate_messages_check_deps_Yolox_data"
 	@echo "... actionlib_generate_messages_cpp"
 	@echo "... actionlib_generate_messages_eus"
 	@echo "... actionlib_generate_messages_lisp"
@@ -544,6 +728,17 @@ help:
 	@echo "... actionlib_msgs_generate_messages_lisp"
 	@echo "... actionlib_msgs_generate_messages_nodejs"
 	@echo "... actionlib_msgs_generate_messages_py"
+	@echo "... main_gencpp"
+	@echo "... main_generate_messages"
+	@echo "... main_generate_messages_cpp"
+	@echo "... main_generate_messages_eus"
+	@echo "... main_generate_messages_lisp"
+	@echo "... main_generate_messages_nodejs"
+	@echo "... main_generate_messages_py"
+	@echo "... main_geneus"
+	@echo "... main_genlisp"
+	@echo "... main_gennodejs"
+	@echo "... main_genpy"
 	@echo "... nav_msgs_generate_messages_cpp"
 	@echo "... nav_msgs_generate_messages_eus"
 	@echo "... nav_msgs_generate_messages_lisp"

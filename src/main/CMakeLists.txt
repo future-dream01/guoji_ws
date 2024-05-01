@@ -7,11 +7,14 @@ project(main)
 ## Find catkin macros and libraries
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
+
 find_package(catkin REQUIRED COMPONENTS
   geometry_msgs
   nav_msgs
   rospy
   sensor_msgs
+  std_msgs
+  message_generation
   tf
 )
 
@@ -51,7 +54,8 @@ find_package(catkin REQUIRED COMPONENTS
 ## Generate messages in the 'msg' folder
 add_message_files(
    FILES
-   Result.msg
+   Yolox_data.msg
+   Yolox_action.msg
  )
 
 ## Generate services in the 'srv' folder
@@ -69,10 +73,11 @@ add_message_files(
 # )
 
 ## Generate added messages and services with any dependencies listed here
-# generate_messages(
-#   DEPENDENCIES
-#   geometry_msgs#   nav_msgs#   sensor_msgs
-# )
+generate_messages(
+   DEPENDENCIES
+   geometry_msgs#   nav_msgs#   sensor_msgs
+   std_msgs
+ )
 
 ################################################
 ## Declare ROS dynamic reconfigure parameters ##
@@ -108,6 +113,7 @@ catkin_package(
 #  LIBRARIES zuobiao
 #  CATKIN_DEPENDS geometry_msgs nav_msgs rospy sensor_msgs tf
 #  DEPENDS system_lib
+CATKIN_DEPENDS rospy std_msgs message_runtime
 )
 
 ###########
