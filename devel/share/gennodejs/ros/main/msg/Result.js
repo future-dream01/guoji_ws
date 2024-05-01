@@ -14,7 +14,7 @@ const _getByteLength = _ros_msg_utils.getByteLength;
 
 //-----------------------------------------------------------
 
-class Result {
+class result {
   constructor(initObj={}) {
     if (initObj === null) {
       // initObj === null is a special case for deserialization where we don't initialize fields
@@ -45,7 +45,7 @@ class Result {
   }
 
   static serialize(obj, buffer, bufferOffset) {
-    // Serializes a message object of type Result
+    // Serializes a message object of type result
     // Serialize message field [target]
     bufferOffset = _serializer.uint8(obj.target, buffer, bufferOffset);
     // Serialize message field [x_p]
@@ -56,9 +56,9 @@ class Result {
   }
 
   static deserialize(buffer, bufferOffset=[0]) {
-    //deserializes a message object of type Result
+    //deserializes a message object of type result
     let len;
-    let data = new Result(null);
+    let data = new result(null);
     // Deserialize message field [target]
     data.target = _deserializer.uint8(buffer, bufferOffset);
     // Deserialize message field [x_p]
@@ -74,7 +74,7 @@ class Result {
 
   static datatype() {
     // Returns string type for a message object
-    return 'main/Result';
+    return 'main/result';
   }
 
   static md5sum() {
@@ -96,7 +96,7 @@ class Result {
     if (typeof msg !== 'object' || msg === null) {
       msg = {};
     }
-    const resolved = new Result(null);
+    const resolved = new result(null);
     if (msg.target !== undefined) {
       resolved.target = msg.target;
     }
@@ -122,4 +122,4 @@ class Result {
     }
 };
 
-module.exports = Result;
+module.exports = result;

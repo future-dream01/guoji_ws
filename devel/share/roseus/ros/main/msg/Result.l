@@ -1,22 +1,22 @@
 ;; Auto-generated. Do not edit!
 
 
-(when (boundp 'main::Result)
+(when (boundp 'main::result)
   (if (not (find-package "MAIN"))
     (make-package "MAIN"))
-  (shadow 'Result (find-package "MAIN")))
+  (shadow 'result (find-package "MAIN")))
 (unless (find-package "MAIN::RESULT")
   (make-package "MAIN::RESULT"))
 
 (in-package "ROS")
-;;//! \htmlinclude Result.msg.html
+;;//! \htmlinclude result.msg.html
 
 
-(defclass main::Result
+(defclass main::result
   :super ros::object
   :slots (_target _x_p _y_p ))
 
-(defmethod main::Result
+(defmethod main::result
   (:init
    (&key
     ((:target __target) 0)
@@ -71,9 +71,9 @@
    self)
   )
 
-(setf (get main::Result :md5sum-) "dd8ae1831add5d55430f288fc3367194")
-(setf (get main::Result :datatype-) "main/Result")
-(setf (get main::Result :definition-)
+(setf (get main::result :md5sum-) "dd8ae1831add5d55430f288fc3367194")
+(setf (get main::result :datatype-) "main/result")
+(setf (get main::result :definition-)
       "uint8 target
 float32 x_p
 float32 y_p
@@ -81,6 +81,6 @@ float32 y_p
 
 
 
-(provide :main/Result "dd8ae1831add5d55430f288fc3367194")
+(provide :main/result "dd8ae1831add5d55430f288fc3367194")
 
 
