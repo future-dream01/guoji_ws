@@ -36,6 +36,7 @@ def identifyCallback(call):
     # 回调函数
     global action_judge
     if call.action == 1:
+        print("Get!")
         action_judge = True
     else:
         action_judge = False
@@ -68,7 +69,7 @@ def identify_processor(predictor, vis_folder, args):
                     vid_writer.write(result_frame)
                 else:
                     cv2.namedWindow("yolox", cv2.WINDOW_NORMAL)
-                    cv2.imshow("yolox", result_frame[0])
+                    cv2.imshow("yolox", result_frame)
                 ch = cv2.waitKey(1)
                 if  not action_judge:
                     state_check = 2
