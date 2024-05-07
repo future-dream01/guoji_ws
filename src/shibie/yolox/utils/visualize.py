@@ -9,13 +9,17 @@ from yolox.utils.boxes import min_rect
 
 __all__ = ["vis"]
 
+x_p,y_p=0,0
+obj=6
+
 
 def vis(img, boxes, scores, cls_ids, conf=0.5, class_names=None):
-
+    global x_p,y_p,obj
     rect_bbox = min_rect(boxes)
     ind=torch.argmax(torch.max(scores))
     obj_ind=cls_ids[ind]
     obj=class_names[int(obj_ind.item())]
+    #print(boxes)
     for i in range(len(boxes)):
         box = boxes[i]
         cls_id = int(cls_ids[i])

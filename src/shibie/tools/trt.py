@@ -10,7 +10,8 @@ from loguru import logger
 import tensorrt as trt
 import torch
 from torch2trt import torch2trt
-
+import sys
+sys.path.append("/home/jetson/github/guoji_ws/src/shibie")
 from yolox.exp import get_exp
 
 

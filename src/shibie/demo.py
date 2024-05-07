@@ -11,7 +11,7 @@ import cv2
 import torch
 import torch
 import sys
-sys.path.append("/home/jetson/shibie_ws/src/shibie")
+sys.path.append("/home/jetson/github/guoji_ws/src/shibie")
 from yolox.data.data_augment import ValTransform
 from yolox.data.datasets import COCO_CLASSES
 from yolox.exp import get_exp
@@ -28,13 +28,13 @@ obj=6
 def make_parser():
     parser = argparse.ArgumentParser("YOLOX Demo!")
     parser.add_argument(
-        "--demo", default="webcam", help="demo type, eg. image, video and webcam"
+        "--demo", default="video", help="demo type, eg. image, video and webcam"
     )
     parser.add_argument("-expn", "--experiment-name", type=str, default=None)
     parser.add_argument("-n", "--name", type=str, default=None, help="model name")
 
     parser.add_argument(
-        "--path", default="/home/jetson/shibie_ws/src/shibie/datasets/coco/images", help="path to images or video"
+        "--path", default="/home/jetson/github/guoji_ws/src/shibie/datasets/1.MP4", help="path to images or video"
     )
     parser.add_argument("--camid", type=int, default=0, help="webcam demo camera id")
     parser.add_argument(
@@ -47,7 +47,7 @@ def make_parser():
     parser.add_argument(
         "-f",
         "--exp_file",
-        default="/home/jetson/shibie_ws/src/shibie/exps/example/custom/yolox_s.py",
+        default="/home/jetson/github/guoji_ws/src/shibie/exps/example/custom/yolox_s.py",
         type=str,
         help="pls input your experiment description file",
     )

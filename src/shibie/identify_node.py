@@ -73,6 +73,8 @@ def identify_processor(predictor, vis_folder, args):
                 if  not action_judge:
                     state_check = 2
                     break
+                if ch == 27 or ch == ord("q") or ch == ord("Q"):
+                    break
             else:
                 break
 

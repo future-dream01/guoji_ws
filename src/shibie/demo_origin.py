@@ -17,7 +17,8 @@ from yolox.data.datasets import COCO_CLASSES
 from yolox.exp import get_exp
 from yolox.utils import fuse_model, get_model_info, postprocess, vis
 from yolox.utils.boxes import poly_postprocess,min_rect
-
+obj=6
+x_p,y_p=0,0
 IMAGE_EXT = [".jpg", ".jpeg", ".webp", ".bmp", ".png"]
 CLASSES=["坦克","地堡","帐篷","装甲车","桥梁","起飞着陆","无"]
 clas="无"
@@ -26,13 +27,13 @@ clas="无"
 def make_parser():
     parser = argparse.ArgumentParser("YOLOX Demo!")
     parser.add_argument(
-        "--demo", default="webcam", help="demo type, eg. image, video and webcam"
+        "--demo", default="video", help="demo type, eg. image, video and webcam"
     )
     parser.add_argument("-expn", "--experiment-name", type=str, default=None)
     parser.add_argument("-n", "--name", type=str, default=None, help="model name")
 
     parser.add_argument(
-        "--path", default="/home/jetson/github/guoji_ws/src/shibie/datasets/coco/images", help="path to images or video"
+        "--path", default="/home/jetson/github/guoji_ws/src/shibie/datasets/1.mp4", help="path to images or video"
     )
     parser.add_argument("--camid", type=int, default=0, help="webcam demo camera id")
     parser.add_argument(
@@ -62,7 +63,7 @@ def make_parser():
     parser.add_argument(
         "--fp16",
         dest="fp16",
-        default=False,
+        default=True,
         action="store_true",
         help="Adopting mix precision evaluating.",
     )
@@ -199,6 +200,7 @@ class Predictor(object):
         return outputs, img_info
 
     def visual(self, output, img_info, cls_conf=0.35):
+        global x_p,y_p,obj
         ratio = img_info["ratio"]
         img = img_info["raw_img"]
         if output is None:
@@ -212,11 +214,12 @@ class Predictor(object):
         cls = output[:, self.num_apexes*2 + 2]
         scores = output[:, self.num_apexes*2] * output[:, self.num_apexes*2 + 1]
        # print(cls)
-        vis_res = vis(img, bboxes, scores, cls, cls_conf, self.cls_names)
+        vis_res,obj,x_p,y_p = vis(img, bboxes, scores, cls, cls_conf, self.cls_names)
         return vis_res
 
 
 def image_demo(predictor, vis_folder, path, current_time, save_result):
+    global obj,x_p,y_p
     if os.path.isdir(path):
         files = get_image_list(path)
     else:
@@ -224,7 +227,7 @@ def image_demo(predictor, vis_folder, path, current_time, save_result):
     files.sort()
     for image_name in files:
         outputs, img_info = predictor.inference(image_name)
-        result_image , obj = predictor.visual(outputs[0], img_info, predictor.confthre)
+        result_image = predictor.visual(outputs[0], img_info, predictor.confthre)
         #classes=["坦克","地堡","帐篷","装甲车","桥梁","起飞着陆","无"]
         clas = CLASSES[int(obj)]
         print(clas)
@@ -246,7 +249,8 @@ def imageflow_demo(predictor, vis_folder, current_time, args):
     width = cap.get(cv2.CAP_PROP_FRAME_WIDTH)  # float
     height = cap.get(cv2.CAP_PROP_FRAME_HEIGHT)  # float
     fps = cap.get(cv2.CAP_PROP_FPS)
-    if args.save_result:
+    #if args.save_result:
+    if True:
         save_folder = os.path.join(
             vis_folder, time.strftime("%Y_%m_%d_%H_%M_%S", current_time)
         )
@@ -264,9 +268,9 @@ def imageflow_demo(predictor, vis_folder, current_time, args):
         if ret_val:
             outputs, img_info = predictor.inference(frame)
             result_frame = predictor.visual(outputs[0], img_info, predictor.confthre)
-            if args.save_result:
-                vid_writer.write(result_frame)
-            else:
+            #if args.save_result:
+            if True:
+                vid_writer.write(result_frame[0])
                 cv2.namedWindow("yolox", cv2.WINDOW_NORMAL)
                 cv2.imshow("yolox", result_frame[0])
             ch = cv2.waitKey(1)
@@ -284,7 +288,8 @@ def main(exp, args):
     os.makedirs(file_name, exist_ok=True)
 
     vis_folder = None
-    if args.save_result:
+    #if args.save_result:
+    if True:
         vis_folder = os.path.join(file_name, "vis_res")
         os.makedirs(vis_folder, exist_ok=True)
 
