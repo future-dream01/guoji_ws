@@ -158,7 +158,7 @@ def main():
     #light=Light()
     main_node.shibie_pub(1)
     #rospy.sleep(15)
-    #servo.servo_start(1)
+    servo.servo_start(2)
     while not rospy.is_shutdown(): 
         pass
         # if main_node.state:                                                     # 确定无人机是起飞状态

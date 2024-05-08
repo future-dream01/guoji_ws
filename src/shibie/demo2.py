@@ -49,7 +49,7 @@ def make_parser():
         type=str,
         help="pls input your experiment description file",
     )
-    parser.add_argument("-c", "--ckpt", default="/home/jetson/weights/latest_ckpt2.pth", type=str, help="ckpt for eval")
+    parser.add_argument("-c", "--ckpt", default="/home/jetson/weights/latest_ckpt3.pth", type=str, help="ckpt for eval")
     parser.add_argument(
         "--device",
         default="gpu",
