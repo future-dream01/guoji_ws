@@ -57,7 +57,7 @@ class MainNode():
 
     # 起飞状态监听函数
     def altitude_callback(self,msg):
-        self.z=msg.pose.positoion.z
+        self.z=msg.pose.position.z
         if (self.z>=0.5):
             self.arm_takeoff=True
             rospy.loginfo("无人机已起飞")
@@ -96,7 +96,8 @@ class MainNode():
                 self.rate.sleep()
 
     # 激光雷达位姿数据订阅函数+坐标变换
-    def rplidar_callback(self,msg):                                
+    def rplidar_callback(self,msg):     
+        rospy.loginfo("ladar is sending")                           
         self.x = -msg.pose.position.y                              # 无人机当前的x位置
         self.y = msg.pose.position.x                               # 无人机当前的y位置
         self.own_position_pub.publish(msg)                         # 向飞控发布当前无人机自身坐标信息
@@ -203,7 +204,8 @@ def main():
     #rospy.sleep(15)
     #servo.servo_start(2)
     while not rospy.is_shutdown(): 
-        print(f"当前坐标：\n x:{main_node.x}\n y:{main_node.y}\n z:{main_node.z}")
+        pass
+        #print(f"当前坐标：\n x:{main_node.x}\n y:{main_node.y}\n z:{main_node.z}")
         #if (main_node.armed_state) and (main_node.is_offboard):                      # 确定无人机是否解锁、切换到OFFBOARD模式
             #main_node.auto_takeoff(0.5)                                              # 一键起飞，设置起飞高度
             #main_node.set_mode("OFFBOARD") 

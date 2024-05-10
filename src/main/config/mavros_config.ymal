@@ -1,0 +1,7 @@
+vision_pose:
+  tf:
+    listen: false
+    frame_id: "map" # 设置为全局坐标系
+    child_frame_id: "base_link" # 设置为无人机或激光雷达坐标系
+  rate: 30.0 # 发布频率
+  use_mocap: false # 设置为 false 因为使用激光雷达而非运动捕捉
