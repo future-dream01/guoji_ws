@@ -203,17 +203,18 @@ def main():
     #rospy.sleep(15)
     #servo.servo_start(2)
     while not rospy.is_shutdown(): 
-        if (main_node.armed_state) and (main_node.is_offboard):                      # 确定无人机是否解锁、切换到OFFBOARD模式
-            main_node.auto_takeoff(0.5)                                              # 一键起飞，设置起飞高度
+        print(f"当前坐标：\n x:{main_node.x}\n y:{main_node.y}\n z:{main_node.z}")
+        #if (main_node.armed_state) and (main_node.is_offboard):                      # 确定无人机是否解锁、切换到OFFBOARD模式
+            #main_node.auto_takeoff(0.5)                                              # 一键起飞，设置起飞高度
             #main_node.set_mode("OFFBOARD") 
             #main_node.send_aim_posion(0,0,1)
             #rospy.sleep(10)
             #while not rospy.is_shutdown():
                 #main_node.set_mode("OFFBOARD")                                      # 将无人机飞行模式切换到OFFBOARD，由ros程序控制
                 #main_node.send_aim_posion(position[i][0],position[i][1],1)          # 前往指定点（）
-            main_node.send_aim_posion(2,2,0.5)                                       # 前往指定点（x,y,z）
-            main_node.land()                                                         # 自动着陆
-            break
+            #main_node.send_aim_posion(2,2,0.5)                                       # 前往指定点（x,y,z）
+            #main_node.land()                                                         # 自动着陆
+            #break
                 #main_node.shibie_pub(1)                                             # 开始识别
                 #time.sleep(4)                                                       # 等待识别开始出结果
                 #shibie_toudi(main_node,servo)                                       # 投递函数
