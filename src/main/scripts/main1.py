@@ -22,12 +22,13 @@ class MainNode():
     def __init__(self):
         rospy.init_node("main",anonymous=True)
         # 属性
-        self.x=self.y=self.z=0                                                                              # 初始化位置x，y
+        self.x=self.y=self.z=0                                                                              # 初始化位置x，y，z
         self.x_p=self.y_p=self.obj=0                                                                        # 初始化目标位置偏移x_p、y_p、物体类型
-        self.takeoff_state=False                                                                            # 无人机是否起飞
         self.rate=rospy.Rate(10)                                                                            # 频率
+        self.takeoff_state=False                                                                            # 无人机是否起飞
         self.armed_state=False                                                                              # 无人机是否解锁
-        self.is_landing=False
+        self.is_landing=False                                                                               # 是否正在着陆
+        self.is_offboard=False                                                                              # 是否已经切换到offboard模式
         # 话题
         self.servo_pub=rospy.Publisher("servo_action",UInt8,queue_size=10)                                  # 舵机发布者节点
         self.rplidar_sub=rospy.Subscriber("/slam_out_pose",PoseStamped,self.rplidar_callback)               # 雷达订阅者节点 
@@ -41,19 +42,23 @@ class MainNode():
         # 服务
         self.set_mode_client = rospy.ServiceProxy('/mavros/set_mode', SetMode)                              # 飞行模式切换服务代理
 
-    # 解锁状态监听函数
+    # 无人机状态监听函数
     def state_callback(self,msg):                                                                           
-        if msg.armed:
+        if msg.armed:                       # 是否解锁
             rospy.loginfo("无人机已解锁")
             self.armed_state=True
-        else:
+        if not msg.armed:
             self.armed_state=False
             rospy.loginfo("无人机未解锁")
+        if msg.mode=="OFFBOARD":            # 是否切换到OFFBOARD模式
+            self.is_offboard=True
+        if not msg.mode=="OFFBOARD":
+            self.is_offboard=False
 
     # 起飞状态监听函数
     def altitude_callback(self,msg):
-        altitude=msg.pose.positoion.z
-        if (altitude>=0.5):
+        self.z=msg.pose.positoion.z
+        if (self.z>=0.5):
             self.arm_takeoff=True
             rospy.loginfo("无人机已起飞")
         else :
@@ -116,6 +121,17 @@ class MainNode():
             position.pose.position.x=x                             # 目标点的x坐标
             position.pose.position.y=y                             # 目标点的y坐标
             position.pose.position.z=z                             # 目标点的z坐标
+            self.aim_position_pub.publish(position)
+
+    # 自动起飞
+    def auto_takeoff(self,a):
+        position=PoseStamped()
+        while not (-0.1<=(self.z-a)<=0.1):
+            position.header.stamp=rospy.Time.now()
+            position.header.frame_id="map"
+            position.pose.position.x=0                             # 目标点的x坐标
+            position.pose.position.y=0                             # 目标点的y坐标
+            position.pose.position.z=a                             # 目标点的z坐标
             self.aim_position_pub.publish(position)
 
     # 识别数据订阅函数
@@ -187,15 +203,16 @@ def main():
     #rospy.sleep(15)
     #servo.servo_start(2)
     while not rospy.is_shutdown(): 
-        if (main_node.armed_state) and (main_node.takeoff_state):                            # 确定无人机是否解锁、起飞
+        if (main_node.armed_state) and (main_node.is_offboard):                      # 确定无人机是否解锁、切换到OFFBOARD模式
+            main_node.auto_takeoff(0.5)                                              # 一键起飞，设置起飞高度
             #main_node.set_mode("OFFBOARD") 
             #main_node.send_aim_posion(0,0,1)
             #rospy.sleep(10)
             #while not rospy.is_shutdown():
                 #main_node.set_mode("OFFBOARD")                                      # 将无人机飞行模式切换到OFFBOARD，由ros程序控制
-                #main_node.send_aim_posion(position[i][0],position[i][1],1)          # 前往指定点
-            main_node.send_aim_posion(2,2,1)
-            main_node.land()
+                #main_node.send_aim_posion(position[i][0],position[i][1],1)          # 前往指定点（）
+            main_node.send_aim_posion(2,2,0.5)                                       # 前往指定点（x,y,z）
+            main_node.land()                                                         # 自动着陆
             break
                 #main_node.shibie_pub(1)                                             # 开始识别
                 #time.sleep(4)                                                       # 等待识别开始出结果
