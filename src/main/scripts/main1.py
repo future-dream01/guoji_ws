@@ -97,10 +97,23 @@ class MainNode():
 
     # 激光雷达位姿数据订阅函数+坐标变换
     def rplidar_callback(self,msg):                                
-        self.x = -msg.pose.position.y                              # 无人机当前的x位置
-        self.y = msg.pose.position.x                               # 无人机当前的y位置
-        self.own_position_pub.publish(msg)                         # 向飞控发布当前无人机自身坐标信息
-
+        vision_pose_msg = PoseStamped()
+        
+        # 设置时间戳和帧ID
+        vision_pose_msg.header.stamp = rospy.Time.now()
+        vision_pose_msg.header.frame_id = "map"  # 确保与飞控的参考帧一致
+        
+        # 重新映射坐标
+        vision_pose_msg.pose.position.x = -msg.pose.position.y  # 无人机当前的x位置
+        vision_pose_msg.pose.position.y = msg.pose.position.x   # 无人机当前的y位置
+        vision_pose_msg.pose.position.z = msg.pose.position.z   # 无人机当前的z位置
+        
+        # 保持姿态信息
+        vision_pose_msg.pose.orientation = msg.pose.orientation
+        
+        # 发布到 /mavros/vision_pose/pose
+        self.own_position_pub.publish(vision_pose_msg)
+        
     # 发现目标之后开始调整定位，需给定高度
     def shibie_move_fix(self,z):                                   
         position=PoseStamped()
