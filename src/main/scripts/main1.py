@@ -10,6 +10,7 @@ from std_msgs.msg import UInt8
 from mavros_msgs.srv import SetMode
 from mavros_msgs.msg import State
 from geometry_msgs.msg import PoseStamped,Twist
+import tf 
 
 port='/dev/ttyTHS0'                                    # 串口端口,pin8(TXD)->P5(RXD) ； pin10(RXD)->P4(TXD)
 baudrate=9600                                          # 波特率
@@ -96,24 +97,27 @@ class MainNode():
                 self.rate.sleep()
 
     # 激光雷达位姿数据订阅函数+坐标变换
-    def rplidar_callback(self,msg): 
-        rospy.loginfo("send!")                               
-        vision_pose_msg = PoseStamped()
-        
-        # 设置时间戳和帧ID
-        vision_pose_msg.header.stamp = rospy.Time.now()
-        vision_pose_msg.header.frame_id = "map"  # 确保与飞控的参考帧一致
-        
-        # 重新映射坐标
-        vision_pose_msg.pose.position.x = -msg.pose.position.y  # 无人机当前的x位置
-        vision_pose_msg.pose.position.y = msg.pose.position.x   # 无人机当前的y位置
-        vision_pose_msg.pose.position.z = msg.pose.position.z   # 无人机当前的z位置
-        
-        # 保持姿态信息
-        vision_pose_msg.pose.orientation = msg.pose.orientation
+    def rplidar_callback(self,msg):                                
+        pose = PoseStamped()
+        pose.header.stamp = rospy.Time.now()
+        pose.header.frame_id = "map"  # 确保 frame_id 与飞控期望的坐标系一致
+
+        # 转换坐标系
+        pose.pose.position.x = msg.pose.position.x
+        pose.pose.position.y = msg.pose.position.y
+        pose.pose.position.z = msg.pose.position.z
+
+        # 使用 tf 库转换欧拉角到四元数
+        quaternion = tf.transformations.quaternion_from_euler(
+            msg.pose.position.roll, msg.pose.position.pitch, msg.pose.position.yaw
+        )
+        pose.pose.orientation.x = quaternion[0]
+        pose.pose.orientation.y = quaternion[1]
+        pose.pose.orientation.z = quaternion[2]
+        pose.pose.orientation.w = quaternion[3]
         
         # 发布到 /mavros/vision_pose/pose
-        self.own_position_pub.publish(vision_pose_msg)
+        self.own_position_pub.publish(pose)
         
     # 发现目标之后开始调整定位，需给定高度
     def shibie_move_fix(self,z):                                   
