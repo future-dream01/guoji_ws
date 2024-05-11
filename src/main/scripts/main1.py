@@ -10,6 +10,7 @@ from std_msgs.msg import UInt8
 from mavros_msgs.srv import SetMode
 from mavros_msgs.msg import State
 from geometry_msgs.msg import PoseStamped,Twist
+import tf 
 
 port='/dev/ttyTHS0'                                    # 串口端口,pin8(TXD)->P5(RXD) ； pin10(RXD)->P4(TXD)
 baudrate=9600                                          # 波特率
@@ -57,7 +58,7 @@ class MainNode():
 
     # 起飞状态监听函数
     def altitude_callback(self,msg):
-        self.z=msg.pose.positoion.z
+        self.z=msg.pose.position.z
         if (self.z>=0.5):
             self.arm_takeoff=True
             rospy.loginfo("无人机已起飞")
@@ -97,10 +98,41 @@ class MainNode():
 
     # 激光雷达位姿数据订阅函数+坐标变换
     def rplidar_callback(self,msg):                                
-        self.x = -msg.pose.position.y                              # 无人机当前的x位置
-        self.y = msg.pose.position.x                               # 无人机当前的y位置
-        self.own_position_pub.publish(msg)                         # 向飞控发布当前无人机自身坐标信息
+        try:
+            # 获取位置
+            x = msg.pose.position.x
+            y = msg.pose.position.y
+            z = msg.pose.position.z
 
+            # 获取并转换方向
+            orientation_q = msg.pose.orientation
+            quaternion = [orientation_q.x, orientation_q.y, orientation_q.z, orientation_q.w]
+            euler = tf.transformations.euler_from_quaternion(quaternion)
+            roll = euler[0]
+            pitch = euler[1]
+            yaw = euler[2]
+
+            # 将数据发布到 /mavros/vision_pose/pose
+            pose = PoseStamped()
+            pose.header.stamp = rospy.Time.now()
+            pose.header.frame_id = "map"  # 确保 frame_id 与飞控期望的坐标系一致
+
+            pose.pose.position.x = x
+            pose.pose.position.y = y
+            pose.pose.position.z = z
+
+            # 将欧拉角转换回四元数
+            quaternion = tf.transformations.quaternion_from_euler(roll, pitch, yaw)
+            pose.pose.orientation.x = quaternion[0]
+            pose.pose.orientation.y = quaternion[1]
+            pose.pose.orientation.z = quaternion[2]
+            pose.pose.orientation.w = quaternion[3]
+
+            self.own_position_pub.publish(pose)
+            rospy.loginfo("send")
+        except Exception as e:
+            rospy.logerr(f"Error in rplidar_callback: {e}")
+        
     # 发现目标之后开始调整定位，需给定高度
     def shibie_move_fix(self,z):                                   
         position=PoseStamped()
