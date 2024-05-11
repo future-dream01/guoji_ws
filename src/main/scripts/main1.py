@@ -128,7 +128,8 @@ class MainNode():
             pose.pose.orientation.z = quaternion[2]
             pose.pose.orientation.w = quaternion[3]
 
-            self.pose_pub.publish(pose)
+            self.own_position_pub.publish(pose)
+            rospy.loginfo("send")
         except Exception as e:
             rospy.logerr(f"Error in rplidar_callback: {e}")
         
