@@ -15,15 +15,17 @@ import tf
 port='/dev/ttyTHS0'                                    # 串口端口,pin8(TXD)->P5(RXD) ； pin10(RXD)->P4(TXD)
 baudrate=9600                                          # 波特率
 timeout=1
-position=[[3,2],[2,4],[4,1],[2,3],[4,4]]               # 靶标所在点
+position=[[3,2],[2,4],[4,1],[2,3],[4,4]]               # 靶标所在点[x,y]
+target=[1,2,5]                                         # 要投递的目标编号
 i=0                                                    # 已遍历点数
+box=1                                                  # 需要投放的盒子编号
 tim=0
 # 主节点类
 class MainNode():
     def __init__(self):
         rospy.init_node("main",anonymous=True)
         # 属性
-        self.x=self.y=self.z=0                                                                              # 初始化位置x，y，z
+        self.x=self.y=self.z=0                                                                              # 初始化位置x，y，z,无人机当前自身所处的位置
         self.x_p=self.y_p=self.obj=0                                                                        # 初始化目标位置偏移x_p、y_p、物体类型
         self.rate=rospy.Rate(10)                                                                            # 频率
         self.takeoff_state=False                                                                            # 无人机是否起飞
@@ -46,11 +48,11 @@ class MainNode():
     # 无人机状态监听函数
     def state_callback(self,msg):                                                                           
         if msg.armed:                       # 是否解锁
-            rospy.loginfo("无人机已解锁")
+            #rospy.loginfo("无人机已解锁")
             self.armed_state=True
         if not msg.armed:
             self.armed_state=False
-            rospy.loginfo("无人机未解锁")
+            #rospy.loginfo("无人机未解锁")
         if msg.mode=="OFFBOARD":            # 是否切换到OFFBOARD模式
             self.is_offboard=True
         if not msg.mode=="OFFBOARD":
@@ -61,10 +63,10 @@ class MainNode():
         self.z=msg.pose.position.z
         if (self.z>=0.5):
             self.arm_takeoff=True
-            rospy.loginfo("无人机已起飞")
+            #rospy.loginfo("无人机已起飞")
         else :
             self.arm_takeoff=False
-            rospy.loginfo("无人机未起飞")
+            #rospy.loginfo("无人机未起飞")
 
     # 设置无人机飞行模式
     def set_mode(self,mode):                                                                               
@@ -100,9 +102,9 @@ class MainNode():
     def rplidar_callback(self,msg):                                
         try:
             # 获取位置
-            x = msg.pose.position.x
-            y = msg.pose.position.y
-            z = msg.pose.position.z
+            self.x = -msg.pose.position.x
+            self.y = msg.pose.position.y
+            #self.z = msg.pose.position.z
 
             # 获取并转换方向
             orientation_q = msg.pose.orientation
@@ -117,9 +119,9 @@ class MainNode():
             pose.header.stamp = rospy.Time.now()
             pose.header.frame_id = "map"  # 确保 frame_id 与飞控期望的坐标系一致
 
-            pose.pose.position.x = x
-            pose.pose.position.y = y
-            pose.pose.position.z = z
+            pose.pose.position.x = self.x
+            pose.pose.position.y = self.y
+            #pose.pose.position.z = self.z
 
             # 将欧拉角转换回四元数
             quaternion = tf.transformations.quaternion_from_euler(roll, pitch, yaw)
@@ -129,7 +131,7 @@ class MainNode():
             pose.pose.orientation.w = quaternion[3]
 
             self.own_position_pub.publish(pose)
-            rospy.loginfo("send")
+            #rospy.loginfo("send")
         except Exception as e:
             rospy.logerr(f"Error in rplidar_callback: {e}")
         
@@ -143,6 +145,7 @@ class MainNode():
             position.pose.position.y=self.y+self.y_p               # 目标点的y坐标
             position.pose.position.z=z                             # 目标点的z坐标
             self.aim_position_pub.publish(position)
+            rospy.loginfo(f"目标为{self.obj} \n 识别中,正在调整位置 \n x_p:{self.x_p} \n y_p:{self.y_p}")
 
     # 发送目标点位置信息
     def send_aim_posion(self,x,y,z):                               
@@ -215,16 +218,19 @@ class UART(serial.Serial):
 
 # 识别投递功能函数
 def shibie_toudi(main_node,servo):                                                          
-    global i
-    if main_node.obj==1 or main_node.obj==2 or main_node.obj==5 :
+    global i,box,target
+    if main_node.obj in target:
+        target.remove(main_node.obj)
         main_node.shibie_move_fix(1)
-        servo.servo_start(1)
-        rospy.sleep(2)
+        servo.servo_start(main_node.obj)
+        rospy.sleep(3)
+        rospy.loginfo("完成投递")
         i+=1
     if main_node.obj==0:
         pass
     else:
         i+=1
+
 
 # 主函数
 def main():
