@@ -60,7 +60,7 @@ def make_parser():
     )
     parser.add_argument("--conf", default=0.6, type=float, help="test conf")
     parser.add_argument("--nms", default=0.1, type=float, help="test nms threshold")
-    parser.add_argument("--tsize", default=640, type=int, help="test img size")
+    parser.add_argument("--tsize", default=480, type=int, help="test img size")
     parser.add_argument(
         "--fp16",
         dest="fp16",
