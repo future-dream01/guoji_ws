@@ -1,10 +1,10 @@
 #!/usr/bin/env python3
 # 无人机飞行主程序节点
-
+# 整体任务逻辑：无人机整体上电->jetson自启 执行leida.sh脚本，激光雷达工作，提供位置信息 yolox识别节点启动准备 main节点执行 具备起飞条件，遥控器切OFFBOARD，无人机一键起飞
 import rospy
 import time
 import serial                                           # UART串口通讯模块
-#import Jetson.GPIO as GPIO
+import Jetson.GPIO as GPIO
 from main.msg import Yolox_data,Yolox_action
 from std_msgs.msg import UInt8
 from mavros_msgs.srv import SetMode
@@ -48,11 +48,11 @@ class MainNode():
     # 无人机状态监听函数
     def state_callback(self,msg):                                                                           
         if msg.armed:                       # 是否解锁
-            #rospy.loginfo("无人机已解锁")
+            rospy.loginfo("无人机已解锁")
             self.armed_state=True
         if not msg.armed:
             self.armed_state=False
-            #rospy.loginfo("无人机未解锁")
+            rospy.loginfo("无人机未解锁")
         if msg.mode=="OFFBOARD":            # 是否切换到OFFBOARD模式
             self.is_offboard=True
         if not msg.mode=="OFFBOARD":
@@ -174,11 +174,11 @@ class MainNode():
         global tim
         tim2=time.time()
         fps=1/(tim2-tim)                                      # 计算fps
-        obj=msg.target                                        # 识别出的物体类别
-        x_p=msg.x_p                                           # 物体的x偏移量
-        y_p=msg.y_p                                           # 物体的y偏移量
+        self.obj=msg.target                                        # 识别出的物体类别
+        self.x_p=msg.x_p                                           # 物体的x偏移量
+        self.y_p=msg.y_p                                           # 物体的y偏移量
         tim =tim2
-        rospy.loginfo(f"obj: {obj} \n x_p:{x_p} \n y_p:{y_p} \n fps: {fps}")   # 日志
+        #rospy.loginfo(f"obj: {obj} \n x_p:{x_p} \n y_p:{y_p} \n fps: {fps}")   # 日志
 
     # 着陆函数
     def land(self):
@@ -189,20 +189,22 @@ class MainNode():
         rospy.loginfo("the plane landed and poweroffed successfully")
 
 # 信号灯类
-#class Light():
-    #def __init__(self):
-        #GPIO.setmode(GPIO.BOARD)
-        #GPIO.setup(24,GPIO.OUT,initial=GPIO.LOW)
-        #GPIO.setup(26,GPIO.OUT,initial=GPIO.LOW)
-        #GPIO.setup(28,GPIO.OUT,initial=GPIO.LOW)
+class Mark():
+    def __init__(self):
+        GPIO.setmode(GPIO.BOARD)
+        GPIO.setup(7,GPIO.OUT,initial=GPIO.LOW)
+        GPIO.setup(11,GPIO.OUT,initial=GPIO.LOW)
+        GPIO.setup(12,GPIO.OUT,initial=GPIO.LOW)
 
-    #def ryg_lights(self,light):                                    # 信号灯指示函数
-        #if light==1:                                               # 黄灯亮，代表雷达有数据出来，位姿数据正常
-            #GPIO.output(24,GPIO.HIGH)
-        #if light==2:                                               # 绿灯亮，代表所有节点启动完毕，可以起飞
-            #GPIO.output(26,GPIO.HIGH)
-       # if light==3:                                               # 红灯亮，代表识别有数据传出
-           # GPIO.output(28,GPIO.HIGH)
+    def marking(self,i):                                    # 信号灯指示函数
+        if i==1:                                               # 黄灯亮，代表雷达有数据出来，位姿数据正常
+            GPIO.output(7,GPIO.HIGH)
+        if i==2:                                               # 绿灯亮，代表所有节点启动完毕，可以起飞
+            GPIO.output(11,GPIO.HIGH)
+            rospy.sleep(0.5)
+            GPIO.output(11,GPIO.LOW)
+        if i==3:                                               # 红灯亮，代表识别有数据传出
+           GPIO.output(12,GPIO.HIGH)
 
 #串口通信类
 class UART(serial.Serial):                       
@@ -236,6 +238,8 @@ def shibie_toudi(main_node,servo):
 def main():
     main_node=MainNode()
     servo=UART(port, baudrate,timeout)
+    mark=Mark()
+    mark.marking(2)
     #light=Light()
     #main_node.shibie_pub(1)
     #rospy.sleep(15)
