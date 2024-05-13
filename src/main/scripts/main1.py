@@ -16,7 +16,7 @@ port='/dev/ttyTHS0'                                    # 串口端口,pin8(TXD)-
 baudrate=9600                                          # 波特率
 timeout=1
 position=[[3,2],[2,4],[4,1],[2,3],[4,4]]               # 靶标所在点[x,y]
-target=[1,2,5]                                         # 要投递的目标编号
+target=[1,3,4]                                         # 要投递的目标编号
 i=0                                                    # 已遍历点数
 box=1                                                  # 需要投放的盒子编号
 tim=0
@@ -30,8 +30,9 @@ class MainNode():
         self.rate=rospy.Rate(10)                                                                            # 频率
         self.takeoff_state=False                                                                            # 无人机是否起飞
         self.armed_state=False                                                                              # 无人机是否解锁
-        self.is_landing=False                                                                               # 是否正在着陆
-        self.is_offboard=False                                                                              # 是否已经切换到offboard模式
+        # self.is_landing=False                                                                               # 是否正在着陆
+        # self.is_offboard=False                                                                              # 是否已经切换到offboard模式
+        self.mode="AUTO.LOITER"                                                                             # 无人机当前飞行模式 默认为定点模式
         # 话题
         self.servo_pub=rospy.Publisher("servo_action",UInt8,queue_size=10)                                  # 舵机发布者节点
         self.rplidar_sub=rospy.Subscriber("/slam_out_pose",PoseStamped,self.rplidar_callback)               # 雷达订阅者节点 
@@ -45,7 +46,7 @@ class MainNode():
         # 服务
         self.set_mode_client = rospy.ServiceProxy('/mavros/set_mode', SetMode)                              # 飞行模式切换服务代理
 
-    # 无人机状态监听函数
+    # 无人机状态、模式监听函数
     def state_callback(self,msg):                                                                           
         if msg.armed:                       # 是否解锁
             rospy.loginfo("无人机已解锁")
@@ -53,10 +54,12 @@ class MainNode():
         if not msg.armed:
             self.armed_state=False
             rospy.loginfo("无人机未解锁")
-        if msg.mode=="OFFBOARD":            # 是否切换到OFFBOARD模式
-            self.is_offboard=True
-        if not msg.mode=="OFFBOARD":
-            self.is_offboard=False
+        self.mode=msg.mode                  # 获取当前的飞行模式
+        # if msg.mode=="OFFBOARD":            # 是否切换到OFFBOARD模式
+        #     self.is_offboard=True
+        #     rospy.loginfo("已切换到OFFBOARD")
+        # if not msg.mode=="OFFBOARD":
+        #     self.is_offboard=False
 
     # 起飞状态监听函数
     def altitude_callback(self,msg):
@@ -68,19 +71,27 @@ class MainNode():
             self.arm_takeoff=False
             #rospy.loginfo("无人机未起飞")
 
-    # 设置无人机飞行模式
-    def set_mode(self,mode):                                                                               
+    # 切换无人机飞行模式 最多重试10次
+    def set_mode(self, mode):
         rospy.wait_for_service('/mavros/set_mode')
-        try:
-            response=self.set_mode_client(custom_mode=mode)
-            if response.mode_sent:
-                rospy.loginfo(f"Mode change to {mode} successful")
-                if mode =="AUTO.LAND":
-                    self.is_landing==True
-            else:
-                rospy.loginfo("Mode change failed")
-        except rospy.ServiceException as e:
-            rospy.logerr("Service call failed: %s" % e)
+        max_retries = 10  # 设置最大重试次数
+        retries = 0
+        while retries < max_retries and not rospy.is_shutdown():
+            try:
+                response = self.set_mode_client(custom_mode=mode)   # 发送指定模式请求
+                if response.mode_sent:
+                    rospy.loginfo(f"Mode change to {mode} successful")
+                    self.mode=mode                                  # 更新模式状态
+                    break
+                else:
+                    retries += 1
+                    rospy.logwarn(f"Mode change to {mode} failed, retrying... ({retries}/{max_retries})")
+            except rospy.ServiceException as e:
+                rospy.logerr(f"Service call failed: {e}")
+                retries += 1
+            self.rate.sleep()  # 避免过于频繁的请求
+        if retries == max_retries:
+            rospy.logerr(f"Failed to change mode to {mode} after {max_retries} attempts")
 
     # 识别状态发布函数
     def shibie_pub(self,a):                                        
@@ -133,47 +144,79 @@ class MainNode():
             self.own_position_pub.publish(pose)
             #rospy.loginfo("send")
         except Exception as e:
-            rospy.logerr(f"Error in rplidar_callback: {e}")
+            rospy.logerr(f"rplidar_callback 发生错误: {e}")
         
-    # 发现目标之后开始调整定位，需给定高度
-    def shibie_move_fix(self,z):                                   
+    # 发现目标之后开始调整定位 (高度，超时时间)
+    def shibie_move_fix(self,z,timeout=30):                                   
         position=PoseStamped()
-        while not ((-70<=(self.x_p)<=70) and(70<=(self.y_p)<=70) ):
+        start_time=rospy.Time.now().to_sec()
+        while not rospy.is_shutdown():
+            current_time=rospy.Time.now().to_sec()
+            if (current_time-start_time)>=timeout:
+                rospy.logwarn("识别微调过程超时，直接投递")
+                break
+            if (abs(self.x_p)<=20 and abs(self.y_p)<=20):
+                rospy.loginfo("已经抵达目标中心点正上方，开始投递")
+                break
             position.header.stamp=rospy.Time.now()
             position.header.frame_id="map"
-            position.pose.position.x=self.x+self.x_p               # 目标点的x坐标
-            position.pose.position.y=self.y+self.y_p               # 目标点的y坐标
-            position.pose.position.z=z                             # 目标点的z坐标
+            position.pose.position.x=self.x+(self.x_p/1000)              # 目标点的x坐标
+            position.pose.position.y=self.y+(self.y_p/1000)              # 目标点的y坐标
+            position.pose.position.z=z                                   # 目标点的z坐标
             self.aim_position_pub.publish(position)
+            self.rate.sleep()
             rospy.loginfo(f"目标为{self.obj} \n 识别中,正在调整位置 \n x_p:{self.x_p} \n y_p:{self.y_p}")
 
-    # 发送目标点位置信息
-    def send_aim_posion(self,x,y,z):                               
+    # 发送目标点位置信息(x坐标，y坐标，z坐标，最大执行时间)
+    def send_aim_posion(self,x,y,z,timeout=40):                               
         position=PoseStamped()
-        while not ((-0.1<=(self.x-x)<=0.1) and(-0.1<=(self.y-y)<=0.1)) :
+        start_time=rospy.Time.now().to_sec()
+
+        while not rospy.is_shutdown():
+            current_time=rospy.Time.now().to_sec()
+            if (current_time-start_time)>=timeout:
+                rospy.logwarn("前往目标点过程超时")
+                break
+            if (abs(self.x-x)<=0.05 and abs(self.y-y)<=0.05):
+                rospy.loginfo("已到达目标点")
+                break
             position.header.stamp=rospy.Time.now()
             position.header.frame_id="map"
             position.pose.position.x=x                             # 目标点的x坐标
             position.pose.position.y=y                             # 目标点的y坐标
             position.pose.position.z=z                             # 目标点的z坐标
             self.aim_position_pub.publish(position)
+            rospy.loginfo(f"正在飞往指定点({x},{y},{z})")
+            self.rate.sleep()
 
-    # 自动起飞
-    def auto_takeoff(self,a):
-        position=PoseStamped()
-        while not (-0.1<=(self.z-a)<=0.1):
-            position.header.stamp=rospy.Time.now()
-            position.header.frame_id="map"
-            position.pose.position.x=0                             # 目标点的x坐标
-            position.pose.position.y=0                             # 目标点的y坐标
-            position.pose.position.z=a                             # 目标点的z坐标
+    # 自动起飞（目标高度，最大执行时间）
+    def auto_takeoff(self, altitude, timeout=30):
+        position = PoseStamped()
+        start_time = rospy.Time.now().to_sec()
+        rospy.loginfo("模式成功切换为OFFBOARD")
+        
+        while not rospy.is_shutdown():
+            current_time = rospy.Time.now().to_sec()
+            if (current_time - start_time) > timeout:           # 检查是否超时
+                rospy.logwarn("起飞所用时间超时")
+                break
+            if abs(self.z - altitude) <= 0.05:  # 更严格的高度检查
+                rospy.loginfo("成功起飞")
+                break
+            position.header.stamp = rospy.Time.now()
+            position.header.frame_id = "map"
+            position.pose.position.x = 0
+            position.pose.position.y = 0
+            position.pose.position.z = altitude
             self.aim_position_pub.publish(position)
+            rospy.loginfo("正在起飞……")
+            self.rate.sleep()  # 控制发布频率
 
     # 识别数据订阅函数
     def yolox_callback(self,msg):                                  
         global tim
         tim2=time.time()
-        fps=1/(tim2-tim)                                      # 计算fps
+        fps=1/(tim2-tim)                                           # 计算fps
         self.obj=msg.target                                        # 识别出的物体类别
         self.x_p=msg.x_p                                           # 物体的x偏移量
         self.y_p=msg.y_p                                           # 物体的y偏移量
@@ -182,11 +225,13 @@ class MainNode():
 
     # 着陆函数
     def land(self):
-        while not self.is_landing:
-            self.set_mode("AUTO.LAND")
+        while not self.mode=="AUTO.LAND":
+            self.set_mode("AUTO.LAND")                  # 切换模式到“AUTO.LAND”
+            rospy.rate.sleep()
         while self.armed_state:
-            rospy.loginfo("the plane is landing……")
-        rospy.loginfo("the plane landed and poweroffed successfully")
+            rospy.loginfo("成功切换模式为AUTO.LAND,着陆中……")
+            rospy.rate.sleep()
+        rospy.loginfo("成功着陆，并完成上锁")
 
 # 信号灯类
 class Mark():
@@ -196,14 +241,14 @@ class Mark():
         GPIO.setup(11,GPIO.OUT,initial=GPIO.LOW)
         GPIO.setup(12,GPIO.OUT,initial=GPIO.LOW)
 
-    def marking(self,i):                                    # 信号灯指示函数
-        if i==1:                                               # 黄灯亮，代表雷达有数据出来，位姿数据正常
+    def marking(self,i):                                       # 信号灯指示函数
+        if i==1:                                               # 
             GPIO.output(7,GPIO.HIGH)
-        if i==2:                                               # 绿灯亮，代表所有节点启动完毕，可以起飞
+        if i==2:                                               # 
             GPIO.output(11,GPIO.HIGH)
             rospy.sleep(0.5)
             GPIO.output(11,GPIO.LOW)
-        if i==3:                                               # 红灯亮，代表识别有数据传出
+        if i==3:                                               # 
            GPIO.output(12,GPIO.HIGH)
 
 #串口通信类
@@ -224,11 +269,12 @@ def shibie_toudi(main_node,servo):
     if main_node.obj in target:
         target.remove(main_node.obj)
         main_node.shibie_move_fix(1)
-        servo.servo_start(main_node.obj)
-        rospy.sleep(3)
+        servo.servo_start(box)
+        box+=1                          # 需要投放的盒子编号+1
+        rospy.sleep(3)                  
         rospy.loginfo("完成投递")
         i+=1
-    if main_node.obj==0:
+    if main_node.obj==6:
         pass
     else:
         i+=1
@@ -245,7 +291,7 @@ def main():
     #rospy.sleep(15)
     #servo.servo_start(2)
     while not rospy.is_shutdown(): 
-        if (main_node.armed_state) and (main_node.is_offboard):                      # 确定无人机是否解锁、切换到OFFBOARD模式
+        if (main_node.armed_state) and (main_node.mode=="OFFBOARD"):                 # 确定无人机是否解锁、切换到OFFBOARD模式
             main_node.auto_takeoff(0.5)                                              # 一键起飞，设置起飞高度
             #main_node.set_mode("OFFBOARD") 
             #main_node.send_aim_posion(0,0,1)
