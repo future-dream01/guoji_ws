@@ -249,8 +249,9 @@ def main():
     mark.marking(2)
     #main_node.shibie_pub(1)
     while not rospy.is_shutdown(): 
-        pass
-        
+        main_node.auto_takeoff(0.5)
+        main_node.send_aim_posion(2,2,0.5)
+        main_node.land()
         #main_node.set_mode("OFFBOARD")
         #shibie_toudi(main_node,servo)
         #print(f"当前坐标：\n x:{main_node.x}\n y:{main_node.y}\n z:{main_node.z}\n")
