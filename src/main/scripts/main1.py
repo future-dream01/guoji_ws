@@ -247,14 +247,14 @@ def main():
     # servo.servo_start(3)
     # # rospy.sleep(3)
     mark.marking(2)
-    main_node.shibie_pub(1)
+    #main_node.shibie_pub(1)
     while not rospy.is_shutdown(): 
         pass
         
         #main_node.set_mode("OFFBOARD")
         #shibie_toudi(main_node,servo)
-        print(f"当前坐标：\n x:{main_node.x}\n y:{main_node.y}\n z:{main_node.z}\n")
-        print(f"当前识别结果：{main_node.obj}\n x_p:{main_node.x_p}\n y_p:{main_node.y_p}\n")
+        #print(f"当前坐标：\n x:{main_node.x}\n y:{main_node.y}\n z:{main_node.z}\n")
+       #print(f"当前识别结果：{main_node.obj}\n x_p:{main_node.x_p}\n y_p:{main_node.y_p}\n")
 
         #if (main_node.armed_state) and (main_node.is_offboard):                      # 确定无人机是否解锁、切换到OFFBOARD模式
             #main_node.auto_takeoff(0.5)                                              # 一键起飞，设置起飞高度
