@@ -19,7 +19,6 @@ position=[[3,2],[2,4],[4,1],[2,3],[4,4]]               # 靶标所在点[x,y]
 target=[1,3,4]                                         # 要投递的目标编号
 i=0                                                    # 已遍历点数
 box=1                                                  # 需要投放的盒子编号
-tim=0
 # 主节点类
 class MainNode():
     def __init__(self):
@@ -214,14 +213,10 @@ class MainNode():
 
     # 识别数据订阅函数
     def yolox_callback(self,msg):                                  
-        global tim
-        tim2=time.time()
-        fps=1/(tim2-tim)                                           # 计算fps
         self.obj=msg.target                                        # 识别出的物体类别
         self.x_p=msg.x_p                                           # 物体的x偏移量
         self.y_p=msg.y_p                                           # 物体的y偏移量
-        tim =tim2
-        #rospy.loginfo(f"obj: {obj} \n x_p:{x_p} \n y_p:{y_p} \n fps: {fps}")   # 日志
+
 
     # 着陆函数
     def land(self):
