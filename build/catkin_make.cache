@@ -1,2 +1,2 @@
-main:rplidar_ros:servo:shibie
--DCATKIN_DEVEL_PREFIX=/home/jetson/github/guoji_ws/devel -DCMAKE_INSTALL_PREFIX=/home/jetson/github/guoji_ws/install -G Unix Makefiles
+main:rplidar_ros:servo:shibie:ydlidar_ros_driver
+-DCATKIN_WHITELIST_PACKAGES=ydlidar_ros_driver -DCATKIN_DEVEL_PREFIX=/home/jetson/github/guoji_ws/devel -DCMAKE_INSTALL_PREFIX=/home/jetson/github/guoji_ws/install -G Unix Makefiles

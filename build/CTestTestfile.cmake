@@ -5,7 +5,4 @@
 # This file includes the relevant testing commands required for 
 # testing this directory and lists subdirectories to be tested as well.
 subdirs("gtest")
-subdirs("servo")
-subdirs("shibie")
-subdirs("rplidar_ros")
-subdirs("main")
+subdirs("ydlidar_ros_driver")

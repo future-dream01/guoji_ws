@@ -37,7 +37,7 @@ CATKIN_SKIP_TESTING:BOOL=OFF
 CATKIN_SYMLINK_INSTALL:BOOL=OFF
 
 //List of ';' separated packages to build
-CATKIN_WHITELIST_PACKAGES:STRING=
+CATKIN_WHITELIST_PACKAGES:STRING=ydlidar_ros_driver
 
 //Path to a program.
 CMAKE_ADDR2LINE:FILEPATH=/usr/bin/addr2line
@@ -45,9 +45,8 @@ CMAKE_ADDR2LINE:FILEPATH=/usr/bin/addr2line
 //Path to a program.
 CMAKE_AR:FILEPATH=/usr/bin/ar
 
-//Choose the type of build, options are: None Debug Release RelWithDebInfo
-// MinSizeRel ...
-CMAKE_BUILD_TYPE:STRING=
+//Choose Release or Debug
+CMAKE_BUILD_TYPE:STRING=Release
 
 //Enable/Disable color output during build.
 CMAKE_COLOR_MAKEFILE:BOOL=ON
@@ -492,7 +491,7 @@ gtest_hide_internal_symbols:BOOL=OFF
 gtest_main_LIB_DEPENDS:STATIC=general;gtest;
 
 //Path to a library.
-lib:FILEPATH=/opt/ros/noetic/lib/libtf2.so
+lib:FILEPATH=/opt/ros/noetic/lib/libxmlrpcpp.so
 
 //Value Computed by CMake
 main_BINARY_DIR:STATIC=/home/jetson/github/guoji_ws/build/main
@@ -589,6 +588,18 @@ tf_DIR:PATH=/opt/ros/noetic/share/tf/cmake
 
 //The directory containing a CMake configuration file for xmlrpcpp.
 xmlrpcpp_DIR:PATH=/opt/ros/noetic/share/xmlrpcpp/cmake
+
+//Value Computed by CMake
+ydlidar_ros_driver_BINARY_DIR:STATIC=/home/jetson/github/guoji_ws/build/ydlidar_ros_driver
+
+//Value Computed by CMake
+ydlidar_ros_driver_IS_TOP_LEVEL:STATIC=OFF
+
+//Value Computed by CMake
+ydlidar_ros_driver_SOURCE_DIR:STATIC=/home/jetson/github/guoji_ws/src/ydlidar_ros_driver
+
+//The directory containing a CMake configuration file for ydlidar_sdk.
+ydlidar_sdk_DIR:PATH=/usr/local/lib/cmake/ydlidar_sdk
 
 //Value Computed by CMake
 zuobiao_BINARY_DIR:STATIC=/home/jetson/github/guoji_ws/build/zuobiao
@@ -747,7 +758,7 @@ CMAKE_MODULE_LINKER_FLAGS_RELWITHDEBINFO-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_NM
 CMAKE_NM-ADVANCED:INTERNAL=1
 //number of local generators
-CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=8
+CMAKE_NUMBER_OF_MAKEFILES:INTERNAL=5
 //ADVANCED property for variable: CMAKE_OBJCOPY
 CMAKE_OBJCOPY-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_OBJDUMP
@@ -832,6 +843,18 @@ PYTHON_EXECUTABLE-ADVANCED:INTERNAL=1
 //  And it needs to match.  But setuptools won't tell us where
 // it will install things.
 PYTHON_INSTALL_DIR:INTERNAL=lib/python3/dist-packages
+//ADVANCED property for variable: YDLIDAR_SDK_INCLUDE_DIRS
+YDLIDAR_SDK_INCLUDE_DIRS-ADVANCED:INTERNAL=1
+//YDLIDAR_SDK include directories
+YDLIDAR_SDK_INCLUDE_DIRS:INTERNAL=/usr/local/include/src;/usr/local/include
+//ADVANCED property for variable: YDLIDAR_SDK_LIBRARIES
+YDLIDAR_SDK_LIBRARIES-ADVANCED:INTERNAL=1
+//YDLIDAR_SDK libraries
+YDLIDAR_SDK_LIBRARIES:INTERNAL=ydlidar_sdk;pthread;rt
+//ADVANCED property for variable: YDLIDAR_SDK_LIBRARY_DIRS
+YDLIDAR_SDK_LIBRARY_DIRS-ADVANCED:INTERNAL=1
+//YDLIDAR_SDK library directories
+YDLIDAR_SDK_LIBRARY_DIRS:INTERNAL=
 //linker supports push/pop state
 _CMAKE_LINKER_PUSHPOP_STATE_SUPPORTED:INTERNAL=TRUE
 //CMAKE_INSTALL_PREFIX during last run

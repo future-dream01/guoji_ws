@@ -19,6 +19,16 @@ position=[[3,2],[2,4],[4,1],[2,3],[4,4]]               # 靶标所在点[x,y]
 target=[1,3,4]                                         # 要投递的目标编号
 i=0                                                    # 已遍历点数
 box=1                                                  # 需要投放的盒子编号
+
+
+a=PoseStamped()
+a.pose.position.x = 0
+a.pose.position.y = 0
+a.pose.position.z = 0.5
+#self.aim_position_pub.publish(position)
+
+
+
 # 主节点类
 class MainNode():
     def __init__(self):
@@ -54,6 +64,7 @@ class MainNode():
             self.armed_state=False
             rospy.loginfo("无人机未解锁")
         self.mode=msg.mode                  # 获取当前的飞行模式
+        rospy.loginfo(f"当前模式为:{msg.mode}")
         # if msg.mode=="OFFBOARD":            # 是否切换到OFFBOARD模式
         #     self.is_offboard=True
         #     rospy.loginfo("已切换到OFFBOARD")
@@ -192,9 +203,10 @@ class MainNode():
     def auto_takeoff(self, altitude, timeout=30):
         position = PoseStamped()
         start_time = rospy.Time.now().to_sec()
-        rospy.loginfo("模式成功切换为OFFBOARD")
+        #rospy.loginfo("模式成功切换为OFFBOARD")
         
         while not rospy.is_shutdown():
+            #self.set_mode("OFFBOARD")
             current_time = rospy.Time.now().to_sec()
             if (current_time - start_time) > timeout:           # 检查是否超时
                 rospy.logwarn("起飞所用时间超时")
@@ -289,10 +301,16 @@ def main():
     # # rospy.sleep(3)
     mark.marking(2)
     #main_node.shibie_pub(1)
+    #main_node.auto_takeoff(0.5)
     while not rospy.is_shutdown(): 
-        if (main_node.armed_state) and (main_node.mode=="OFFBOARD"):
+        #if (main_node.armed_state) and (main_node.mode=="OFFBOARD"):
+        if (main_node.armed_state):
+            #main_node.aim_position_pub.publish(a)
+            #main_node.set_mode("OFFBOARD")
             main_node.auto_takeoff(0.5)
-            main_node.send_aim_posion(2,2,0.5)
+            #main_node.send_aim_posion(2,2,0.5)
+            #main_node.auto_takeoff(0.5)
+            #main_node.send_aim_posion(2,2,0.5)
             main_node.land()
         #main_node.set_mode("OFFBOARD")
         #shibie_toudi(main_node,servo)
