@@ -141,9 +141,12 @@ class MainNode():
             rospy.logerr(f"rplidar_callback 发生错误: {e}")
         
     # 发现目标之后开始调整定位 (高度，超时时间)
-    def shibie_move_fix(self,z,timeout=30):                                   
-        position=PoseStamped()
+    def shibie_move_fix(self,z,timeout=60):                                   
+        #position=PoseStamped()
         start_time=rospy.Time.now().to_sec()
+        x_now=self.x
+        y_now=self.y
+        #z_now=self.z
         while not rospy.is_shutdown():
             current_time=rospy.Time.now().to_sec()
             if (current_time-start_time)>=timeout:
@@ -152,12 +155,13 @@ class MainNode():
             if (abs(self.x_p)<=30 and abs(self.y_p)<=30):
                 rospy.loginfo("已经抵达目标中心点正上方，开始投递")
                 break
-            position.header.stamp=rospy.Time.now()
-            position.header.frame_id="map"
-            position.pose.position.x=self.x+(self.x_p/1000)              # 目标点的x坐标
-            position.pose.position.y=self.y+(self.y_p/1000)              # 目标点的y坐标
-            position.pose.position.z=z                                   # 目标点的z坐标
-            self.aim_position_pub.publish(position)
+            self.send_aim_posion(x_now+(self.x_p/1000),y_now+(self.y_p/1000),z)
+            # position.header.stamp=rospy.Time.now()
+            # position.header.frame_id="map"
+            # position.pose.position.x=self.x+(self.x_p/1000)              # 目标点的x坐标
+            # position.pose.position.y=self.y+(self.y_p/1000)              # 目标点的y坐标
+            # position.pose.position.z=z                                   # 目标点的z坐标
+            # self.aim_position_pub.publish(position)
             self.rate.sleep()
             rospy.loginfo(f"目标为{self.obj} \n 识别中,正在调整位置 \n x_p:{self.x_p} \n y_p:{self.y_p}")
 
@@ -336,7 +340,6 @@ def shibie_toudi(main_node,servo,mark):
         i+=1                            # 已经去过的点的数量+1
     else:
         i+=1                            # 已经去过的点的数量+1
-
 
 # 主函数
 def main():
