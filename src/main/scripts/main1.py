@@ -27,7 +27,7 @@ class MainNode():
         rospy.init_node("main",anonymous=True)
         # 属性
         self.x=self.y=self.z=0                                                                              # 初始化位置x，y，z,无人机当前自身所处的位置
-        self.x_p=self.y_p=self.obj=0                                                                        # 初始化目标位置偏移x_p、y_p、物体类型
+        self.x_p=self.y_p=self.obj=6                                                                        # 初始化目标位置偏移x_p、y_p、物体类型
         self.rate=rospy.Rate(10)                                                                            # 频率
         self.takeoff_state=False                                                                            # 无人机是否起飞
         self.armed_state=False                                                                              # 无人机是否解锁
@@ -222,7 +222,7 @@ class MainNode():
             #self.set_mode("OFFBOARD")
             current_time = rospy.Time.now().to_sec()    # 此刻时间
             if (current_time - start_time) >= time:   # 检查是否超时
-                rospy.info("悬停时间已到")
+                rospy.loginfo("悬停时间已到")
                 break
             position.header.stamp = rospy.Time.now()
             position.header.frame_id = "map"
@@ -259,18 +259,18 @@ class MainNode():
     # 识别数据订阅函数
     def yolox_callback(self,msg):                                  
         self.obj=msg.target                                        # 识别出的物体类别
-        self.x_p=msg.x_p                                           # 物体的x偏移量
-        self.y_p=msg.y_p                                           # 物体的y偏移量
+        self.x_p=msg.y_p                                           # 物体的x偏移量
+        self.y_p=-msg.x_p                                          # 物体的y偏移量
 
 
     # 着陆函数
     def land(self):
         while not self.mode=="AUTO.LAND":
             self.set_mode("AUTO.LAND")                  # 切换模式到“AUTO.LAND”
-            rospy.rate.sleep()
+            self.rate.sleep()
         while self.armed_state:
             rospy.loginfo("成功切换模式为AUTO.LAND,着陆中……")
-            rospy.rate.sleep()
+            self.rate.sleep()
         rospy.loginfo("任务完成，成功着陆，并完成上锁")
 
 # 信号灯类
@@ -355,39 +355,13 @@ def main():
     # servo.servo_start(3)
     # # rospy.sleep(3)
     mark.marking(2)
-    #main_node.shibie_pub(1)
-    #main_node.auto_takeoff(0.5)
+   # main_node.shibie_pub(1)
     while not rospy.is_shutdown(): 
-        #if (main_node.armed_state) and (main_node.mode=="OFFBOARD"):
+        #rospy.loginfo(f"物体为：{main_node.obj}\n x偏移量:{main_node.x_p}\n y偏移量:{main_node.y_p}")
         if (main_node.armed_state):
-            #main_node.aim_position_pub.publish(a)
-            #main_node.set_mode("OFFBOARD")
-            main_node.auto_takeoff(0.5)
-            main_node.hover(10)             # 悬停10s
-            #main_node.send_aim_posion(2,2,0.5)
-            #main_node.auto_takeoff(0.5)
-            #main_node.send_aim_posion(2,2,0.5)
+            main_node.auto_takeoff(0.6)
+            main_node.hover(30)             # 悬停10s
             main_node.land()
-        #main_node.set_mode("OFFBOARD")
-        #shibie_toudi(main_node,servo)
-        #print(f"当前坐标：\n x:{main_node.x}\n y:{main_node.y}\n z:{main_node.z}\n")
-       #print(f"当前识别结果：{main_node.obj}\n x_p:{main_node.x_p}\n y_p:{main_node.y_p}\n")
-
-        #if (main_node.armed_state) and (main_node.is_offboard):                      # 确定无人机是否解锁、切换到OFFBOARD模式
-            #main_node.auto_takeoff(0.5)                                              # 一键起飞，设置起飞高度
-            #main_node.set_mode("OFFBOARD") 
-        #main_node.send_aim_posion(0,0,1)
-            #rospy.sleep(10)
-            #while not rospy.is_shutdown():
-                #main_node.set_mode("OFFBOARD")                                      # 将无人机飞行模式切换到OFFBOARD，由ros程序控制
-                #main_node.send_aim_posion(position[i][0],position[i][1],1)          # 前往指定点（）
-            #main_node.send_aim_posion(2,2,0.5)                                       # 前往指定点（x,y,z）
-            #main_node.land()                                                         # 自动着陆
-            #break
-                #main_node.shibie_pub(1)                                             # 开始识别
-                #time.sleep(4)                                                       # 等待识别开始出结果
-                #shibie_toudi(main_node,servo)                                       # 投递函数
-    #main_node.shibie_pub(2)
 
 if __name__=='__main__':
     main()
