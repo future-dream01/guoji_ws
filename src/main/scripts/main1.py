@@ -11,6 +11,7 @@ from mavros_msgs.srv import SetMode
 from mavros_msgs.msg import State
 from geometry_msgs.msg import PoseStamped,Twist
 import tf 
+from functools import partial
 
 port='/dev/ttyTHS0'                                    # 串口端口,pin8(TXD)->P5(RXD) ； pin10(RXD)->P4(TXD)
 baudrate=9600                                          # 波特率
@@ -19,15 +20,6 @@ position=[[3,2],[2,4],[4,1],[2,3],[4,4]]               # 靶标所在点[x,y]
 target=[1,3,4]                                         # 要投递的目标编号
 i=0                                                    # 已遍历点数
 box=1                                                  # 需要投放的盒子编号
-
-
-a=PoseStamped()
-a.pose.position.x = 0
-a.pose.position.y = 0
-a.pose.position.z = 0.5
-#self.aim_position_pub.publish(position)
-
-
 
 # 主节点类
 class MainNode():
@@ -39,9 +31,8 @@ class MainNode():
         self.rate=rospy.Rate(10)                                                                            # 频率
         self.takeoff_state=False                                                                            # 无人机是否起飞
         self.armed_state=False                                                                              # 无人机是否解锁
-        # self.is_landing=False                                                                               # 是否正在着陆
-        # self.is_offboard=False                                                                              # 是否已经切换到offboard模式
         self.mode="AUTO.LOITER"                                                                             # 无人机当前飞行模式 默认为定点模式
+        self.timer=None                         # 定义定时器
         # 话题
         self.servo_pub=rospy.Publisher("servo_action",UInt8,queue_size=10)                                  # 舵机发布者节点
         self.rplidar_sub=rospy.Subscriber("/slam_out_pose",PoseStamped,self.rplidar_callback)               # 雷达订阅者节点 
@@ -54,7 +45,7 @@ class MainNode():
         self.state_sub=rospy.Subscriber('/mavros/state',State,self.state_callback)                          # 无人机状态订阅者
         # 服务
         self.set_mode_client = rospy.ServiceProxy('/mavros/set_mode', SetMode)                              # 飞行模式切换服务代理
-
+ 
     # 无人机状态、模式监听函数
     def state_callback(self,msg):                                                                           
         if msg.armed:                       # 是否解锁
@@ -65,21 +56,14 @@ class MainNode():
             rospy.loginfo("无人机未解锁")
         self.mode=msg.mode                  # 获取当前的飞行模式
         rospy.loginfo(f"当前模式为:{msg.mode}")
-        # if msg.mode=="OFFBOARD":            # 是否切换到OFFBOARD模式
-        #     self.is_offboard=True
-        #     rospy.loginfo("已切换到OFFBOARD")
-        # if not msg.mode=="OFFBOARD":
-        #     self.is_offboard=False
 
     # 起飞状态监听函数
     def altitude_callback(self,msg):
         self.z=msg.pose.position.z
         if (self.z>=0.5):
             self.arm_takeoff=True
-            #rospy.loginfo("无人机已起飞")
         else :
             self.arm_takeoff=False
-            #rospy.loginfo("无人机未起飞")
 
     # 切换无人机飞行模式 最多重试10次
     def set_mode(self, mode):
@@ -157,23 +141,27 @@ class MainNode():
             rospy.logerr(f"rplidar_callback 发生错误: {e}")
         
     # 发现目标之后开始调整定位 (高度，超时时间)
-    def shibie_move_fix(self,z,timeout=30):                                   
-        position=PoseStamped()
+    def shibie_move_fix(self,z,timeout=60):                                   
+        #position=PoseStamped()
         start_time=rospy.Time.now().to_sec()
+        x_now=self.x
+        y_now=self.y
+        #z_now=self.z
         while not rospy.is_shutdown():
             current_time=rospy.Time.now().to_sec()
             if (current_time-start_time)>=timeout:
                 rospy.logwarn("识别微调过程超时，直接投递")
                 break
-            if (abs(self.x_p)<=20 and abs(self.y_p)<=20):
+            if (abs(self.x_p)<=30 and abs(self.y_p)<=30):
                 rospy.loginfo("已经抵达目标中心点正上方，开始投递")
                 break
-            position.header.stamp=rospy.Time.now()
-            position.header.frame_id="map"
-            position.pose.position.x=self.x+(self.x_p/1000)              # 目标点的x坐标
-            position.pose.position.y=self.y+(self.y_p/1000)              # 目标点的y坐标
-            position.pose.position.z=z                                   # 目标点的z坐标
-            self.aim_position_pub.publish(position)
+            self.send_aim_posion(x_now+(self.x_p/1000),y_now+(self.y_p/1000),z)
+            # position.header.stamp=rospy.Time.now()
+            # position.header.frame_id="map"
+            # position.pose.position.x=self.x+(self.x_p/1000)              # 目标点的x坐标
+            # position.pose.position.y=self.y+(self.y_p/1000)              # 目标点的y坐标
+            # position.pose.position.z=z                                   # 目标点的z坐标
+            # self.aim_position_pub.publish(position)
             self.rate.sleep()
             rospy.loginfo(f"目标为{self.obj} \n 识别中,正在调整位置 \n x_p:{self.x_p} \n y_p:{self.y_p}")
 
@@ -200,7 +188,7 @@ class MainNode():
             self.rate.sleep()
 
     # 自动起飞（目标高度，最大执行时间）
-    def auto_takeoff(self, altitude, timeout=30):
+    def auto_takeoff(self, altitude, timeout=40):
         position = PoseStamped()
         start_time = rospy.Time.now().to_sec()
         #rospy.loginfo("模式成功切换为OFFBOARD")
@@ -223,6 +211,51 @@ class MainNode():
             rospy.loginfo("正在起飞……")
             self.rate.sleep()  # 控制发布频率
 
+    # 全局悬停函数
+    def hover(self,time):
+        position = PoseStamped()
+        start_time = rospy.Time.now().to_sec()          # 开始时间
+        x_now=self.x                                    # 获取此时的坐标
+        y_now=self.y
+        z_now=self.z
+        while not rospy.is_shutdown():
+            #self.set_mode("OFFBOARD")
+            current_time = rospy.Time.now().to_sec()    # 此刻时间
+            if (current_time - start_time) >= time:   # 检查是否超时
+                rospy.info("悬停时间已到")
+                break
+            position.header.stamp = rospy.Time.now()
+            position.header.frame_id = "map"
+            position.pose.position.x = x_now
+            position.pose.position.y = y_now
+            position.pose.position.z = z_now
+            self.aim_position_pub.publish(position)
+            rospy.loginfo("正在悬停……")
+            self.rate.sleep()  # 控制发布频率
+    
+
+    # 定时器回调函数
+    def timer_callback(self, x_now, y_now, z_now, event):
+        position = PoseStamped()
+        position.header.stamp = rospy.Time.now()
+        position.header.frame_id = "map"
+        position.pose.position.x = x_now
+        position.pose.position.y = y_now
+        position.pose.position.z = z_now
+        self.aim_position_pub.publish(position)
+        rospy.loginfo("正在进行并行任务悬停……")
+
+    # 并行任务状态悬停函数(1:开始悬停，2结束悬停)
+    def stay(self,a):
+        if a==1:
+            x_now=self.x        # 获取当前坐标
+            y_now=self.y
+            z_now=self.z
+            self.timer=rospy.Timer(rospy.Duration(0.1),partial(self.timer_callback, x_now, y_now, z_now)) # 定住函数
+        if a==2:
+            self.timer.shutdown()
+
+
     # 识别数据订阅函数
     def yolox_callback(self,msg):                                  
         self.obj=msg.target                                        # 识别出的物体类别
@@ -238,7 +271,7 @@ class MainNode():
         while self.armed_state:
             rospy.loginfo("成功切换模式为AUTO.LAND,着陆中……")
             rospy.rate.sleep()
-        rospy.loginfo("成功着陆，并完成上锁")
+        rospy.loginfo("任务完成，成功着陆，并完成上锁")
 
 # 信号灯类
 class Mark():
@@ -271,20 +304,42 @@ class UART(serial.Serial):
             rospy.sleep(0.1)
 
 # 识别投递功能函数
-def shibie_toudi(main_node,servo):                                                          
+def shibie_toudi(main_node,servo,mark):                                                          
     global i,box,target
-    if main_node.obj in target:
-        target.remove(main_node.obj)
-        main_node.shibie_move_fix(1)
-        servo.servo_start(box)
+    if main_node.obj==6:                                # 如果没有目标 则要动一动，直到超时或者再次有目标
+        position = PoseStamped()
+        x_now=main_node.x                               # 获取此刻坐标
+        y_now=main_node.y
+        z_now=main_node.z
+        start_time = rospy.Time.now().to_sec()          # 开始时间
+        while not rospy.is_shutdown():
+            current_time = rospy.Time.now().to_sec()    # 此刻时间
+            if (current_time-start_time)>=15:           # 超时退出
+                break
+            if main_node.obj!= 6:                       # 有目标了退出
+                rospy.loginfo(f"找到了，目标为{main_node.obj}……")
+                break
+            position.header.stamp = rospy.Time.now()
+            position.header.frame_id = "map"
+            position.pose.position.x = x_now+0.2
+            position.pose.position.y = y_now+0.2
+            position.pose.position.z = z_now
+            rospy.loginfo("正在该点附近搜索目标……")
+    if main_node.obj in target:         # 找到了目标
+        main_node.stay(1)               # 并行任务悬停开始
+        mark.marking()                  # 蜂鸣器提示
+        main_node.stay(2)               # 并行任务悬停结束
+        target.remove(main_node.obj)    # 从目标列表中移除当前目标
+        main_node.shibie_move_fix(1)    # 开始投递前的修正
+        servo.servo_start(box)          # 投递
         box+=1                          # 需要投放的盒子编号+1
-        rospy.sleep(3)                  
+        main_node.stay(1)               # 并行任务悬停开始
+        rospy.sleep(3)                  # 确保货物落下来
+        main_node.stay(2)               # 并行任务悬停结束
         rospy.loginfo("完成投递")
-        i+=1
-    if main_node.obj==6:
-        pass
+        i+=1                            # 已经去过的点的数量+1
     else:
-        i+=1
+        i+=1                            # 已经去过的点的数量+1
 
 # 主函数
 def main():
@@ -308,6 +363,7 @@ def main():
             #main_node.aim_position_pub.publish(a)
             #main_node.set_mode("OFFBOARD")
             main_node.auto_takeoff(0.5)
+            main_node.hover(10)             # 悬停10s
             #main_node.send_aim_posion(2,2,0.5)
             #main_node.auto_takeoff(0.5)
             #main_node.send_aim_posion(2,2,0.5)
