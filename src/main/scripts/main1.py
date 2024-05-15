@@ -200,7 +200,7 @@ class MainNode():
             self.rate.sleep()
 
     # 自动起飞（目标高度，最大执行时间）
-    def auto_takeoff(self, altitude, timeout=30):
+    def auto_takeoff(self, altitude, timeout=40):
         position = PoseStamped()
         start_time = rospy.Time.now().to_sec()
         #rospy.loginfo("模式成功切换为OFFBOARD")
@@ -222,6 +222,30 @@ class MainNode():
             self.aim_position_pub.publish(position)
             rospy.loginfo("正在起飞……")
             self.rate.sleep()  # 控制发布频率
+
+    # 悬停函数
+    def hover(self,time):
+        position = PoseStamped()
+        start_time = rospy.Time.now().to_sec()          # 开始时间
+        x_now=self.x                                    # 获取此时的坐标
+        y_now=self.y
+        z_now=self.z
+        while not rospy.is_shutdown():
+            #self.set_mode("OFFBOARD")
+            current_time = rospy.Time.now().to_sec()    # 此刻时间
+            if (current_time - start_time) >= time:   # 检查是否超时
+                rospy.logwarn("悬停时间已到")
+                break
+            position.header.stamp = rospy.Time.now()
+            position.header.frame_id = "map"
+            position.pose.position.x = x_now
+            position.pose.position.y = y_now
+            position.pose.position.z = z_now
+            self.aim_position_pub.publish(position)
+            rospy.loginfo("正在悬停……")
+            self.rate.sleep()  # 控制发布频率
+        
+        
 
     # 识别数据订阅函数
     def yolox_callback(self,msg):                                  
@@ -308,6 +332,7 @@ def main():
             #main_node.aim_position_pub.publish(a)
             #main_node.set_mode("OFFBOARD")
             main_node.auto_takeoff(0.5)
+            main_node.hover(10)             # 悬停10s
             #main_node.send_aim_posion(2,2,0.5)
             #main_node.auto_takeoff(0.5)
             #main_node.send_aim_posion(2,2,0.5)
