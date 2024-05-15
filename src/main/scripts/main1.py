@@ -27,7 +27,7 @@ class MainNode():
         rospy.init_node("main",anonymous=True)
         # 属性
         self.x=self.y=self.z=0                                                                              # 初始化位置x，y，z,无人机当前自身所处的位置
-        self.x_p=self.y_p=self.obj=0                                                                        # 初始化目标位置偏移x_p、y_p、物体类型
+        self.x_p=self.y_p=self.obj=6                                                                        # 初始化目标位置偏移x_p、y_p、物体类型
         self.rate=rospy.Rate(10)                                                                            # 频率
         self.takeoff_state=False                                                                            # 无人机是否起飞
         self.armed_state=False                                                                              # 无人机是否解锁
@@ -222,7 +222,7 @@ class MainNode():
             #self.set_mode("OFFBOARD")
             current_time = rospy.Time.now().to_sec()    # 此刻时间
             if (current_time - start_time) >= time:   # 检查是否超时
-                rospy.info("悬停时间已到")
+                rospy.loginfo("悬停时间已到")
                 break
             position.header.stamp = rospy.Time.now()
             position.header.frame_id = "map"
@@ -259,18 +259,18 @@ class MainNode():
     # 识别数据订阅函数
     def yolox_callback(self,msg):                                  
         self.obj=msg.target                                        # 识别出的物体类别
-        self.x_p=msg.x_p                                           # 物体的x偏移量
-        self.y_p=msg.y_p                                           # 物体的y偏移量
+        self.x_p=msg.y_p                                           # 物体的x偏移量
+        self.y_p=-msg.x_p                                          # 物体的y偏移量
 
 
     # 着陆函数
     def land(self):
         while not self.mode=="AUTO.LAND":
             self.set_mode("AUTO.LAND")                  # 切换模式到“AUTO.LAND”
-            rospy.rate.sleep()
+            self.rate.sleep()
         while self.armed_state:
             rospy.loginfo("成功切换模式为AUTO.LAND,着陆中……")
-            rospy.rate.sleep()
+            self.rate.sleep()
         rospy.loginfo("任务完成，成功着陆，并完成上锁")
 
 # 信号灯类
