@@ -283,11 +283,19 @@ class MainNode():
 
     # 着陆函数
     def land(self,x,y):
-        while not(self.z<=0.25):
-            self.send_aim_posion(x,y,0.18)                          # 发送降落目标点
+        position = PoseStamped()
+        while not(self.z<=0.27):
+            position.header.stamp = rospy.Time.now()
+            position.header.frame_id = "map"
+            position.pose.position.x = x
+            position.pose.position.y = y
+            position.pose.position.z = 0.25
+            self.aim_position_pub.publish(position)
+            rospy.loginfo("正在进行降落……")
+            self.rate.sleep()                                       # 发送降落目标点
         while self.armed_state:                                     # 如果是解锁状态
             self.disarm()                                           # 锁桨
-        
+        rospy.loginfo("任务完成，降落成功")
 
         
 
@@ -369,25 +377,26 @@ def main():
     while not rospy.is_shutdown(): 
         if (main_node.armed_state):
 
-            ######### 测试1: 测试自动降落
-            main_node.auto_takeoff(0.5)
-            main_node.hover(0 , 0 , 0.5 ,10)
-            main_node.land(0 , 0 )
-            #########
-
-            # ######### 测试2:测试并行悬停指令和舵机
+            # ######### 测试1: 测试自动降落
             # main_node.auto_takeoff(0.5)
             # main_node.hover(0 , 0 , 0.5 ,10)
-            # main_node.stay(1)                   # 并行任务悬停开始
-            # main_node.servo_start(1)            
-            # rospy.sleep(1)
-            # main_node.servo_start(2)            
-            # rospy.sleep(1)
-            # main_node.servo_start(3)            
-            # main_node.stay(2)                   # 并行任务悬停结束
-            # main_node.send_aim_posion(0 , 1 , 0.5)
-            # main_node.land(0 , 1 )
+            # main_node.land(0 , 0 )
             # #########
+
+            ######### 测试2:测试并行悬停指令和舵机
+            main_node.auto_takeoff(0.5)
+            main_node.hover(0 , 0 , 0.5 ,10)
+            main_node.stay(1)                   # 并行任务悬停开始
+            servo.servo_start(1)            
+            rospy.sleep(1)
+            servo.servo_start(2)            
+            rospy.sleep(1)
+            servo.servo_start(3)  
+            rospy.sleep(1)          
+            main_node.stay(2)                   # 并行任务悬停结束
+            #main_node.send_aim_posion(0 , 0 , 0.5)
+            main_node.land(0 , 0 )
+            #########
 
             # ######### 测试3: 测试画矩形
             # main_node.auto_takeoff(0.5)
