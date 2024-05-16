@@ -365,13 +365,7 @@ def main():
     servo=UART(port, baudrate,timeout)
     mark=Mark()
     mark.marking(2)
-
-    servo.servo_start(1)
-    rospy.sleep(2)
-    servo.servo_start(2)
-    rospy.sleep(2)
-    servo.servo_start(3)
-
+    
    # main_node.shibie_pub(1)
     
     while not rospy.is_shutdown(): 
