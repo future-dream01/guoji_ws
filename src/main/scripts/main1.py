@@ -362,10 +362,11 @@ def main():
             main_node.auto_takeoff(0.5)
             main_node.hover(10) 
             rospy.loginfo("悬停结束，开始降落")
-            main_node.send_aim_posion(1,1,0.5)
-            main_node.send_aim_posion(1,1,0.4)
-            main_node.send_aim_posion(1,1,0.3)
-            main_node.send_aim_posion(1,1,0.2)
+            main_node.send_aim_posion(3.5,1,0.5)
+        
+            main_node.send_aim_posion(3.5,1,0.4)
+            main_node.send_aim_posion(3.5,1,0.3)
+            main_node.send_aim_posion(3.5,1,0.2)
            # main_node.send_aim_posion(1,1,0.2)
             break
 
