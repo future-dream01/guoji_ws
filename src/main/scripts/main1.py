@@ -360,8 +360,10 @@ def main():
         #rospy.loginfo(f"物体为：{main_node.obj}\n x偏移量:{main_node.x_p}\n y偏移量:{main_node.y_p}")
         if (main_node.armed_state):
             main_node.auto_takeoff(0.50)
-            main_node.hover(5)             # 悬停10s
+            main_node.send_aim_posion(1,1,0.5)
+            main_node.hover(10)             # 悬停10s
             main_node.land()
+
 
 if __name__=='__main__':
     main()
