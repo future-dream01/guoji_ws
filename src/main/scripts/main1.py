@@ -108,7 +108,7 @@ class MainNode():
         try:
             # 获取位置
             self.x = -msg.pose.position.x
-            self.y = msg.pose.position.y
+            self.y = -msg.pose.position.y
             #self.z = msg.pose.position.z
 
             # 获取并转换方向
@@ -226,9 +226,9 @@ class MainNode():
                 break
             position.header.stamp = rospy.Time.now()
             position.header.frame_id = "map"
-            position.pose.position.x = x_now
-            position.pose.position.y = y_now
-            position.pose.position.z = z_now
+            position.pose.position.x = 0
+            position.pose.position.y = 0
+            position.pose.position.z = 0.50
             self.aim_position_pub.publish(position)
             rospy.loginfo("正在悬停……")
             self.rate.sleep()  # 控制发布频率
@@ -359,8 +359,8 @@ def main():
     while not rospy.is_shutdown(): 
         #rospy.loginfo(f"物体为：{main_node.obj}\n x偏移量:{main_node.x_p}\n y偏移量:{main_node.y_p}")
         if (main_node.armed_state):
-            main_node.auto_takeoff(0.6)
-            main_node.hover(30)             # 悬停10s
+            main_node.auto_takeoff(0.50)
+            main_node.hover(5)             # 悬停10s
             main_node.land()
 
 if __name__=='__main__':
