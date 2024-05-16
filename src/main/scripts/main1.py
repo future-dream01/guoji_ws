@@ -226,9 +226,9 @@ class MainNode():
                 break
             position.header.stamp = rospy.Time.now()
             position.header.frame_id = "map"
-            position.pose.position.x = 0
-            position.pose.position.y = 0
-            position.pose.position.z = 0.50
+            position.pose.position.x = x_now
+            position.pose.position.y = y_now
+            position.pose.position.z = z_now
             self.aim_position_pub.publish(position)
             rospy.loginfo("正在悬停……")
             self.rate.sleep()  # 控制发布频率
@@ -359,10 +359,19 @@ def main():
     while not rospy.is_shutdown(): 
         #rospy.loginfo(f"物体为：{main_node.obj}\n x偏移量:{main_node.x_p}\n y偏移量:{main_node.y_p}")
         if (main_node.armed_state):
-            main_node.auto_takeoff(0.50)
+            main_node.auto_takeoff(0.5)
+            main_node.hover(10) 
+            rospy.loginfo("悬停结束，开始降落")
             main_node.send_aim_posion(1,1,0.5)
-            main_node.hover(10)             # 悬停10s
-            main_node.land()
+            main_node.send_aim_posion(1,1,0.4)
+            main_node.send_aim_posion(1,1,0.3)
+            main_node.send_aim_posion(1,1,0.2)
+           # main_node.send_aim_posion(1,1,0.2)
+            break
+
+
+            #main_node.hover(10)             # 悬停10s
+            #main_node.land()
 
 
 if __name__=='__main__':
