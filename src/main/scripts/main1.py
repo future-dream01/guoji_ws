@@ -365,11 +365,8 @@ def main():
     servo=UART(port, baudrate,timeout)
     mark=Mark()
     mark.marking(2)
-    
-   # main_node.shibie_pub(1)
-    
+    # main_node.shibie_pub(1)
     while not rospy.is_shutdown(): 
-        #rospy.loginfo(f"物体为：{main_node.obj}\n x偏移量:{main_node.x_p}\n y偏移量:{main_node.y_p}")
         if (main_node.armed_state):
 
             ######### 测试1: 测试自动降落
@@ -378,43 +375,43 @@ def main():
             main_node.land(0 , 0 )
             #########
 
-            ######### 测试2:测试并行悬停指令和舵机
-            main_node.auto_takeoff(0.5)
-            main_node.hover(0 , 0 , 0.5,10)
-            main_node.stay(1)                   # 并行任务悬停开始
-            main_node.servo_start(1)            
-            rospy.sleep(1)
-            main_node.servo_start(2)            
-            rospy.sleep(1)
-            main_node.servo_start(3)            
-            main_node.stay(2)                   # 并行任务悬停结束
-            main_node.send_aim_posion(0 , 1 , 0.5)
-            main_node.land(0 , 1 )
-            #########
+            # ######### 测试2:测试并行悬停指令和舵机
+            # main_node.auto_takeoff(0.5)
+            # main_node.hover(0 , 0 , 0.5 ,10)
+            # main_node.stay(1)                   # 并行任务悬停开始
+            # main_node.servo_start(1)            
+            # rospy.sleep(1)
+            # main_node.servo_start(2)            
+            # rospy.sleep(1)
+            # main_node.servo_start(3)            
+            # main_node.stay(2)                   # 并行任务悬停结束
+            # main_node.send_aim_posion(0 , 1 , 0.5)
+            # main_node.land(0 , 1 )
+            # #########
 
-            ######### 测试3: 测试画矩形
-            main_node.auto_takeoff(0.5)
-            main_node.hover(0 , 0 , 0.5 ,10)
-            main_node.send_aim_posion(0 , 2 , 0.5)
-            main_node.send_aim_posion(2 , 2 , 0.5)
-            main_node.send_aim_posion(2 , 0 , 0.5)
-            main_node.send_aim_posion(0 , 0 , 0.5)
-            main_node.land(0 , 0 )
-            #########
+            # ######### 测试3: 测试画矩形
+            # main_node.auto_takeoff(0.5)
+            # main_node.hover(0 , 0 , 0.5 ,10)
+            # main_node.send_aim_posion(0 , 2 , 0.5)
+            # main_node.send_aim_posion(2 , 2 , 0.5)
+            # main_node.send_aim_posion(2 , 0 , 0.5)
+            # main_node.send_aim_posion(0 , 0 , 0.5)
+            # main_node.land(0 , 0 )
+            # #########
 
-            # 需先标定
+            # # 需先标定
 
-            ######### 测试4:测试目标识别
-            main_node.auto_takeoff(1)
-            main_node.hover(0 , 0 , 1 ,10)
-            main_node.send_aim_posion(2 , 2 , 1)
-            main_node.stay(1)                   # 并行任务悬停开始
-            main_node.shibie_pub(1)        
-            rospy.sleep(3)
-            main_node.stay(2)                   # 并行任务悬停结束
-            main_node.send_aim_posion(0 , 1 , 0.5)
-            shibie_toudi(main_node,servo,mark)
-            main_node.land(0 , 1 )
+            # ######### 测试4:测试目标识别
+            # main_node.auto_takeoff(1)
+            # main_node.hover(0 , 0 , 1 ,10)
+            # main_node.send_aim_posion(2 , 2 , 1)
+            # main_node.stay(1)                   # 并行任务悬停开始
+            # main_node.shibie_pub(1)        
+            # rospy.sleep(3)
+            # main_node.stay(2)                   # 并行任务悬停结束
+            # main_node.send_aim_posion(0 , 1 , 0.5)
+            # shibie_toudi(main_node,servo,mark)
+            # main_node.land(0 , 1 )
 
 
             #########
