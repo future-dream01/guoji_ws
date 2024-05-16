@@ -7,7 +7,7 @@ import serial                                           # UART串口通讯模块
 import Jetson.GPIO as GPIO
 from main.msg import Yolox_data,Yolox_action
 from std_msgs.msg import UInt8
-from mavros_msgs.srv import SetMode
+from mavros_msgs.srv import SetMode,CommandBool
 from mavros_msgs.msg import State
 from geometry_msgs.msg import PoseStamped,Twist
 import tf 
@@ -45,6 +45,7 @@ class MainNode():
         self.state_sub=rospy.Subscriber('/mavros/state',State,self.state_callback)                          # 无人机状态订阅者
         # 服务
         self.set_mode_client = rospy.ServiceProxy('/mavros/set_mode', SetMode)                              # 飞行模式切换服务代理
+        self.arm_plane_client = rospy.ServiceProxy('/mavros/setmode',CommandBool)                             # 无人机锁定函数
  
     # 无人机状态、模式监听函数
     def state_callback(self,msg):                                                                           
@@ -74,18 +75,38 @@ class MainNode():
             try:
                 response = self.set_mode_client(custom_mode=mode)   # 发送指定模式请求
                 if response.mode_sent:
-                    rospy.loginfo(f"Mode change to {mode} successful")
+                    rospy.loginfo(f"模式成功切换为{mode}")
                     self.mode=mode                                  # 更新模式状态
                     break
                 else:
                     retries += 1
-                    rospy.logwarn(f"Mode change to {mode} failed, retrying... ({retries}/{max_retries})")
+                    rospy.logwarn(f"模式切换{mode}失败，正在重新尝试,尝试次数：({retries}/{max_retries})")
             except rospy.ServiceException as e:
                 rospy.logerr(f"Service call failed: {e}")
                 retries += 1
             self.rate.sleep()  # 避免过于频繁的请求
         if retries == max_retries:
-            rospy.logerr(f"Failed to change mode to {mode} after {max_retries} attempts")
+            rospy.logerr(f"经过{max_retries}次尝试后，模式切换为{mode}失败")
+    
+    # 无人机锁桨函数
+    def disarm(self):
+        rospy.wait_for_service('/mavros/cmd/arming')
+        max_retries=10
+        retries = 0
+        while retries < max_retries and not rospy.is_shutdown():
+            try: 
+                response = self.arm_plane_client(False)  # 发送锁桨命令
+                if response.success:
+                    rospy.loginfo("无人机锁桨成功")
+                else:
+                    rospy.logwarn(f"无人机锁桨失败，正在尝试重新锁桨,尝试次数：({retries}/{max_retries})")
+                    retries += 1
+            except rospy.ServiceException as e:
+                rospy.logerr("Service call failed: %s" % e)
+                retries += 1
+            if retries == max_retries:
+                rospy.logerr("锁桨失败")
+            self.rate.sleep()       # 防止请求过快
 
     # 识别状态发布函数
     def shibie_pub(self,a):                                        
@@ -212,12 +233,9 @@ class MainNode():
             self.rate.sleep()  # 控制发布频率
 
     # 全局悬停函数
-    def hover(self,time):
+    def hover(self,x,y,z,time):
         position = PoseStamped()
-        start_time = rospy.Time.now().to_sec()          # 开始时间
-        x_now=self.x                                    # 获取此时的坐标
-        y_now=self.y
-        z_now=self.z
+        start_time = rospy.Time.now().to_sec()          # 开始时间                                
         while not rospy.is_shutdown():
             #self.set_mode("OFFBOARD")
             current_time = rospy.Time.now().to_sec()    # 此刻时间
@@ -226,9 +244,9 @@ class MainNode():
                 break
             position.header.stamp = rospy.Time.now()
             position.header.frame_id = "map"
-            position.pose.position.x = x_now
-            position.pose.position.y = y_now
-            position.pose.position.z = z_now
+            position.pose.position.x = x
+            position.pose.position.y = y
+            position.pose.position.z = z
             self.aim_position_pub.publish(position)
             rospy.loginfo("正在悬停……")
             self.rate.sleep()  # 控制发布频率
@@ -264,14 +282,14 @@ class MainNode():
 
 
     # 着陆函数
-    def land(self):
-        while not self.mode=="AUTO.LAND":
-            self.set_mode("AUTO.LAND")                  # 切换模式到“AUTO.LAND”
-            self.rate.sleep()
-        while self.armed_state:
-            rospy.loginfo("成功切换模式为AUTO.LAND,着陆中……")
-            self.rate.sleep()
-        rospy.loginfo("任务完成，成功着陆，并完成上锁")
+    def land(self,x,y):
+        while not(self.z<=0.25):
+            self.send_aim_posion(x,y,0.18)                          # 发送降落目标点
+        while self.armed_state:                                     # 如果是解锁状态
+            self.disarm()                                           # 锁桨
+        
+
+        
 
 # 信号灯类
 class Mark():
@@ -346,34 +364,74 @@ def main():
     main_node=MainNode()
     servo=UART(port, baudrate,timeout)
     mark=Mark()
-    #main_node.shibie_pub(1)
-    #rospy.sleep(15)
-    # servo.servo_start(1)
-    # rospy.sleep(3)
-    # servo.servo_start(2)
-    # rospy.sleep(3)
-    # servo.servo_start(3)
-    # # rospy.sleep(3)
     mark.marking(2)
+
+    servo.servo_start(1)
+    rospy.sleep(2)
+    servo.servo_start(2)
+    rospy.sleep(2)
+    servo.servo_start(3)
+
    # main_node.shibie_pub(1)
+    
     while not rospy.is_shutdown(): 
         #rospy.loginfo(f"物体为：{main_node.obj}\n x偏移量:{main_node.x_p}\n y偏移量:{main_node.y_p}")
         if (main_node.armed_state):
+
+            ######### 测试1: 测试自动降落
             main_node.auto_takeoff(0.5)
-            main_node.hover(10) 
-            rospy.loginfo("悬停结束，开始降落")
-            main_node.send_aim_posion(3.5,1,0.5)
-        
-            main_node.send_aim_posion(3.5,1,0.4)
-            main_node.send_aim_posion(3.5,1,0.3)
-            main_node.send_aim_posion(3.5,1,0.2)
-           # main_node.send_aim_posion(1,1,0.2)
+            main_node.hover(0 , 0 , 0.5 ,10)
+            main_node.land(0 , 0 )
+            #########
+
+            ######### 测试2:测试并行悬停指令和舵机
+            main_node.auto_takeoff(0.5)
+            main_node.hover(0 , 0 , 0.5,10)
+            main_node.stay(1)                   # 并行任务悬停开始
+            main_node.servo_start(1)            
+            rospy.sleep(1)
+            main_node.servo_start(2)            
+            rospy.sleep(1)
+            main_node.servo_start(3)            
+            main_node.stay(2)                   # 并行任务悬停结束
+            main_node.send_aim_posion(0 , 1 , 0.5)
+            main_node.land(0 , 1 )
+            #########
+
+            ######### 测试3: 测试画矩形
+            main_node.auto_takeoff(0.5)
+            main_node.hover(0 , 0 , 0.5 ,10)
+            main_node.send_aim_posion(0 , 2 , 0.5)
+            main_node.send_aim_posion(2 , 2 , 0.5)
+            main_node.send_aim_posion(2 , 0 , 0.5)
+            main_node.send_aim_posion(0 , 0 , 0.5)
+            main_node.land(0 , 0 )
+            #########
+
+            # 需先标定
+
+            ######### 测试4:测试目标识别
+            main_node.auto_takeoff(1)
+            main_node.hover(0 , 0 , 1 ,10)
+            main_node.send_aim_posion(2 , 2 , 1)
+            main_node.stay(1)                   # 并行任务悬停开始
+            main_node.shibie_pub(1)        
+            rospy.sleep(3)
+            main_node.stay(2)                   # 并行任务悬停结束
+            main_node.send_aim_posion(0 , 1 , 0.5)
+            shibie_toudi(main_node,servo,mark)
+            main_node.land(0 , 1 )
+
+
+            #########
+
+
+
+
+
+
+
             break
-
-
-            #main_node.hover(10)             # 悬停10s
-            #main_node.land()
-
 
 if __name__=='__main__':
     main()
