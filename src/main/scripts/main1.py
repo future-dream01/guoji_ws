@@ -383,30 +383,46 @@ def main():
             # main_node.land(0 , 0 )
             # #########
 
-            ######### 测试2:测试并行悬停指令和舵机
-            main_node.auto_takeoff(0.5)
-            main_node.hover(0 , 0 , 0.5 ,10)
-            main_node.stay(1)                   # 并行任务悬停开始
-            servo.servo_start(1)            
-            rospy.sleep(1)
-            servo.servo_start(2)            
-            rospy.sleep(1)
-            servo.servo_start(3)  
-            rospy.sleep(1)          
-            main_node.stay(2)                   # 并行任务悬停结束
-            #main_node.send_aim_posion(0 , 0 , 0.5)
-            main_node.land(0 , 0 )
-            #########
-
-            # ######### 测试3: 测试画矩形
-            # main_node.auto_takeoff(0.5)
-            # main_node.hover(0 , 0 , 0.5 ,10)
-            # main_node.send_aim_posion(0 , 2 , 0.5)
-            # main_node.send_aim_posion(2 , 2 , 0.5)
-            # main_node.send_aim_posion(2 , 0 , 0.5)
-            # main_node.send_aim_posion(0 , 0 , 0.5)
+            # ######### 测试2:测试并行悬停指令和舵机
+            # main_node.auto_takeoff(1)
+            # main_node.hover(0 , 0 , 1 ,10)
+            # main_node.stay(1)                   # 并行任务悬停开始
+            # servo.servo_start(1)            
+            # rospy.sleep(1)
+            # servo.servo_start(2)            
+            # rospy.sleep(1)
+            # servo.servo_start(3)  
+            # rospy.sleep(1)          
+            # main_node.stay(2)                   # 并行任务悬停结束
+            # #main_node.send_aim_posion(0 , 0 , 0.5)
             # main_node.land(0 , 0 )
             # #########
+
+            ######### 测试3: 测试画矩形
+            main_node.auto_takeoff(1)
+            main_node.hover(0 , 0 , 1 ,10)
+            
+            main_node.send_aim_posion(0 , 2 , 1)
+            main_node.stay(1)
+            servo.servo_start(1)
+            rospy.sleep(1)
+            main_node.stay(2)
+
+            main_node.send_aim_posion(2 , 2 , 1)
+            main_node.stay(1)
+            servo.servo_start(2)
+            rospy.sleep(1)
+            main_node.stay(2)
+
+            main_node.send_aim_posion(2 , 0 , 1)
+            main_node.stay(1)
+            servo.servo_start(3)
+            rospy.sleep(1)
+            main_node.stay(2)
+
+            main_node.send_aim_posion(0 , 0 , 1)
+            main_node.land(0 , 0 )
+            #########
 
             # # 需先标定
 
