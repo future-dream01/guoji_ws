@@ -27,7 +27,8 @@ class MainNode():
         rospy.init_node("main",anonymous=True)
         # 属性
         self.x=self.y=self.z=0                                                                              # 初始化位置x，y，z,无人机当前自身所处的位置
-        self.x_p=self.y_p=self.obj=6                                                                        # 初始化目标位置偏移x_p、y_p、物体类型
+        self.x_p=self.y_p=0
+        self.obj=6                                                                                          # 初始化目标位置偏移x_p、y_p、物体类型
         self.rate=rospy.Rate(10)                                                                            # 频率
         self.takeoff_state=False                                                                            # 无人机是否起飞
         self.armed_state=False                                                                              # 无人机是否解锁
@@ -317,8 +318,8 @@ class MainNode():
     # 识别数据订阅函数
     def yolox_callback(self,msg):                                  
         self.obj=msg.target                                        # 识别出的物体类别
-        self.x_p=msg.y_p                                           # 物体的x偏移量
-        self.y_p=-msg.x_p                                          # 物体的y偏移量
+        self.x_p=-msg.x_p                                           # 物体的x偏移量
+        self.y_p=msg.y_p                                          # 物体的y偏移量
 
 
     # 着陆函数
@@ -403,37 +404,13 @@ def shibie_toudi(main_node,servo,mark):
 # 主函数
 def main():
     main_node=MainNode()
-    servo=UART(port, baudrate,timeout)
+    servo=UART(port, baudrate,time_p)
     mark=Mark()
     mark.marking(2)
+    main_node.shibie_pub(1)
     # main_node.shibie_pub(1)
     while not rospy.is_shutdown(): 
-        if (main_node.armed_state):
-
-            # ######### 测试1: 测试自动降落
-            # main_node.auto_takeoff(0.5)
-            # main_node.hover(0 , 0 , 0.5 ,10)
-            # main_node.land(0 , 0 )
-            # #########
-
-            # ######### 测试2:测试并行悬停指令和舵机
-            # main_node.auto_takeoff(1)
-            # main_node.hover(0 , 0 , 1 ,10)
-            # main_node.stay(1)                   # 并行任务悬停开始
-            # servo.servo_start(1)            
-            # rospy.sleep(1)
-            # servo.servo_start(2)            
-            # rospy.sleep(1)
-            # servo.servo_start(3)  
-            # rospy.sleep(1)          
-            # main_node.stay(2)                   # 并行任务悬停结束
-            # #main_node.send_aim_posion(0 , 0 , 0.5)
-            # main_node.land(0 , 0 )
-            # #########
-
-            ######### 测试3: 测试画矩形
-            main_node.auto_takeoff(0.5)
-            main_node.hover(0 , 0 , 0.5 ,30)
+        rospy.loginfo(f"物体:{main_node.obj} \n x_p:{main_node.x_p} \n y_p:{main_node.y_p}")
             
             #main_node.send_aim_posion(0 , 2 , 0.5)
             # main_node.stay(1)
@@ -454,7 +431,7 @@ def main():
             # main_node.stay(2)
 
            # main_node.send_aim_posion(0 , 0 , 0.5)
-            main_node.land(0 , 0 )
+            #main_node.land(0 , 0 )
             #########
 
             # # 需先标定
@@ -480,7 +457,7 @@ def main():
 
 
 
-            break
+            #break
 
 if __name__=='__main__':
     main()
