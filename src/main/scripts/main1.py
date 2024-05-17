@@ -399,7 +399,7 @@ def main():
     # main_node.shibie_pub(1)
     while not rospy.is_shutdown(): 
         rospy.loginfo(f"物体:{main_node.obj} \n x_p:{main_node.x_p} \n y_p:{main_node.y_p}")
-        if  (main_node.obj ==4) and abs(main_node.x_p) <=30 and abs(main_node.y_p)<=30:
+        if  (main_node.obj ==2) and abs(main_node.x_p) <=30 and abs(main_node.y_p)<=30:
             servo.servo_start(1)
         if  (main_node.obj ==3) and abs(main_node.x_p) <=30 and abs(main_node.y_p)<=30:
             servo.servo_start(2)
