@@ -16,7 +16,7 @@ from functools import partial
 port='/dev/ttyTHS0'                                    # 串口端口,pin8(TXD)->P5(RXD) ； pin10(RXD)->P4(TXD)
 baudrate=9600                                          # 波特率
 time_p=1
-position=[[1.04 , -3.02],[3.37 , -2.53],[2.04 , 0.50],[2.53 , 3.50],[4.00 , 0]]            # 靶标所在点[x,y]
+position=[[1.04 , -3.02],[3.37 , -2.53],[2.04 , 0.50],[2.53 , 3.5],[4 , 0]]            # 靶标所在点[x,y]
 target=[1,3,4]                                         # 要投递的目标编号
 i=0                                                    # 已遍历点数
 box=1    
@@ -27,7 +27,8 @@ class MainNode():
         rospy.init_node("main",anonymous=True)
         # 属性
         self.x=self.y=self.z=0                                                                              # 初始化位置x，y，z,无人机当前自身所处的位置
-        self.x_p=self.y_p=self.obj=6                                                                        # 初始化目标位置偏移x_p、y_p、物体类型
+        self.x_p=self.y_p=0
+        self.obj=6                                                                                          # 初始化目标位置偏移x_p、y_p、物体类型
         self.rate=rospy.Rate(10)                                                                            # 频率
         self.takeoff_state=False                                                                            # 无人机是否起飞
         self.armed_state=False                                                                              # 无人机是否解锁
@@ -163,9 +164,11 @@ class MainNode():
         
     # 发现目标之后开始调整定位 (高度，超时时间)
     def shibie_move_fix(self,z,timeout=60):                                   
+        #position=PoseStamped()
         start_time=rospy.Time.now().to_sec()
         x_now=self.x
         y_now=self.y
+        #z_now=self.z
         while not rospy.is_shutdown():
             current_time=rospy.Time.now().to_sec()
             if (current_time-start_time)>=timeout:
@@ -175,6 +178,12 @@ class MainNode():
                 rospy.loginfo("已经抵达目标中心点正上方，开始投递")
                 break
             self.send_aim_posion(x_now+(self.x_p/1000),y_now+(self.y_p/1000),z)
+            # position.header.stamp=rospy.Time.now()
+            # position.header.frame_id="map"
+            # position.pose.position.x=self.x+(self.x_p/1000)              # 目标点的x坐标
+            # position.pose.position.y=self.y+(self.y_p/1000)              # 目标点的y坐标
+            # position.pose.position.z=z                                   # 目标点的z坐标
+            # self.aim_position_pub.publish(position)
             self.rate.sleep()
             rospy.loginfo(f"目标为{self.obj} \n 识别中,正在调整位置 \n x_p:{self.x_p} \n y_p:{self.y_p}")
 
@@ -225,6 +234,7 @@ class MainNode():
     def send_aim_posion(self,x,y,z,timeout=40):                               
         position=PoseStamped()
         start_time=rospy.Time.now().to_sec()
+
         while not rospy.is_shutdown():
             current_time=rospy.Time.now().to_sec()
             if (current_time-start_time)>=timeout:
@@ -308,8 +318,8 @@ class MainNode():
     # 识别数据订阅函数
     def yolox_callback(self,msg):                                  
         self.obj=msg.target                                        # 识别出的物体类别
-        self.x_p=msg.y_p                                           # 物体的x偏移量
-        self.y_p=-msg.x_p                                          # 物体的y偏移量
+        self.x_p=-msg.x_p                                           # 物体的x偏移量
+        self.y_p=msg.y_p                                          # 物体的y偏移量
 
 
     # 着陆函数
@@ -327,6 +337,8 @@ class MainNode():
         while self.armed_state:                                     # 如果是解锁状态
             self.disarm()                                           # 锁桨
         rospy.loginfo("任务完成，降落成功")
+
+        
 
 # 信号灯类
 class Mark():
@@ -374,11 +386,11 @@ def shibie_toudi(main_node,servo,mark):
         mark.marking()                  # 蜂鸣器提示
         main_node.stay(2)               # 并行任务悬停结束
         target.remove(main_node.obj)    # 从目标列表中移除当前目标
-        main_node.shibie_move_fix(1.15) # 开始投递前的修正
+        main_node.shibie_move_fix(1.15)    # 开始投递前的修正
         main_node.send_aim_posion( main_node.x , main_node.y, 0.5)  # 降高
         servo.servo_start(box)          # 投递
         main_node.stay(1)               # 并行任务悬停开始
-        rospy.sleep(2)                  # 确保货物落下来
+        rospy.sleep(3)                  # 确保货物落下来
         main_node.stay(2)               # 并行任务悬停结束
         box+=1                          # 需要投放的盒子编号+1
         rospy.loginfo("完成投递")
