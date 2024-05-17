@@ -7,7 +7,7 @@ import serial                                           # UART串口通讯模块
 import Jetson.GPIO as GPIO
 from main.msg import Yolox_data,Yolox_action
 from std_msgs.msg import UInt8
-from mavros_msgs.srv import SetMode
+from mavros_msgs.srv import SetMode,CommandBool
 from mavros_msgs.msg import State
 from geometry_msgs.msg import PoseStamped,Twist
 import tf 
@@ -15,11 +15,11 @@ from functools import partial
 
 port='/dev/ttyTHS0'                                    # 串口端口,pin8(TXD)->P5(RXD) ； pin10(RXD)->P4(TXD)
 baudrate=9600                                          # 波特率
-timeout=1
-position=[[3,2],[2,4],[4,1],[2,3],[4,4]]               # 靶标所在点[x,y]
+time_p=1
+position=[[1.04 , -3.02],[3.37 , -2.53],[2.04 , 0.50],[2.53 , 3.5],[4 , 0]]            # 靶标所在点[x,y]
 target=[1,3,4]                                         # 要投递的目标编号
 i=0                                                    # 已遍历点数
-box=1                                                  # 需要投放的盒子编号
+box=1    
 
 # 主节点类
 class MainNode():
@@ -45,6 +45,7 @@ class MainNode():
         self.state_sub=rospy.Subscriber('/mavros/state',State,self.state_callback)                          # 无人机状态订阅者
         # 服务
         self.set_mode_client = rospy.ServiceProxy('/mavros/set_mode', SetMode)                              # 飞行模式切换服务代理
+        self.arm_plane_client = rospy.ServiceProxy('/mavros/setmode',CommandBool)                             # 无人机锁定函数
  
     # 无人机状态、模式监听函数
     def state_callback(self,msg):                                                                           
@@ -74,18 +75,38 @@ class MainNode():
             try:
                 response = self.set_mode_client(custom_mode=mode)   # 发送指定模式请求
                 if response.mode_sent:
-                    rospy.loginfo(f"Mode change to {mode} successful")
+                    rospy.loginfo(f"模式成功切换为{mode}")
                     self.mode=mode                                  # 更新模式状态
                     break
                 else:
                     retries += 1
-                    rospy.logwarn(f"Mode change to {mode} failed, retrying... ({retries}/{max_retries})")
+                    rospy.logwarn(f"模式切换{mode}失败，正在重新尝试,尝试次数：({retries}/{max_retries})")
             except rospy.ServiceException as e:
                 rospy.logerr(f"Service call failed: {e}")
                 retries += 1
             self.rate.sleep()  # 避免过于频繁的请求
         if retries == max_retries:
-            rospy.logerr(f"Failed to change mode to {mode} after {max_retries} attempts")
+            rospy.logerr(f"经过{max_retries}次尝试后，模式切换为{mode}失败")
+    
+    # 无人机锁桨函数
+    def disarm(self):
+        rospy.wait_for_service('/mavros/cmd/arming')
+        max_retries=10
+        retries = 0
+        while retries < max_retries and not rospy.is_shutdown():
+            try: 
+                response = self.arm_plane_client(False)  # 发送锁桨命令
+                if response.success:
+                    rospy.loginfo("无人机锁桨成功")
+                else:
+                    rospy.logwarn(f"无人机锁桨失败，正在尝试重新锁桨,尝试次数：({retries}/{max_retries})")
+                    retries += 1
+            except rospy.ServiceException as e:
+                rospy.logerr("Service call failed: %s" % e)
+                retries += 1
+            if retries == max_retries:
+                rospy.logerr("锁桨失败")
+            self.rate.sleep()       # 防止请求过快
 
     # 识别状态发布函数
     def shibie_pub(self,a):                                        
@@ -108,7 +129,7 @@ class MainNode():
         try:
             # 获取位置
             self.x = -msg.pose.position.x
-            self.y = msg.pose.position.y
+            self.y = -msg.pose.position.y
             #self.z = msg.pose.position.z
 
             # 获取并转换方向
@@ -165,6 +186,49 @@ class MainNode():
             self.rate.sleep()
             rospy.loginfo(f"目标为{self.obj} \n 识别中,正在调整位置 \n x_p:{self.x_p} \n y_p:{self.y_p}")
 
+    # 识别搜寻函数
+    def search_move(self,x,y,z):
+        position=PoseStamped()
+        start_time=rospy.Time.now().to_sec()
+        while not rospy.is_shutdown():
+            current_time=rospy.Time.now().to_sec()
+            if (current_time-start_time)>=20:
+                rospy.logwarn("搜寻过程超时")
+                return 0                    # 代表附近没有目标
+            if self.obj!=6:
+                return 1                    # 代表找到目标
+            if (current_time-start_time)<= 5:
+                position.header.stamp=rospy.Time.now()
+                position.header.frame_id="map"
+                position.pose.position.x=x+0.20                             # 目标点的x坐标
+                position.pose.position.y=y+0.20                           # 目标点的y坐标
+                position.pose.position.z=z                             # 目标点的z坐标
+                self.aim_position_pub.publish(position)
+            if 5<(current_time-start_time)<= 10:
+                position.header.stamp=rospy.Time.now()
+                position.header.frame_id="map"
+                position.pose.position.x=x+0.20                             # 目标点的x坐标
+                position.pose.position.y=y-0.20                             # 目标点的y坐标
+                position.pose.position.z=z                             # 目标点的z坐标
+                self.aim_position_pub.publish(position)
+            if 10<(current_time-start_time)<= 15:
+                position.header.stamp=rospy.Time.now()
+                position.header.frame_id="map"
+                position.pose.position.x=x-0.20                             # 目标点的x坐标
+                position.pose.position.y=y-0.20                             # 目标点的y坐标
+                position.pose.position.z=z                             # 目标点的z坐标
+                self.aim_position_pub.publish(position)
+            if 15<(current_time-start_time)<= 20:
+                position.header.stamp=rospy.Time.now()
+                position.header.frame_id="map"
+                position.pose.position.x=x-0.20                             # 目标点的x坐标
+                position.pose.position.y=y+0.20                             # 目标点的y坐标
+                position.pose.position.z=z                             # 目标点的z坐标
+                self.aim_position_pub.publish(position)
+            rospy.loginfo(f"正在指定点附近徘徊搜寻目标……")
+            self.rate.sleep()
+
+
     # 发送目标点位置信息(x坐标，y坐标，z坐标，最大执行时间)
     def send_aim_posion(self,x,y,z,timeout=40):                               
         position=PoseStamped()
@@ -191,10 +255,7 @@ class MainNode():
     def auto_takeoff(self, altitude, timeout=40):
         position = PoseStamped()
         start_time = rospy.Time.now().to_sec()
-        #rospy.loginfo("模式成功切换为OFFBOARD")
-        
         while not rospy.is_shutdown():
-            #self.set_mode("OFFBOARD")
             current_time = rospy.Time.now().to_sec()
             if (current_time - start_time) > timeout:           # 检查是否超时
                 rospy.logwarn("起飞所用时间超时")
@@ -212,12 +273,9 @@ class MainNode():
             self.rate.sleep()  # 控制发布频率
 
     # 全局悬停函数
-    def hover(self,time):
+    def hover(self,x,y,z,time):
         position = PoseStamped()
-        start_time = rospy.Time.now().to_sec()          # 开始时间
-        x_now=self.x                                    # 获取此时的坐标
-        y_now=self.y
-        z_now=self.z
+        start_time = rospy.Time.now().to_sec()          # 开始时间                                
         while not rospy.is_shutdown():
             #self.set_mode("OFFBOARD")
             current_time = rospy.Time.now().to_sec()    # 此刻时间
@@ -226,9 +284,9 @@ class MainNode():
                 break
             position.header.stamp = rospy.Time.now()
             position.header.frame_id = "map"
-            position.pose.position.x = x_now
-            position.pose.position.y = y_now
-            position.pose.position.z = z_now
+            position.pose.position.x = x
+            position.pose.position.y = y
+            position.pose.position.z = z
             self.aim_position_pub.publish(position)
             rospy.loginfo("正在悬停……")
             self.rate.sleep()  # 控制发布频率
@@ -264,14 +322,22 @@ class MainNode():
 
 
     # 着陆函数
-    def land(self):
-        while not self.mode=="AUTO.LAND":
-            self.set_mode("AUTO.LAND")                  # 切换模式到“AUTO.LAND”
-            self.rate.sleep()
-        while self.armed_state:
-            rospy.loginfo("成功切换模式为AUTO.LAND,着陆中……")
-            self.rate.sleep()
-        rospy.loginfo("任务完成，成功着陆，并完成上锁")
+    def land(self,x,y):
+        position = PoseStamped()
+        while not(self.z<=0.22):
+            position.header.stamp = rospy.Time.now()
+            position.header.frame_id = "map"
+            position.pose.position.x = x
+            position.pose.position.y = y
+            position.pose.position.z = 0.20
+            self.aim_position_pub.publish(position)
+            rospy.loginfo("正在进行降落……")
+            self.rate.sleep()                                       # 发送降落目标点
+        while self.armed_state:                                     # 如果是解锁状态
+            self.disarm()                                           # 锁桨
+        rospy.loginfo("任务完成，降落成功")
+
+        
 
 # 信号灯类
 class Mark():
@@ -306,58 +372,58 @@ class UART(serial.Serial):
 # 识别投递功能函数
 def shibie_toudi(main_node,servo,mark):                                                          
     global i,box,target
-    if main_node.obj==6:                                # 如果没有目标 则要动一动，直到超时或者再次有目标
-        position = PoseStamped()
-        x_now=main_node.x                               # 获取此刻坐标
-        y_now=main_node.y
-        z_now=main_node.z
-        start_time = rospy.Time.now().to_sec()          # 开始时间
-        while not rospy.is_shutdown():
-            current_time = rospy.Time.now().to_sec()    # 此刻时间
-            if (current_time-start_time)>=15:           # 超时退出
-                break
-            if main_node.obj!= 6:                       # 有目标了退出
-                rospy.loginfo(f"找到了，目标为{main_node.obj}……")
-                break
-            position.header.stamp = rospy.Time.now()
-            position.header.frame_id = "map"
-            position.pose.position.x = x_now+0.2
-            position.pose.position.y = y_now+0.2
-            position.pose.position.z = z_now
-            rospy.loginfo("正在该点附近搜索目标……")
+    if main_node.obj==6:                # 如果没有目标 则要开始搜寻，直到超时或者再次有目标
+        rospy.loginfo("目标点位置没有找到目标,开始徘徊搜索")
+        a=main_node.search_move()                 
+        if a==0:                        # 找不到目标
+            return
+        if a==1:
+            pass
+
     if main_node.obj in target:         # 找到了目标
         main_node.stay(1)               # 并行任务悬停开始
         mark.marking()                  # 蜂鸣器提示
         main_node.stay(2)               # 并行任务悬停结束
         target.remove(main_node.obj)    # 从目标列表中移除当前目标
-        main_node.shibie_move_fix(1)    # 开始投递前的修正
+        main_node.shibie_move_fix(1.15)    # 开始投递前的修正
+        main_node.send_aim_posion( main_node.x , main_node.y, 0.5)  # 降高
         servo.servo_start(box)          # 投递
-        box+=1                          # 需要投放的盒子编号+1
         main_node.stay(1)               # 并行任务悬停开始
         rospy.sleep(3)                  # 确保货物落下来
         main_node.stay(2)               # 并行任务悬停结束
+        box+=1                          # 需要投放的盒子编号+1
         rospy.loginfo("完成投递")
         i+=1                            # 已经去过的点的数量+1
-    else:
+
+    else:                               # 不是需要投递的目标
+        rospy.loginfo("目标点位置没有需要投递的目标")
         i+=1                            # 已经去过的点的数量+1
+
+
 
 # 主函数
 def main():
     main_node=MainNode()
-    servo=UART(port, baudrate,timeout)
+    servo=UART(port, baudrate,time_p)
     mark=Mark()
     mark.marking(2)
     while not rospy.is_shutdown(): 
         if (main_node.armed_state):                 # 确定无人机是否解锁
-            main_node.auto_takeoff(1.5)             # 一键起飞，设置起飞高度：1.5米
+            main_node.auto_takeoff( 1.15 )          # 一键起飞，设置起飞高度：1.15米
             main_node.hover(30)                     # 全局悬停30s
             for iii in range(0,5):
+                if iii==4:
+                    main_node.send_aim_posion(position[iii][0],position[iii][1],1.5)
+                    break
                 main_node.send_aim_posion(position[iii][0],position[iii][1],1.5) # 飞往指定点，高度1.5米
                 main_node.stay(1)                   # 并行任务悬停开始
                 main_node.shibie_pub(1)             # 发布开始识别指令
                 main_node.stay(2)                   # 并行任务悬停结束
                 shibie_toudi(main_node,servo,mark)  # 识别，并决定是否投递
-            main_node.send_aim_posion(0,0,1)        # 回到出发点，高度：1米
+            main_node.stay(1)                   # 并行任务悬停开始
+            main_node.shibie_pub(2)             # 发布结束识别指令
+            main_node.stay(2)                   # 并行任务悬停结束
+            main_node.send_aim_posion(0 , 0 , 1.15 )        # 回到出发点，高度：1.15米
             main_node.land()                        # 自动着陆
             break
 if __name__=='__main__':
