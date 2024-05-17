@@ -16,7 +16,7 @@ from functools import partial
 port='/dev/ttyTHS0'                                    # 串口端口,pin8(TXD)->P5(RXD) ； pin10(RXD)->P4(TXD)
 baudrate=9600                                          # 波特率
 time_p=1
-position=[[1.04 , -3.02],[3.37 , -2.53],[2.04 , 0.50],[2.53 , 3.5],[4 , 0]]            # 靶标所在点[x,y]
+position=[[1.04 , -3.02],[3.37 , -2.53],[2.04 , 0.50],[2.53 , 3.50],[4.00 , 0]]            # 靶标所在点[x,y]
 target=[1,3,4]                                         # 要投递的目标编号
 i=0                                                    # 已遍历点数
 box=1    
@@ -163,11 +163,9 @@ class MainNode():
         
     # 发现目标之后开始调整定位 (高度，超时时间)
     def shibie_move_fix(self,z,timeout=60):                                   
-        #position=PoseStamped()
         start_time=rospy.Time.now().to_sec()
         x_now=self.x
         y_now=self.y
-        #z_now=self.z
         while not rospy.is_shutdown():
             current_time=rospy.Time.now().to_sec()
             if (current_time-start_time)>=timeout:
@@ -177,12 +175,6 @@ class MainNode():
                 rospy.loginfo("已经抵达目标中心点正上方，开始投递")
                 break
             self.send_aim_posion(x_now+(self.x_p/1000),y_now+(self.y_p/1000),z)
-            # position.header.stamp=rospy.Time.now()
-            # position.header.frame_id="map"
-            # position.pose.position.x=self.x+(self.x_p/1000)              # 目标点的x坐标
-            # position.pose.position.y=self.y+(self.y_p/1000)              # 目标点的y坐标
-            # position.pose.position.z=z                                   # 目标点的z坐标
-            # self.aim_position_pub.publish(position)
             self.rate.sleep()
             rospy.loginfo(f"目标为{self.obj} \n 识别中,正在调整位置 \n x_p:{self.x_p} \n y_p:{self.y_p}")
 
@@ -233,7 +225,6 @@ class MainNode():
     def send_aim_posion(self,x,y,z,timeout=40):                               
         position=PoseStamped()
         start_time=rospy.Time.now().to_sec()
-
         while not rospy.is_shutdown():
             current_time=rospy.Time.now().to_sec()
             if (current_time-start_time)>=timeout:
@@ -337,8 +328,6 @@ class MainNode():
             self.disarm()                                           # 锁桨
         rospy.loginfo("任务完成，降落成功")
 
-        
-
 # 信号灯类
 class Mark():
     def __init__(self):
@@ -385,11 +374,11 @@ def shibie_toudi(main_node,servo,mark):
         mark.marking()                  # 蜂鸣器提示
         main_node.stay(2)               # 并行任务悬停结束
         target.remove(main_node.obj)    # 从目标列表中移除当前目标
-        main_node.shibie_move_fix(1.15)    # 开始投递前的修正
+        main_node.shibie_move_fix(1.15) # 开始投递前的修正
         main_node.send_aim_posion( main_node.x , main_node.y, 0.5)  # 降高
         servo.servo_start(box)          # 投递
         main_node.stay(1)               # 并行任务悬停开始
-        rospy.sleep(3)                  # 确保货物落下来
+        rospy.sleep(2)                  # 确保货物落下来
         main_node.stay(2)               # 并行任务悬停结束
         box+=1                          # 需要投放的盒子编号+1
         rospy.loginfo("完成投递")
@@ -398,7 +387,6 @@ def shibie_toudi(main_node,servo,mark):
     else:                               # 不是需要投递的目标
         rospy.loginfo("目标点位置没有需要投递的目标")
         i+=1                            # 已经去过的点的数量+1
-
 
 
 # 主函数
@@ -413,17 +401,18 @@ def main():
             main_node.hover(30)                     # 全局悬停30s
             for iii in range(0,5):
                 if iii==4:
-                    main_node.send_aim_posion(position[iii][0],position[iii][1],1.5)
+                    main_node.send_aim_posion(position[iii][0] , position[iii][1] , 1.15)    # 飞往指定点，高度1.15米
                     break
-                main_node.send_aim_posion(position[iii][0],position[iii][1],1.5) # 飞往指定点，高度1.5米
+                main_node.send_aim_posion(position[iii][0] , position[iii][1] , 1.15)        # 飞往指定点，高度1.15米
                 main_node.stay(1)                   # 并行任务悬停开始
                 main_node.shibie_pub(1)             # 发布开始识别指令
+                rospy.sleep(3)                      # 等3s出数据
                 main_node.stay(2)                   # 并行任务悬停结束
                 shibie_toudi(main_node,servo,mark)  # 识别，并决定是否投递
-            main_node.stay(1)                   # 并行任务悬停开始
-            main_node.shibie_pub(2)             # 发布结束识别指令
-            main_node.stay(2)                   # 并行任务悬停结束
-            main_node.send_aim_posion(0 , 0 , 1.15 )        # 回到出发点，高度：1.15米
+            main_node.stay(1)                       # 并行任务悬停开始
+            main_node.shibie_pub(2)                 # 发布结束识别指令
+            main_node.stay(2)                       # 并行任务悬停结束
+            main_node.send_aim_posion(0 , 0 , 1.15 )# 回到出发点，高度：1.15米
             main_node.land()                        # 自动着陆
             break
 if __name__=='__main__':
