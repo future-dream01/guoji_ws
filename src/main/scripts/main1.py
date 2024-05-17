@@ -160,7 +160,7 @@ class MainNode():
             rospy.logerr(f"rplidar_callback 发生错误: {e}")
         
     # 发现目标之后开始调整定位 (高度，超时时间)
-    def shibie_move_fix(self,z,timeout=60):                                   
+    def shibie_move_fix(self,z,timeout=30):                                   
         start_time=rospy.Time.now().to_sec()
         x_now=self.x
         y_now=self.y
@@ -375,7 +375,7 @@ def shibie_toudi(main_node,servo,mark):
         main_node.stay(2)               # 并行任务悬停结束
         target.remove(main_node.obj)    # 从目标列表中移除当前目标
         main_node.shibie_move_fix(1.15)    # 开始投递前的修正
-        main_node.send_aim_posion( main_node.x , main_node.y, 0.5)  # 降高
+        #main_node.send_aim_posion( main_node.x , main_node.y, 0.5)  # 降高
         servo.servo_start(box)          # 投递
         main_node.stay(1)               # 并行任务悬停开始
         rospy.sleep(3)                  # 确保货物落下来
@@ -398,7 +398,7 @@ def main():
     while not rospy.is_shutdown(): 
         if (main_node.armed_state):                 # 确定无人机是否解锁
             main_node.auto_takeoff( 1.15 )          # 一键起飞，设置起飞高度：1.15米
-            main_node.hover(30)                     # 全局悬停30s
+            main_node.hover(35)                     # 全局悬停30s
             for iii in range(0,5):
                 if iii==4:
                     main_node.send_aim_posion(position[iii][0] , position[iii][1] , 1.15)    # 飞往指定点，高度1.15米
@@ -406,7 +406,7 @@ def main():
                 main_node.send_aim_posion(position[iii][0] , position[iii][1] , 1.15)        # 飞往指定点，高度1.15米
                 main_node.stay(1)                   # 并行任务悬停开始
                 main_node.shibie_pub(1)             # 发布开始识别指令
-                rospy.sleep(3)                      # 等3s出数据
+                rospy.sleep(5)                      # 等5s出数据
                 main_node.stay(2)                   # 并行任务悬停结束
                 shibie_toudi(main_node,servo,mark)  # 识别，并决定是否投递
             main_node.stay(1)                       # 并行任务悬停开始
