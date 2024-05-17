@@ -11,11 +11,8 @@ from mavros_msgs.srv import SetMode,CommandBool
 from mavros_msgs.msg import State
 from geometry_msgs.msg import PoseStamped,Twist
 import tf 
-from functools import partial
-
-port='/dev/ttyTHS0'                                    # 串口端口,pin8(TXD)->P5(RXD) ； pin10(RXD)->P4(TXD)
-baudrate=9600                                          # 波特率
-time_p=1
+from functools import partial                           # 定时器函数传参
+                                      
 position=[[1.04 , -3.02],[3.37 , -2.53],[2.04 , 0.50],[2.53 , 3.5],[4 , 0]]            # 靶标所在点[x,y]
 target=[1,3,4]                                         # 要投递的目标编号
 i=0                                                    # 已遍历点数
@@ -395,14 +392,19 @@ def shibie_toudi(main_node,servo,mark):
 # 主函数
 def main():
     main_node=MainNode()
-    servo=UART(port, baudrate,time_p)
+    servo=UART('/dev/ttyTHS0', 9600,1)
     mark=Mark()
     mark.marking(2)
     main_node.shibie_pub(1)
     # main_node.shibie_pub(1)
     while not rospy.is_shutdown(): 
         rospy.loginfo(f"物体:{main_node.obj} \n x_p:{main_node.x_p} \n y_p:{main_node.y_p}")
-            
+        if  (main_node.obj ==4) and abs(main_node.x_p) <=30 and abs(main_node.y_p)<=30:
+            servo.servo_start(1)
+        if  (main_node.obj ==3) and abs(main_node.x_p) <=30 and abs(main_node.y_p)<=30:
+            servo.servo_start(2)
+        if  (main_node.obj ==1) and abs(main_node.x_p) <=30 and abs(main_node.y_p)<=30:
+            servo.servo_start(3)
             #main_node.send_aim_posion(0 , 2 , 0.5)
             # main_node.stay(1)
             # servo.servo_start(1)
