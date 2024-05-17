@@ -284,12 +284,12 @@ class MainNode():
     # 着陆函数
     def land(self,x,y):
         position = PoseStamped()
-        while not(self.z<=0.27):
+        while not(self.z<=0.22):
             position.header.stamp = rospy.Time.now()
             position.header.frame_id = "map"
             position.pose.position.x = x
             position.pose.position.y = y
-            position.pose.position.z = 0.25
+            position.pose.position.z = 0.20
             self.aim_position_pub.publish(position)
             rospy.loginfo("正在进行降落……")
             self.rate.sleep()                                       # 发送降落目标点
@@ -399,28 +399,28 @@ def main():
             # #########
 
             ######### 测试3: 测试画矩形
-            main_node.auto_takeoff(1)
-            main_node.hover(0 , 0 , 1 ,10)
+            main_node.auto_takeoff(0.5)
+            main_node.hover(0 , 0 , 0.5 ,30)
             
-            main_node.send_aim_posion(0 , 2 , 1)
-            main_node.stay(1)
-            servo.servo_start(1)
-            rospy.sleep(1)
-            main_node.stay(2)
+            #main_node.send_aim_posion(0 , 2 , 0.5)
+            # main_node.stay(1)
+            # servo.servo_start(1)
+            # rospy.sleep(1)
+            # main_node.stay(2)
 
-            main_node.send_aim_posion(2 , 2 , 1)
-            main_node.stay(1)
-            servo.servo_start(2)
-            rospy.sleep(1)
-            main_node.stay(2)
+            #main_node.send_aim_posion(2 , 2 , 0.5)
+            # main_node.stay(1)
+            # servo.servo_start(2)
+            # rospy.sleep(1)
+            # main_node.stay(2)
 
-            main_node.send_aim_posion(2 , 0 , 1)
-            main_node.stay(1)
-            servo.servo_start(3)
-            rospy.sleep(1)
-            main_node.stay(2)
+           # main_node.send_aim_posion(2 , 0 , 0.5)
+            # main_node.stay(1)
+            # servo.servo_start(3)
+            # rospy.sleep(1)
+            # main_node.stay(2)
 
-            main_node.send_aim_posion(0 , 0 , 1)
+           # main_node.send_aim_posion(0 , 0 , 0.5)
             main_node.land(0 , 0 )
             #########
 
