@@ -220,7 +220,7 @@ class MainNode():
 
 
     # 发送目标点位置信息(x坐标，y坐标，z坐标，最大执行时间)
-    def send_aim_posion(self,x,y,z,timeout=40):                               
+    def send_aim_posion(self,x,y,z,timeout=10):                               
         position=PoseStamped()
         start_time=rospy.Time.now().to_sec()
 
@@ -242,7 +242,7 @@ class MainNode():
             self.rate.sleep()
 
     # 自动起飞（目标高度，最大执行时间）
-    def auto_takeoff(self, altitude, timeout=40):
+    def auto_takeoff(self, altitude, timeout=15):
         position = PoseStamped()
         start_time = rospy.Time.now().to_sec()
         while not rospy.is_shutdown():
@@ -375,7 +375,7 @@ def shibie_toudi(main_node,servo,mark):
         main_node.stay(2)               # 并行任务悬停结束
         target.remove(main_node.obj)    # 从目标列表中移除当前目标
         main_node.shibie_move_fix(1.15)    # 开始投递前的修正
-        #main_node.send_aim_posion( main_node.x , main_node.y, 0.5)  # 降高
+        main_node.send_aim_posion( main_node.x , main_node.y, 1.15)  # 降高
         servo.servo_start(box)          # 投递
         main_node.stay(1)               # 并行任务悬停开始
         rospy.sleep(3)                  # 确保货物落下来
@@ -394,16 +394,16 @@ def main():
     main_node=MainNode()
     servo=UART('/dev/ttyTHS0', 9600,1)
     mark=Mark()
-    mark.marking(2)
+    mark.marking(2) 
     while not rospy.is_shutdown(): 
         if (main_node.armed_state):                 # 确定无人机是否解锁
-            main_node.auto_takeoff( 1.15 )          # 一键起飞，设置起飞高度：1.15米
-            main_node.hover(35)                     # 全局悬停30s
+            main_node.auto_takeoff( 1.6 )          # 一键起飞，设置起飞高度：1.15米
+            #main_node.hover()                     # 全局悬停30s
             for iii in range(0,5):
                 if iii==4:
-                    main_node.send_aim_posion(position[iii][0] , position[iii][1] , 1.15)    # 飞往指定点，高度1.15米
+                    main_node.send_aim_posion(position[iii][0] , position[iii][1] , 1.6)    # 飞往指定点，高度1.15米
                     break
-                main_node.send_aim_posion(position[iii][0] , position[iii][1] , 1.15)        # 飞往指定点，高度1.15米
+                main_node.send_aim_posion(position[iii][0] , position[iii][1] , 1.6)        # 飞往指定点，高度1.15米
                 main_node.stay(1)                   # 并行任务悬停开始
                 main_node.shibie_pub(1)             # 发布开始识别指令
                 rospy.sleep(5)                      # 等5s出数据
@@ -412,7 +412,7 @@ def main():
             main_node.stay(1)                       # 并行任务悬停开始
             main_node.shibie_pub(2)                 # 发布结束识别指令
             main_node.stay(2)                       # 并行任务悬停结束
-            main_node.send_aim_posion(0 , 0 , 1.15 )# 回到出发点，高度：1.15米
+            main_node.send_aim_posion(0 , 0 , 1.6 )# 回到出发点，高度：1.15米
             main_node.land()                        # 自动着陆
             break
 if __name__=='__main__':
