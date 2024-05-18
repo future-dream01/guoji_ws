@@ -395,16 +395,14 @@ def main():
     servo=UART('/dev/ttyTHS0', 9600,1)
     mark=Mark()
     mark.marking(2)
-    main_node.shibie_pub(1)
+    #main_node.shibie_pub(1)
     # main_node.shibie_pub(1)
     while not rospy.is_shutdown(): 
-        rospy.loginfo(f"物体:{main_node.obj} \n x_p:{main_node.x_p} \n y_p:{main_node.y_p}")
-        if  (main_node.obj ==2) and abs(main_node.x_p) <=30 and abs(main_node.y_p)<=30:
-            servo.servo_start(1)
-        if  (main_node.obj ==3) and abs(main_node.x_p) <=30 and abs(main_node.y_p)<=30:
-            servo.servo_start(2)
-        if  (main_node.obj ==1) and abs(main_node.x_p) <=30 and abs(main_node.y_p)<=30:
-            servo.servo_start(3)
+        if main_node.armed_state:
+            main_node.auto_takeoff(0.5)
+            main_node.hover(0, 0 , 0.5 ,30)
+            main_node.land()
+            break
             #main_node.send_aim_posion(0 , 2 , 0.5)
             # main_node.stay(1)
             # servo.servo_start(1)
